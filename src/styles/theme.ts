@@ -6,10 +6,11 @@ const theme: DefaultTheme = {
 
         WHITE_900: "#FFFFFF",
 
-        GRAY_900: "#2E3132",
-        GRAY_700: "#545151",
+        GRAY_700: "#788499",
         GRAY_500: "#7D7D7D",
         GRAY_300: "#D6D6D6",
+
+        BLUE: "#113d84"
     },
     
     FONTS_WEIGHT: {
