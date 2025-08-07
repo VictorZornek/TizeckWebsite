@@ -25,7 +25,7 @@ export function Header(){
         { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
-    return(
+    return (
         <Container>
             <Nav>
                 {links.map(link => (

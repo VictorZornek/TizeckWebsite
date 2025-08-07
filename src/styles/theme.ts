@@ -3,6 +3,7 @@ import { DefaultTheme } from "styled-components"
 const theme: DefaultTheme = {
     COLORS: {
         BLACK_900: "#000000",
+        BLACK_700: "#292929",
 
         WHITE_900: "#FFFFFF",
 
@@ -10,7 +11,7 @@ const theme: DefaultTheme = {
         GRAY_500: "#7D7D7D",
         GRAY_300: "#D6D6D6",
 
-        BLUE: "#113d84"
+        BLUE: "#02255cff"
     },
     
     FONTS_WEIGHT: {
