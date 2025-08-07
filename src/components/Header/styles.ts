@@ -125,7 +125,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
     border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
     border-radius: 0.5rem;
 
-    background-color: rgba(214, 214, 214, 0.5);
+    background-color: rgba(214, 214, 214, 0.8);
 
     overflow: hidden;
     z-index: 1;
@@ -149,7 +149,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
     }
 
     .wrapper-categories-labels a {
-        padding: .5rem 1rem;  /* afina ainda mais */
+        padding: .3rem 1rem;  /* afina ainda mais */
     }
 
     @media (min-width: 768px) {
