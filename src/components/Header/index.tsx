@@ -21,7 +21,7 @@ export function Header(){
     const links = [
         { href: '#home', label: 'Início', icon: <FaHome /> },
         { href: '#products', label: 'Produtos', icon: <FaBoxOpen /> },
-        { href: '#about', label: 'Sua Mentora', icon: <MdBusiness /> },
+        { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
     return(

@@ -12,11 +12,10 @@ export const Container = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    background-color: ${({ theme }) => theme.COLORS.BLACK_900};
+    background-color: ${({ theme }) => theme.COLORS.GRAY_700};
     color: ${({ theme }) => theme.COLORS.WHITE_900};
 
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 `;
 
 export const Nav = styled.nav`
@@ -29,15 +28,16 @@ export const Nav = styled.nav`
 `;
 
 export const NavLink = styled.a`
-    font-family: 'Cinzel', serif;
-    font-size: 1.4rem;
+    font-family: var(--font-inter);
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.MEDIUM};
+    font-size: 1.5rem;
     text-decoration: none;
 
     display: flex;
     align-items: center;
     gap: 1rem;
-
-    color: ${({ theme }) => theme.COLORS.WHITE_900};
+    
+    color: ${({ theme }) => theme.COLORS.BLACK_900};
 
     svg {
         color: ${({ theme }) => theme.COLORS.BLUE};
@@ -83,7 +83,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
     border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
     border-radius: 0.5rem;
 
-    background-color:rgba(0, 0, 0, 0.97);;
+    background-color: rgba(214, 214, 214, 0.5);
 
     overflow: hidden;
     z-index: 1;

@@ -20,7 +20,7 @@ export default function HomePage() {
             <h1 className={cinzel.className}>Seja muito bem-vindo(a)!</h1>
 
             <div className='wrapper-buttons'>
-                <ButtonLinktree icon={<GrCatalog />} title="Catálogo Produtos" />
+                <ButtonLinktree icon={<GrCatalog />} title="Catálogo Produtos" href="/categories" />
                 <ButtonLinktree icon={<MdBusiness />} title="Sobre a Tizeck" />        
                 <ButtonLinktree icon={<FaWhatsapp />} title="Whatsapp" />
                 <ButtonLinktree icon={<MdMail />} title="E-mail" />
