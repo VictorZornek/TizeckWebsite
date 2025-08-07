@@ -6,31 +6,54 @@ import Link from "next/link";
 import { FaHome, FaBoxOpen } from 'react-icons/fa';
 import { MdBusiness } from 'react-icons/md';
 
-import { Container, Nav, NavLink, MenuButton, MobileMenu } from "./styles";
-import { Cinzel } from 'next/font/google'; 
-
-const cinzel = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
-  display: 'swap',
-});
+import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, MobileMenu } from "./styles";
 
 export function Header(){
     const [menuOpen, setMenuOpen] = useState(false)
+    const [categoriesOpen, setCategoriesOpen] = useState(false)
 
     const links = [
         { href: '#home', label: 'Início', icon: <FaHome /> },
-        { href: '#products', label: 'Produtos', icon: <FaBoxOpen /> },
+        { 
+            label: 'Produtos', 
+            icon: <FaBoxOpen />,
+            categories: [
+                { href: '#products-suportes', label: 'Suportes' },
+                { href: '#products-acessorios', label: 'Acessórios' }
+            ],
+        },
         { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
     return(
         <Container>
             <Nav>
-                {links.map(({ href, label }) => (
-                    <Link key={href} href={href} passHref>
-                        <NavLink onClick={() => setMenuOpen(false)}>{label}</NavLink>
-                    </Link>
+                {links.map(link => (
+                    link.categories ? (
+                        <NavItem
+                            key={link.label}
+                            onMouseEnter={() => setCategoriesOpen(true)}
+                            onMouseLeave={() => setCategoriesOpen(false)}
+                        >
+                            <NavLink as="button">{link.label}</NavLink>
+
+                            <SubMenu open={categoriesOpen}>
+                                {link.categories.map(category => (
+                                    <Link key={category.href} href={category.href} passHref>
+                                        <SubMenuItem onClick={() => setCategoriesOpen(false)}>
+                                            {category.label}
+                                        </SubMenuItem>
+                                    </Link>
+                                ))}
+                            </SubMenu>
+                        </NavItem>
+                    ) : (
+                        <Link key={link.href} href={link.href} passHref>
+                            <NavLink onClick={() => setMenuOpen(false)}>
+                                {link.label}
+                            </NavLink>
+                        </Link>
+                    )
                 ))}
             </Nav>
 
@@ -46,13 +69,43 @@ export function Header(){
             </MenuButton>
 
             <MobileMenu open={menuOpen}>
-                {links.map(({ href, label, icon }) => (
-                    <Link key={href} href={href} passHref>
-                        <NavLink className={cinzel.className} onClick={() => setMenuOpen(false)}>
-                            {icon}
-                            {label}
-                        </NavLink>
-                    </Link>
+                {links.map(link => (
+                    link.categories ? (
+                        <div key={link.label} className="wrapper-categories">
+                            <NavLink
+                                as="button"
+                                onClick={() => setCategoriesOpen(open => !open)}
+                            >
+                                {link.icon}
+                                {link.label}
+                            </NavLink>
+                            {categoriesOpen && (
+                                <div className="wrapper-categories-labels">
+                                    {link.categories.map(category => (
+                                            <Link key={category.href} href={category.href} passHref>
+                                                <NavLink
+                                                    onClick={() => {
+                                                        setMenuOpen(false);
+                                                        setCategoriesOpen(false);
+                                                    }}
+                                                    style={{ paddingLeft: '2rem' }}
+                                                >
+                                                    {category.label}
+                                                </NavLink>
+
+                                            </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <Link key={link.href} href={link.href} passHref>
+                            <NavLink onClick={() => setMenuOpen(false)}>
+                                {link.icon}
+                                {link.label}
+                            </NavLink>
+                        </Link>
+                    )
                 ))}
             </MobileMenu>
         </Container>

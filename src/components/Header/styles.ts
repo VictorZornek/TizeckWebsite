@@ -27,6 +27,11 @@ export const Nav = styled.nav`
     }
 `;
 
+export const NavItem = styled.div`
+    position: relative;
+    display: inline-block;
+`;
+
 export const NavLink = styled.a`
     font-family: var(--font-inter);
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.MEDIUM};
@@ -39,6 +44,11 @@ export const NavLink = styled.a`
     
     color: ${({ theme }) => theme.COLORS.BLACK_900};
 
+    background: transparent;
+    border: none;
+    padding: 0;        /* zera qualquer padding extra */
+    line-height: 1;    /* manter altura de linha enxuta */
+
     svg {
         color: ${({ theme }) => theme.COLORS.BLUE};
     }
@@ -47,6 +57,38 @@ export const NavLink = styled.a`
         color: ${({ theme }) => theme.COLORS.BLUE};
     }
   
+`;
+
+export const SubMenu = styled.div<{ open: boolean }>`
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+
+    display: ${({ open }) => (open ? 'flex' : 'none')};
+    flex-direction: column;
+
+    background-color: ${({ theme }) => theme.COLORS.WHITE_900};
+
+    border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
+    border-radius: 0.5rem;
+
+    overflow: hidden;
+
+    z-index: 1000;
+`;
+
+export const SubMenuItem = styled.a`
+    font-size: 1.4rem;
+    text-decoration: none;
+    
+    padding: 0.75rem 1rem;
+
+    color: ${({ theme }) => theme.COLORS.BLACK_900};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        color: ${({ theme }) => theme.COLORS.BLUE};
+    }
 `;
 
 export const MenuButton = styled.button`
@@ -70,7 +112,7 @@ export const MenuButton = styled.button`
 
 export const MobileMenu = styled.div<{ open: boolean }>`
     position: absolute;
-    top: calc(100% + 0.5rem);
+    top: calc(100% + 0.25rem);
     right: 1.5rem;
     width: max-content;
     min-width: 160px;
@@ -78,7 +120,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
     display: ${({ open }) => (open ? 'flex' : 'none')};
     flex-direction: column;
 
-    font-size: 1.8rem;
+    font-size: 1.4rem;
 
     border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
     border-radius: 0.5rem;
@@ -92,8 +134,22 @@ export const MobileMenu = styled.div<{ open: boolean }>`
         padding: 0.75rem 1rem;
     }
 
-    a:last-child {
-        border-bottom: none;
+    .wrapper-categories {
+        padding: 0.75rem 2rem;
+    }
+
+    .wrapper-categories-labels {
+        display: flex;
+        flex-direction: column;
+
+        padding-left: 1.5rem;
+        padding: 0 2rem 0 0.75rem;
+
+        margin-top: 1rem;
+    }
+
+    .wrapper-categories-labels a {
+        padding: .5rem 1rem;  /* afina ainda mais */
     }
 
     @media (min-width: 768px) {
