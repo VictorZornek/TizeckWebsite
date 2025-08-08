@@ -14,6 +14,10 @@ export default function CategoriesPage() {
                 <div className="wrapper-categories">
                     <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png" name="Suportes" />
                     <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" name="Acessórios Galões" />
+                    <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png" name="Suportes" />
+                    <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" name="Acessórios Galões" />
+                    <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png" name="Suportes" />
+                    <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" name="Acessórios Galões" />
                 </div>
             </main>
         </Container>

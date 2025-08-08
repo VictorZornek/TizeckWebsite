@@ -7,6 +7,7 @@ const theme: DefaultTheme = {
         
 
         WHITE_900: "#FFFFFF",
+        WHITE_600: "#EEEEEE",
 
         GRAY_700: "#788499",
         GRAY_500: "#7D7D7D",
