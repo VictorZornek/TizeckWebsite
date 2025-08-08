@@ -5,18 +5,28 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
-    margin: 10rem auto 0;
+    margin: 9rem auto 0;
 
     max-width: 37.5rem;
 
     overflow-x: hidden;
 
-    > main {
+    h1 {
+        font-size: 2.2rem;
+        color: ${({ theme }) => theme.COLORS.WHITE_600};
+
+        text-align: center;
+
+        margin-bottom: 3rem;
+    }
+
+    main {
         .wrapper-categories {
             display: flex;
             flex-direction: column;
             gap: 3rem;
 
+            align-items: center;
         }
     }
 

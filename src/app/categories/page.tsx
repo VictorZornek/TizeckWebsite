@@ -11,6 +11,8 @@ export default function CategoriesPage() {
             <Header />
 
             <main>
+                <h1>Categorias de Produtos</h1>
+                
                 <div className="wrapper-categories">
                     <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png" name="Suportes" />
                     <CategoryCard imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" name="Acessórios Galões" />
