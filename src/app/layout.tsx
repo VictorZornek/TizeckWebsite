@@ -10,9 +10,9 @@ const inter = Inter({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" style={{ backgroundColor: '#788499' }} className={inter.variable}>
+    <html lang="pt-BR" style={{ backgroundColor: '#1E1E1E' }} className={inter.variable}>
       <head></head>
-      <body style={{ backgroundColor: '#788499' }} >
+      <body style={{ backgroundColor: '#1E1E1E' }} >
         <Providers>
           {children}
         </Providers>

@@ -12,7 +12,7 @@ export const Container = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    background-color: ${({ theme }) => theme.COLORS.GRAY_700};
+    background-color: ${({ theme }) => theme.COLORS.BLACK_700};
     color: ${({ theme }) => theme.COLORS.WHITE_900};
 
     z-index: 1000;
@@ -69,7 +69,7 @@ export const SubMenu = styled.div<{ open: boolean }>`
 
     background-color: ${({ theme }) => theme.COLORS.WHITE_900};
 
-    border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
+    border: 1px solid ${({ theme }) => theme.COLORS.BLACK_700};
     border-radius: 0.5rem;
 
     overflow: hidden;
@@ -122,7 +122,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
 
     font-size: 1.4rem;
 
-    border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
+    border: 1px solid ${({ theme }) => theme.COLORS.BLACK_700};
     border-radius: 0.5rem;
 
     background-color: rgba(214, 214, 214, 0.8);

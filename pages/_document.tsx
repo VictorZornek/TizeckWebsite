@@ -33,10 +33,10 @@ export default class MyDocument extends Document {
 
     render() {
         return (
-            <Html lang="pt-BR" style={{ backgroundColor: "#788499" }}>
+            <Html lang="pt-BR" style={{ backgroundColor: "#1E1E1E" }}>
                 <Head>
                     {/* Meta para color-theme em mobile browsers */}
-                    <meta name="theme-color" content="#788499" />
+                    <meta name="theme-color" content="#1E1E1E" />
 
                     {/* Inline CSS para garantir background preto já no primeiro paint */}
                     <style
@@ -44,19 +44,19 @@ export default class MyDocument extends Document {
                             __html: `
                                 /* garante fundo preto e texto branco em tudo, inclusive pseudo-elementos */
                                 html, body, #__next {
-                                    background-color: #788499 !important;
+                                    background-color: #1E1E1E !important;
                                 }
 
                                 /* tudo e seus pseudo-elementos */
                                 *, *::before, *::after {
-                                    background-color: #788499 !important;
-                                    border-color: #788499 !important;
+                                    background-color: #1E1E1E !important;
+                                    border-color: #1E1E1E !important;
                                     box-shadow: none !important;
                                 }
 
                                 /* e qualquer container que o Next use como fallback */
                                 [data-nextjs-loading], [data-nextjs-loading] * {
-                                    background-color: #788499 !important;
+                                    background-color: #1E1E1E !important;
                                 }
 
                                 /* inputs, botões e links ficam transparentes para herdar o fundo */
@@ -73,7 +73,7 @@ export default class MyDocument extends Document {
                             }}
                     />
                 </Head>
-                <body style={{ backgroundColor: "#788499" }}>
+                <body style={{ backgroundColor: "#1E1E1E" }}>
                     <Main />
                     <NextScript />
                 </body>
