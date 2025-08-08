@@ -11,13 +11,13 @@ export const Container = styled.div`
 
     border-radius: .8rem;
 
-    background-color: ${({ theme }) => theme.COLORS.WHITE_600};
+    background-color: rgba(255, 255, 255, 0.07);
 
     transition: transform 0.2s, box-shadow 0.2s;
 
     &:hover {
         transform: translateY(-0.8rem);
-        box-shadow: 0 1.6rem 3.2rem rgba(255, 255, 255, 0.20);
+        box-shadow: 0 1.6rem 3.2rem rgba(255, 255, 255, 0.2);
     }
 `;
 
@@ -31,13 +31,13 @@ export const ImageWrapper = styled.img`
 
     border-radius: .8rem;
 
-    background-color: rgba(14, 14, 14, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
 `;
 
 export const CategoryName = styled.h5`
     font-size: 1.8rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
-    color: ${({ theme }) => theme.COLORS.BLACK_700};
+    color: ${({ theme }) => theme.COLORS.WHITE_900};
 
     align-self: center;
     margin-top: 1rem;

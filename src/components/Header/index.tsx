@@ -8,6 +8,8 @@ import { MdBusiness } from 'react-icons/md';
 
 import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, MobileMenu } from "./styles";
 
+import logoTizeck from '@/assets/LogoTizeck.png';
+
 export function Header(){
     const [menuOpen, setMenuOpen] = useState(false)
     const [categoriesOpen, setCategoriesOpen] = useState(false)
@@ -27,6 +29,8 @@ export function Header(){
 
     return (
         <Container>
+            <img src={logoTizeck.src} alt="Logo Tizeck" />
+
             <Nav>
                 {links.map(link => (
                     link.categories ? (
@@ -68,7 +72,7 @@ export function Header(){
                 </svg>
             </MenuButton>
 
-            <MobileMenu open={menuOpen}>
+            <MobileMenu open={menuOpen}>                
                 {links.map(link => (
                     link.categories ? (
                         <div key={link.label} className="wrapper-categories">
