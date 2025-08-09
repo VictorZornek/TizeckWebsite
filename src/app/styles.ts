@@ -9,14 +9,13 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
 
-    margin: 0 auto;
+    margin: 2rem auto;
 
-    h1 {
-        font-family: 'Cinzel', serif;
+    > h1 {
         font-size: 4.8rem;
         text-align: center;
 
-        margin-bottom: 2rem;
+        margin-bottom: 6rem;
     }
 
     .wrapper-buttons {
