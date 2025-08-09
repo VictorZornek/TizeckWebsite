@@ -1,19 +1,21 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
-const Product = require("./models/Product");
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Product from "./models/Product";
 
-const MONGO_CONNECTION = process.env.MONGO_CONNECTION;
+dotenv.config();
+
+const MONGO_CONNECTION = process.env.MONGO_CONNECTION as string;
 
 const categorias = [
   "Filtro",
   "Suporte Quadrado",
   "Suporte Redondo",
   "Torneira",
-  "Galões"
+  "Galões",
 ];
 
-const gerarProdutosExemplo = () => {
-  const produtos = [];
+function gerarProdutosExemplo() {
+  const produtos = [] as Array<{ name: string; description: string; category: string; images: string[]; activated: boolean; specifications: Record<string, unknown>; }>;
 
   categorias.forEach((categoria) => {
     for (let i = 1; i <= 3; i++) {
@@ -23,20 +25,17 @@ const gerarProdutosExemplo = () => {
         category: categoria,
         images: [],
         activated: true,
-        specifications: {}
+        specifications: {},
       });
     }
   });
 
   return produtos;
-};
+}
 
 async function popularBanco() {
   try {
-    await mongoose.connect(MONGO_CONNECTION, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(MONGO_CONNECTION);
     console.log("✅ Conectado ao MongoDB.");
 
     const produtos = gerarProdutosExemplo();
@@ -71,4 +70,5 @@ async function listarProdutos() {
   }
 }
 
-listarProdutos();
+// Execute seeding seguido da listagem dos produtos
+popularBanco().then(listarProdutos);
