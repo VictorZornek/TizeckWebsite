@@ -15,8 +15,6 @@ export const Container = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
-
     background: ${({ theme }) => theme.COLORS.WHITE_900};
     color: ${({ theme }) => theme.COLORS.WHITE_900};
 

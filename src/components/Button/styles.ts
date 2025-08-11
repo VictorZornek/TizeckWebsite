@@ -22,6 +22,6 @@ export const Container = styled.button<{ $isdark: boolean }>`
     background-color: ${({ theme, $isdark }) => $isdark ? "transparent" : theme.COLORS.WHITE_600};
 
     &:hover {
-        background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        background-color: ${({ theme, $isdark }) => $isdark ? "none" : theme.COLORS.GRAY_300};
     }
 `;
