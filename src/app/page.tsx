@@ -28,6 +28,14 @@ export default function HomePage() {
                         <Button title="Sobre a Empresa" isDark />
                     </div>
 
+                    <span className="arrow">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <line x1="12" y1="4"  x2="12" y2="16" />
+                            <polyline points="7,12 12,18 17,12" />
+                        </svg>
+                    </span>
+
+
                 </section>
             </main>
         </Container>

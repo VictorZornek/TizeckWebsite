@@ -1,6 +1,11 @@
 'use client'
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const arrowBounce = keyframes`
+    0%, 100% { transform: translateY(0);   opacity: .9; }
+    50% { transform: translateY(8px); opacity: 1; }
+`;
 
 export const Container = styled.div`
     width: 39.5rem;
@@ -15,6 +20,7 @@ export const Container = styled.div`
         margin-top: 3rem;
 
         .hero {
+            position: relative;
             height: 40rem;
 
             margin: 0 auto;
@@ -44,8 +50,33 @@ export const Container = styled.div`
                 display: flex;
                 flex-direction: column;
                 gap: 1rem;
+            }
 
-                margin-bottom: 6rem;
+            .arrow {
+                position: absolute;
+                left: 50%;
+                bottom: 2.5rem;
+                
+                transform: translateX(-50%);
+
+                width: 4.4rem;
+                height: 4.4rem;
+
+                display: grid;
+                place-items: center;
+
+                color: ${({ theme }) => theme.COLORS.WHITE_900};
+                pointer-events: none; /* garante que não “vire botão” */
+            }
+
+            .arrow svg {
+                width: 2.4rem;
+                height: 2.4rem;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+                animation: ${arrowBounce} 1.2s ease-in-out infinite;
+                will-change: transform;
             }
         }
     }
