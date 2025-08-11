@@ -2,13 +2,14 @@
 
 import { FaWhatsapp } from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
-import { MdBusiness, MdMail } from 'react-icons/md';
+import { MdBusiness, MdPhone, MdPlace, MdMail } from 'react-icons/md';
 
-import { Container, Counter } from "./styles";
+import { Container, Counter, WorktimeWrapper } from "./styles";
 
 import { Header } from "@/components/Header";
 import { Button } from "@/components/Button";
 import { CategoryCard } from "@/components/CategoryCard";
+import { InformationCard } from "@/components/InformationCard";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
 
@@ -75,7 +76,59 @@ export default function HomePage() {
                         <CategoryCard name="Suportes" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"/>
                         <CategoryCard name="Acessórios" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"/>
                     </div>
+                </section>
 
+                <section className="contact">
+                    <div className="wrapper-text">
+                        <h1>Entre em Contato</h1>
+
+                        <p>Estamos prontos para atender você! Fale conosco e descubra como podemos ajudar.</p>
+                    </div>
+
+                    <div className="contact-info">
+                        <h3>Informações de Contato</h3>
+
+                        <InformationCard 
+                            icon={MdPlace}
+                            title="Endereço"
+                            information={`Rua Izabel de Andrade Maia, 315\nFerrazopólis - SBC - SP\nCEP: 09790-430`}
+                        />
+
+                        <InformationCard 
+                            icon={MdPhone}
+                            title="Telefone"
+                            information={["(11) 98782-2169", "(11) 4067-4561"]}
+                        />
+
+                        <InformationCard 
+                            icon={MdMail}
+                            title="E-mail"
+                            information={["tizeckwebsite@gmail.com", "contato@tizeck.com"]}
+                        />
+                    </div>
+
+                    <div className="worktime">
+                        <h3>Horário de Funcionamento</h3>
+
+                        <WorktimeWrapper>
+                            <div className="wrapper-day-hour">
+                                <span className="day">Segunda a Sexta</span>
+                                <span className="hour">08:00 - 18:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Sábado</span>
+                                <span className="hour">08:00 - 12:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Domingo</span>
+                                <span className="hour">Fechado</span>
+                            </div>
+                        </WorktimeWrapper>
+
+                        <Button title="Solicitar Orçamento" isblue />
+                    </div>
                 </section>
             </main>
         </Container>

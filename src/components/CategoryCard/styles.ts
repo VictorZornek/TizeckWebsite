@@ -18,7 +18,7 @@ export const Container = styled.div`
 
     &:hover {
         transform: translateY(-0.8rem);
-        box-shadow: 0 1.6rem 3.2rem rgba(255, 255, 255, 0.2);
+        box-shadow: 0 1.6rem 3.2rem rgba(0, 0, 0, 1);
     }
 `;
 

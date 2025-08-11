@@ -180,11 +180,57 @@ export const Container = styled.div`
                 gap: 7rem;
             }
         }
+
+        .contact {
+            height: 78rem;
+
+            margin: 0 auto;
+
+            background-color: ${({ theme }) => theme.COLORS.DARK_BLUE};
+
+            padding: 1rem 1.5rem;
+
+            .wrapper-text {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                text-align: center;
+
+                margin: 3rem 0 4rem;
+
+                h1 {
+                    font-size: 3rem;
+                    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                }
+
+                p {
+                    font-size: 1.3rem;
+                    color: ${({ theme }) => theme.COLORS.GRAY_300};
+                }
+            }
+
+            .contact-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+
+                margin-bottom: 4rem;
+                
+                h3 {
+                    margin-bottom: 1rem;
+                }
+            }
+
+            .worktime {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
     }
 
-
-
-
+    
 `;
 
 export const Counter = styled.div`
@@ -206,4 +252,31 @@ export const Counter = styled.div`
     }
 
 
+`;
+
+export const WorktimeWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    width: 100%;
+
+    padding: 2rem;
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.07);
+
+    .wrapper-day-hour {
+        display: flex;
+        justify-content: space-between;
+
+        .day {
+            color: ${({ theme }) => theme.COLORS.GRAY_300};
+        }
+
+        .hour {
+            font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+        }
+    }
 `;
