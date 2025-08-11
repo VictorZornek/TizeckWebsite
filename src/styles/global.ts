@@ -13,7 +13,7 @@ export default createGlobalStyle`
     }
 
     body {
-        background: radial-gradient(circle,rgba(0, 170, 255, 1) 0%, rgba(6, 78, 171, 1) 60%, rgba(9, 9, 121, 1) 100%);
+        background: ${({ theme }) => theme.COLORS.WHITE_900};
         color: ${({ theme }) => theme.COLORS.WHITE_900};
 
         -webkit-font-smoothing: antialiased;
