@@ -66,6 +66,11 @@ export default function HomePage() {
                 </section>
 
                 <section className="categories">
+                    <div className="wrapper-title-text">
+                        <h2>Nossas Categorias de Produtos</h2>
+                        <p>Conheça nossa linha completa de produtos desenvolvidos com tecnologia e qualidade superior</p>
+                    </div>
+
                     <div className="wrapper-categories">
                         <CategoryCard name="Suportes" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"/>
                         <CategoryCard name="Acessórios" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"/>

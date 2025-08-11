@@ -143,14 +143,35 @@ export const Container = styled.div`
         }
 
         .categories {
-            height: 65rem;
+            height: 80rem;
 
             margin: 0 auto;
             text-align: center;
 
             background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
 
-            padding: 3rem;
+            padding: 1rem 1.5rem;
+
+            .wrapper-title-text {
+                padding: 3rem 3rem 0;
+                margin-bottom: 3rem;
+
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                h2 {
+                    font-size: 2.2rem;
+                    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                    color: ${({ theme }) => theme.COLORS.WHITE_900};
+                }
+
+                p {
+                    font-size: 1.4rem;
+                    color: ${({ theme }) => theme.COLORS.WHITE_600};
+
+                }
+            }
 
             .wrapper-categories {
                 display: flex;
