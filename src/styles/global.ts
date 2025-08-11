@@ -12,6 +12,10 @@ export default createGlobalStyle`
         --font-inter: 'Inter', sans-serif;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         background: ${({ theme }) => theme.COLORS.WHITE_900};
         color: ${({ theme }) => theme.COLORS.WHITE_900};
