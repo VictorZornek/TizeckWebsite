@@ -79,9 +79,59 @@ export const Container = styled.div`
                 will-change: transform;
             }
         }
+
+        .about {
+            height: 40rem;
+
+            margin: 0 auto;
+            text-align: center;
+
+            background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+
+            .wrapper-title-text {
+                padding: 3rem 3rem 0;
+                margin-bottom: 3rem;
+
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                h2 {
+                    font-size: 2rem;
+                    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                    color: ${({ theme }) => theme.COLORS.DARK_BLUE};
+                }
+
+                p {
+                    font-size: 1.2rem;
+                    color: ${({ theme }) => theme.COLORS.GRAY_400};
+                }
+            }
+
+            .wrapper-history {
+                padding: 0 1.5rem;
+
+                text-align: justify;
+
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                h3 {
+                    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                    color: ${({ theme }) => theme.COLORS.DARK_BLUE};
+                }
+
+                p {
+                    font-size: 1.1rem;
+                    color: ${({ theme }) => theme.COLORS.GRAY_400};
+                }
+            }
+        }
     }
 
 
 
 
-`
+`;
+

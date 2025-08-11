@@ -9,8 +9,10 @@ declare module 'styled-components' {
       WHITE_600: string
       GRAY_700: string
       GRAY_500: string
+      GRAY_400: string
       GRAY_300: string
       BLUE: string
+      DARK_BLUE: string
     }
     FONTS_WEIGHT: {
       REGULAR: number
