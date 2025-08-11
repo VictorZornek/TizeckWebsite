@@ -1,24 +1,31 @@
 import styled from "styled-components";
 
 export const Container = styled.header`
+    --header-h: 5.6rem;
+
     position: fixed;
     top: 0;
     left: 0;
 
     width: 100%;
-    padding: 1rem 1.5rem;
+    height: var(--header-h);
+    padding: 0 1.5rem;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    background: transparent;
+    border: 1px solid ${({ theme }) => theme.COLORS.GRAY_700};
+
+    background: ${({ theme }) => theme.COLORS.WHITE_900};
     color: ${({ theme }) => theme.COLORS.WHITE_900};
 
     z-index: 1000;
 
     > img {
-        width: 10rem;
+        height: calc(var(--header-h) - 1.2rem);
+        width: auto;
+        display: block;
     }
 `;
 
@@ -100,8 +107,10 @@ export const MenuButton = styled.button`
     cursor: pointer;
     margin-left: auto;
 
-    margin-top: .8rem;
-    margin-right: .8rem;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
 
     @media (min-width: 768px) {
         display: none;
@@ -110,7 +119,7 @@ export const MenuButton = styled.button`
     svg {
         width: 2.8rem;
         height: 2.8rem;
-        fill: ${({ theme }) => theme.COLORS.WHITE_900};
+        fill: ${({ theme }) => theme.COLORS.GRAY_700};
     }
 `;
 
@@ -126,7 +135,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
 
     font-size: 1.4rem;
 
-    border: 1px solid ${({ theme }) => theme.COLORS.BLACK_900};
+    border: 1px solid ${({ theme }) => theme.COLORS.WHITE_600};
     border-radius: 0.5rem;
 
     background-color: rgba(214, 214, 214, 0.8);
