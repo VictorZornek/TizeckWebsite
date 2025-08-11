@@ -1,0 +1,28 @@
+import styled from "styled-components";
+
+export const Container = styled.button<{ $isdark: boolean }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    width: 34rem;
+    height: 3.8rem;
+
+    margin: 0 auto;
+    padding: 1rem 1.6rem;
+
+    font-size: 1.6rem;
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
+
+    border: ${({ theme, $isdark }) => $isdark ? `solid 1.5px ${theme.COLORS.WHITE_900}` : "none"};
+    border-radius: .6rem;
+
+    color: ${({ theme, $isdark }) => $isdark ? theme.COLORS.WHITE_900 : theme.COLORS.BLUE};
+    background-color: ${({ theme, $isdark }) => $isdark ? "transparent" : theme.COLORS.WHITE_600};
+
+    &:hover {
+        background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        color: ${({ theme }) => theme.COLORS.WHITE_900};
+    }
+`;

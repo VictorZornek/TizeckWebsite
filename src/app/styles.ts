@@ -39,6 +39,14 @@ export const Container = styled.div`
                     font-size: 1.2rem;
                 }
             }
+
+            .wrapper-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                margin-bottom: 6rem;
+            }
         }
     }
 

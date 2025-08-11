@@ -13,7 +13,7 @@ const theme: DefaultTheme = {
         GRAY_500: "#7D7D7D",
         GRAY_300: "#D6D6D6",
 
-        BLUE: "#02255cff"
+        BLUE: "#1E43B1"
     },
     
     FONTS_WEIGHT: {
