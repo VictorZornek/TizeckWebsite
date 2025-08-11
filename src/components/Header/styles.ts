@@ -12,7 +12,7 @@ export const Container = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    background-color: ${({ theme }) => theme.COLORS.BLACK_900};
+    background: transparent;
     color: ${({ theme }) => theme.COLORS.WHITE_900};
 
     z-index: 1000;
