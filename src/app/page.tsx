@@ -2,11 +2,12 @@ import { FaWhatsapp } from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
 import { MdBusiness, MdMail } from 'react-icons/md';
 
-import { Container } from "./styles";
+import { Container, Counter } from "./styles";
 
 import { Header } from "@/components/Header";
 import { Button } from "@/components/Button";
 
+import tizeckFront from '@/assets/TizeckFront.jpg';
 
 export default function HomePage() {
     return(
@@ -47,7 +48,17 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-counters-image">
-                    
+                        <Counter>
+                            <span>+20</span>
+                            <p>Anos de Experiência</p>
+                        </Counter>
+
+                        <Counter>
+                            <span>+500</span>
+                            <p>Clientes Satisfeitos</p>
+                        </Counter>
+
+                        <img src={tizeckFront.src} alt="Frente da Tizeck" />
                     </div>
                 </section>
             </main>

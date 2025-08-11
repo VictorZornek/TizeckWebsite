@@ -81,7 +81,7 @@ export const Container = styled.div`
         }
 
         .about {
-            height: 40rem;
+            height: 65rem;
 
             margin: 0 auto;
             text-align: center;
@@ -127,6 +127,19 @@ export const Container = styled.div`
                     color: ${({ theme }) => theme.COLORS.GRAY_400};
                 }
             }
+
+            .wrapper-counters-image {
+                margin-top: 2rem;
+
+                img {
+                    width: 30rem;
+                    height: 15rem;
+
+                    border-radius: .8rem;
+
+                    margin-top: 1rem;
+                }
+            }
         }
     }
 
@@ -135,3 +148,23 @@ export const Container = styled.div`
 
 `;
 
+export const Counter = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    margin-bottom: 2rem;
+
+    span {
+        font-size: 2rem;
+        font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+        color: ${({ theme }) => theme.COLORS.BLUE};
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: ${({ theme }) => theme.COLORS.GRAY_400};
+    }
+
+
+`;
