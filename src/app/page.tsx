@@ -1,3 +1,5 @@
+'use client'
+
 import { FaWhatsapp } from "react-icons/fa";
 import { GrCatalog } from "react-icons/gr";
 import { MdBusiness, MdMail } from 'react-icons/md';
@@ -6,6 +8,7 @@ import { Container, Counter } from "./styles";
 
 import { Header } from "@/components/Header";
 import { Button } from "@/components/Button";
+import { CategoryCard } from "@/components/CategoryCard";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
 
@@ -60,6 +63,14 @@ export default function HomePage() {
 
                         <img src={tizeckFront.src} alt="Frente da Tizeck" />
                     </div>
+                </section>
+
+                <section className="categories">
+                    <div className="wrapper-categories">
+                        <CategoryCard name="Suportes" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"/>
+                        <CategoryCard name="Acessórios" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"/>
+                    </div>
+
                 </section>
             </main>
         </Container>

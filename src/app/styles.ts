@@ -141,6 +141,24 @@ export const Container = styled.div`
                 }
             }
         }
+
+        .categories {
+            height: 65rem;
+
+            margin: 0 auto;
+            text-align: center;
+
+            background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
+
+            padding: 3rem;
+
+            .wrapper-categories {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 7rem;
+            }
+        }
     }
 
 
