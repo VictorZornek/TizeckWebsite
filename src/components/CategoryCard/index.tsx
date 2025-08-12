@@ -1,4 +1,4 @@
-'use cliente'
+'use client'
 
 import React from "react";
 import { Container, ImageWrapper, WrapperText, CategoryName, Description, Button } from "./styles";
