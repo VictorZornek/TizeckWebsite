@@ -127,7 +127,7 @@ export default function HomePage() {
                             </div>
                         </WorktimeWrapper>
 
-                        <Button title="Solicitar Orçamento" isblue />
+                        <Button title="Solicitar Orçamento" />
                     </div>
                 </section>
             </main>

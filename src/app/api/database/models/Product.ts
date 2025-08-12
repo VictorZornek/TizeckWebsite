@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, models, model } from "mongoose";
 
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -28,11 +28,11 @@ const ProductSchema = new mongoose.Schema({
     },
 
     specifications: {
-        type: mongoose.Schema.Types.Mixed,
+        type: Schema.Types.Mixed,
         default: {}
     }
 });
 
-const Products = mongoose.models.Products || mongoose.model('Products', ProductSchema);
+const Products = models.Products || model('Products', ProductSchema);
 
-module.exports = Products;
+export default Products;
