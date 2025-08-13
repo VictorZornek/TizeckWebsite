@@ -16,6 +16,8 @@ const theme: DefaultTheme = {
 
         BLUE: "#1E43B1",
         DARK_BLUE: "#131B2A",
+
+        GREEN: "#008000",
     },
     
     FONTS_WEIGHT: {

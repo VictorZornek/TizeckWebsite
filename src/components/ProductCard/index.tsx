@@ -12,12 +12,13 @@ export interface ProductCardProps {
 export function ProductCard({ imageUrl, name }: ProductCardProps) {
     return (
         <Container>
-            <div className="wrapper-image-name">
-                <ImageWrapper src={imageUrl} alt={name} />
-                <ProductName>{name}</ProductName>
-            </div>
+            <ImageWrapper src={imageUrl} alt={name} />
+            <ProductName>{name}</ProductName>
             
-            <Button>Ver Mais</Button>
+            <div className="wrapper-buttons">
+                <Button $isgreen={false}>Ver Mais</Button>
+                <Button $isgreen>Whatsapp</Button>
+            </div>
         </Container>
     )
 }

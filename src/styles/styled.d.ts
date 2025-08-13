@@ -13,6 +13,7 @@ declare module 'styled-components' {
       GRAY_300: string
       BLUE: string
       DARK_BLUE: string
+      GREEN: string
     }
     FONTS_WEIGHT: {
       REGULAR: number

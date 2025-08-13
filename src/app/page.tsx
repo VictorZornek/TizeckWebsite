@@ -12,6 +12,7 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { InformationCard } from "@/components/InformationCard";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
+import { ProductCard } from "@/components/ProductCard";
 
 export default function HomePage() {
     return(
@@ -73,8 +74,20 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-categories">
-                        <CategoryCard name="Suportes" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"/>
-                        <CategoryCard name="Acessórios" description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"/>
+                        <CategoryCard 
+                            name="Suportes" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                            href={`/products/${encodeURIComponent("Suporte")}`}
+                        />
+                        {/* <CategoryCard 
+                            name="Acessórios" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"
+                            href={`/products/${encodeURIComponent("Acessorio")}`}
+                        /> */}
+
+                        <ProductCard name="Produto Teste" imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" />
                     </div>
                 </section>
 
