@@ -6,11 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "tsx src/database/seed.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.1",
-    "mongoose": "^8.17.0",
+    "mongoose": "^8.17.1",
     "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -24,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
+    "tsx": "^4.20.4",
     "typescript": "^5"
   }
 }
