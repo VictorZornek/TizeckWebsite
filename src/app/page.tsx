@@ -75,10 +75,10 @@ export default function HomePage() {
 
                     <div className="wrapper-categories">
                         <CategoryCard 
-                            name="Suportes" 
+                            name="Filtros" 
                             description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Suporte")}`}
+                            href={`/products/${encodeURIComponent("Filtro")}`}
                         />
                         {/* <CategoryCard 
                             name="Acessórios" 
