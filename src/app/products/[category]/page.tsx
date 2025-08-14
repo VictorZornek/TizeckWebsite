@@ -29,7 +29,7 @@ export default async function ProductsPage({ params }: PageProps) {
                         <div className="product-row" key={String(product._id)}>
                             <ProductCard 
                                 name={product.name}
-                                imageUrl={product.image?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
+                                imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
                             />
                         </div>
                     ))}
