@@ -44,10 +44,12 @@ export const ProductName = styled.h5`
     font-size: 1.5rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
 
+    text-align: center;
+
     color: ${({ theme }) => theme.COLORS.BLACK_900};
 `;
 
-export const Button = styled.button<{ $isgreen: boolean }>`
+export const Button = styled.button<{ $isgreen?: boolean }>`
     width: 8rem;
     height: 2.5rem;
 
@@ -56,6 +58,6 @@ export const Button = styled.button<{ $isgreen: boolean }>`
     border-radius: .5rem;
     border: none;
 
-    color: ${({ theme }) => theme.COLORS.WHITE_900};
-    background-color: ${({ theme, $isgreen }) => $isgreen ? theme.COLORS.GREEN : theme.COLORS.BLUE};
+    color: ${({ theme, $isgreen }) => $isgreen ? theme.COLORS.GREEN : theme.COLORS.WHITE_900};
+    background-color: ${({ theme, $isgreen }) => $isgreen ? 'transparent' : theme.COLORS.BLUE};
 `;

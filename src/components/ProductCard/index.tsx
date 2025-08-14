@@ -16,7 +16,7 @@ export function ProductCard({ imageUrl, name }: ProductCardProps) {
             <ProductName>{name}</ProductName>
             
             <div className="wrapper-buttons">
-                <Button $isgreen={false}>Ver Mais</Button>
+                <Button>Ver Mais</Button>
                 <Button $isgreen>Whatsapp</Button>
             </div>
         </Container>
