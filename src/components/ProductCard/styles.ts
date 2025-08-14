@@ -1,14 +1,17 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+    position: relative;
+
     width: 90%;
-    height: 9rem;
+    height: 8rem;
 
     display: flex;
     align-items: center;
     gap: .5rem;
 
-    padding: 1rem;
+    padding: .8rem;
+    padding-left: 0;
     margin-bottom: 2rem;
 
     border-radius: .8rem;
@@ -16,12 +19,6 @@ export const Container = styled.div`
     background-color: ${({ theme }) => theme.COLORS.WHITE_600};
 
     transition: transform 0.2s, box-shadow 0.2s;
-
-    .wrapper-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: .6rem;
-    }
 
     &:hover {
         transform: translateY(-0.8rem);
@@ -35,27 +32,41 @@ export const ImageWrapper = styled.img`
 
     object-fit: cover;
 
-    padding: 1rem 1rem 1rem 0;
+    padding: 1rem .5rem 1rem 0;
 
     border-radius: 1rem;
 `;
 
 export const ProductName = styled.h5`
+    position: absolute;
+    top: .8rem;
+    left: 60%;
+    transform: translateX(-50%);
+    width: calc(100% - 1.6rem);
+    text-align: center;
+    margin: 0;
+
     font-size: 1.5rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
 
     color: ${({ theme }) => theme.COLORS.BLACK_900};
 `;
 
-export const Button = styled.button<{ $isgreen: boolean }>`
-    width: 8rem;
-    height: 2.5rem;
+export const Button = styled.a`
+    position: absolute;
+    right: .8rem;
+    bottom: .8rem;
 
     font-size: 1.4rem;
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+    text-decoration: none;
 
     border-radius: .5rem;
     border: none;
 
-    color: ${({ theme }) => theme.COLORS.WHITE_900};
-    background-color: ${({ theme, $isgreen }) => $isgreen ? theme.COLORS.GREEN : theme.COLORS.BLUE};
+    color: ${({ theme }) => theme.COLORS.BLUE};
+
+    &:hover {
+        text-decoration: underline;
+    }
 `;
