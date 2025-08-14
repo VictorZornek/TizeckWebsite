@@ -80,14 +80,34 @@ export default function HomePage() {
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
                             href={`/products/${encodeURIComponent("Filtro")}`}
                         />
-                        {/* <CategoryCard 
-                            name="Acessórios" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png"
-                            href={`/products/${encodeURIComponent("Acessorio")}`}
-                        /> */}
 
-                        <ProductCard name="Produto Teste" imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/acessorios_galoes/CapaAcessorios.png" />
+                        <CategoryCard 
+                            name="Suporte Quadrado" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                            href={`/products/${encodeURIComponent("Suporte Quadrado")}`}
+                        />
+
+                        <CategoryCard 
+                            name="Filtros" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                            href={`/products/${encodeURIComponent("Suporte Redondo")}`}
+                        />
+
+                        <CategoryCard 
+                            name="Filtros" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                            href={`/products/${encodeURIComponent("Torneira")}`}
+                        />
+
+                        <CategoryCard 
+                            name="Filtros" 
+                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
+                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                            href={`/products/${encodeURIComponent("Galões")}`}
+                        />
                     </div>
                 </section>
 

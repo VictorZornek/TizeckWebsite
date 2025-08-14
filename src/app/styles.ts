@@ -9,7 +9,7 @@ const arrowBounce = keyframes`
 
 export const Container = styled.div`
     width: 39.5rem;
-    height: 100vh;
+    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -143,14 +143,13 @@ export const Container = styled.div`
         }
 
         .categories {
-            height: 80rem;
 
             margin: 0 auto;
             text-align: center;
 
             background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
 
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.5rem 8rem;
 
             .wrapper-title-text {
                 padding: 3rem 3rem 0;
