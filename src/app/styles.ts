@@ -8,7 +8,7 @@ const arrowBounce = keyframes`
 `;
 
 export const Container = styled.div`
-    width: 39.5rem;
+    width: 100%;
     min-height: 100vh;
 
     display: flex;
