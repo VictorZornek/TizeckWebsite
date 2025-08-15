@@ -5,6 +5,7 @@ import { listProductsByCategory } from "@/database/services/productsService"
 import { Header } from "@/components/Header"
 import { ProductCard } from "@/components/ProductCard"
 import { ImageSlider } from "@/components/ImageSlider"
+import { SpecsList } from "@/components/SpecsList"
 
 type PageProps = { 
     params: Promise<{ 
@@ -22,6 +23,13 @@ export default async function ProductsPage({ params }: PageProps) {
         { src: 'https://picsum.photos/seed/a/1200/800', alt: 'Slide A' },
         { src: 'https://picsum.photos/seed/b/1200/800', alt: 'Slide B' },
         { src: 'https://picsum.photos/seed/c/1200/800', alt: 'Slide C' },
+    ];
+
+    const specs = [
+        { label: 'Material',   value: 'Aço inoxidável' },
+        { label: 'Dimensões',  value: '25 x 15 x 30 cm' },
+        { label: 'Peso',       value: '1.2 kg' },
+        { label: 'Acabamento', value: 'Polido'}
     ];
 
     return(
@@ -43,6 +51,8 @@ export default async function ProductsPage({ params }: PageProps) {
                 </div>
 
                 <ImageSlider items={imgs} autoPlay interval={4500} height={300} />
+
+                <SpecsList items={specs} />
             </main>
         </Container>
     )

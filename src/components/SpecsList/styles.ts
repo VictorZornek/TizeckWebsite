@@ -4,7 +4,6 @@ export const Container = styled.div`
     width: 100%;
 
     border-radius: 1.2rem;
-    background: linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%);
 
     box-shadow: 0 2px 12px rgba(16, 24, 40, 0.04);
     padding: 2rem 0 .8rem;
@@ -26,17 +25,17 @@ export const List = styled.dl`
 `;
 
 export const Row = styled.div`
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 1.6rem;
 
     padding: 1.4rem 0;
 
-    border-top: 1px solid ${({ theme }) => theme.COLORS.GRAY_400};
+    border-top: .5px solid ${({ theme }) => theme.COLORS.GRAY_300};
 
     &:first-of-type {
-        border-top: 1px solid ${({ theme }) => theme.COLORS.GRAY_400};
+        border-top: none;
     }
 
     @media (max-width: 480px) {
