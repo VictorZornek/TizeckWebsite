@@ -43,16 +43,12 @@ export const Slide = styled.div`
 `;
 
 export const Image = styled.img`
-    max-width: min(76%, 78rem);
-    max-height: 80%;
+    max-width: min(90%, 100rem);
+    max-height: 100%;
 
     object-fit: contain;
-    background: ${({ theme }) => theme.COLORS.WHITE_600};
 
-    border: 3px solid ${({ theme }) => theme.COLORS.BLUE};
     border-radius: 1.4rem;
-
-    padding: 1.8rem;
 
     box-shadow: 0 6px 20px rgba(31, 73, 215, 0.12);
 `;
@@ -75,6 +71,8 @@ export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
 
     display: grid;
     place-items: center;
+
+    z-index: 1;
 
     cursor: pointer;
 
