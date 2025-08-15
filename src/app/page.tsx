@@ -82,28 +82,28 @@ export default function HomePage() {
                         />
 
                         <CategoryCard 
-                            name="Suporte Quadrado" 
+                            name="Suportes Quadrados" 
                             description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
                             href={`/products/${encodeURIComponent("Suporte Quadrado")}`}
                         />
 
                         <CategoryCard 
-                            name="Filtros" 
+                            name="Suportes Redondos" 
                             description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
                             href={`/products/${encodeURIComponent("Suporte Redondo")}`}
                         />
 
                         <CategoryCard 
-                            name="Filtros" 
+                            name="Torneiras" 
                             description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
                             href={`/products/${encodeURIComponent("Torneira")}`}
                         />
 
                         <CategoryCard 
-                            name="Filtros" 
+                            name="Galões" 
                             description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
                             imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
                             href={`/products/${encodeURIComponent("Galões")}`}

@@ -8,7 +8,7 @@ import { MdBusiness } from 'react-icons/md';
 
 import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, MobileMenu } from "./styles";
 
-import logoTizeck from '@/assets/LogoTizeck.png';
+import logoTizeck from '@/assets/Group 12.svg';
 
 export function Header(){
     const [menuOpen, setMenuOpen] = useState(false)
