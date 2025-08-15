@@ -4,8 +4,7 @@ const theme: DefaultTheme = {
     COLORS: {
         BLACK_900: "#000000",
         BLACK_700: "#1E1E1E",
-        
-
+    
         WHITE_900: "#FFFFFF",
         WHITE_600: "#EEEEEE",
 
