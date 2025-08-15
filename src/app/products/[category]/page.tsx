@@ -6,6 +6,7 @@ import { Header } from "@/components/Header"
 import { ProductCard } from "@/components/ProductCard"
 import { ImageSlider } from "@/components/ImageSlider"
 import { SpecsList } from "@/components/SpecsList"
+import { BudgetButton } from "@/components/BudgetButton"
 
 type PageProps = { 
     params: Promise<{ 
@@ -53,6 +54,8 @@ export default async function ProductsPage({ params }: PageProps) {
                 <ImageSlider items={imgs} autoPlay interval={4500} height={300} />
 
                 <SpecsList items={specs} />
+
+                <BudgetButton />
             </main>
         </Container>
     )
