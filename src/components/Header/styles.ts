@@ -22,7 +22,7 @@ export const Container = styled.header`
 
     > img {
         height: calc(var(--header-h) - 1.2rem);
-        width: auto;
+        width: 10rem;
         display: block;
     }
 `;

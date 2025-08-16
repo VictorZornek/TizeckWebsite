@@ -39,17 +39,17 @@ export default async function ProductDetailsPage({ params }: PageProps) {
         return notFound();
     }
 
-    const images: { src: string; alt: string }[] = productResponse.images?.length 
-        ? productResponse.images.map((src: string, i: number) => ({ src, alt: `${productResponse.name} - ${i + 1}` }))
-        : [{ src: "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png", alt: productResponse.name }];
+    // const images: { src: string; alt: string }[] = productResponse.images?.length 
+    //     ? productResponse.images.map((src: string, i: number) => ({ src, alt: `${productResponse.name} - ${i + 1}` }))
+    //     : [{ src: "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png", alt: productResponse.name }];
 
-    const specs = productResponse.specs?.length
-        ? productResponse.specs
-        : [
-            { label: "Material", value: "—" },
-            { label: "Dimensões", value: "—" },
-            { label: "Peso", value: "—" },
-        ];
+    // const specs = productResponse.specs?.length
+    //     ? productResponse.specs
+    //     : [
+    //         { label: "Material", value: "—" },
+    //         { label: "Dimensões", value: "—" },
+    //         { label: "Peso", value: "—" },
+    //     ];
 
     return (
         <Container>

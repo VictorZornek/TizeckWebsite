@@ -11,6 +11,11 @@ type PageProps = {
     }>
 };
 
+type product = {
+    _id: string;
+    name: string;
+}
+
 export default async function ProductsPage({ params }: PageProps) {
     const { category } = await params;
     const categoryName = decodeURIComponent(category);
@@ -25,7 +30,7 @@ export default async function ProductsPage({ params }: PageProps) {
                 <h1>Produtos de {categoryName}</h1>
                 
                 <div className="wrapper-products">
-                    {products.map((product: any) => (
+                    {products.map((product: product) => (
                         <div className="product-row" key={String(product._id)}>
                             <ProductCard 
                                 name={product.name}

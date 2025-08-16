@@ -1,8 +1,6 @@
 'use client'
 
-import { FaWhatsapp } from "react-icons/fa";
-import { GrCatalog } from "react-icons/gr";
-import { MdBusiness, MdPhone, MdPlace, MdMail } from 'react-icons/md';
+import { MdPhone, MdPlace, MdMail } from 'react-icons/md';
 
 import { Container, Counter, WorktimeWrapper } from "./styles";
 
@@ -12,7 +10,6 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { InformationCard } from "@/components/InformationCard";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
-import { ProductCard } from "@/components/ProductCard";
 
 export default function HomePage() {
     return(

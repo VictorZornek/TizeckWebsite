@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 import { FaHome, FaBoxOpen } from 'react-icons/fa';
 import { MdBusiness } from 'react-icons/md';
@@ -29,7 +30,7 @@ export function Header(){
 
     return (
         <Container>
-            <img src={logoTizeck.src} alt="Logo Tizeck" />
+            <Image src={logoTizeck} alt="Logo Tizeck" width={140} height={40} priority />
 
             <Nav>
                 {links.map(link => (
