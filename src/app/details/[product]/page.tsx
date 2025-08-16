@@ -44,17 +44,19 @@ export default async function ProductDetailsPage({ params }: PageProps) {
             <main>
                 <h1>{productResponse.name}</h1>
 
-                <h3>{productResponse.description ?? "Sem descrição cadastrada"}</h3>
+                <p>{productResponse.description ?? "Sem descrição cadastrada"}</p>
 
                 
                 <div>
                     <ImageSlider items={images} />
                     
                     <SpecsList items={specs} />
-
-                    <BudgetButton />
                 </div>
             </main>
+
+            <footer>
+                <BudgetButton />
+            </footer>
         </Container>
     )
 }
