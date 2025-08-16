@@ -19,7 +19,7 @@ export const Container = styled.div`
 
     > main {
         width: 100%;
-        padding: 0 1.6rem;
+        padding: 0 3rem;
         margin: 0 auto;
 
         > h1 {

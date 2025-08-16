@@ -19,7 +19,7 @@ export const Container = styled.div`
     > main {
         width: 100%;
         padding: 0 1.6rem;
-        margin: 0 auto;
+        margin: 0 auto 10rem;
 
         > h1 {
             font-size: 2.2rem;
@@ -37,6 +37,14 @@ export const Container = styled.div`
             text-align: center;
 
             margin-bottom: 3rem;
+        }
+
+        .wrapper-images-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+
+            margin-top: 4rem;
         }
 
     }

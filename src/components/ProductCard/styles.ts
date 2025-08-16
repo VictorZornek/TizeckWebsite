@@ -1,9 +1,18 @@
 import styled from "styled-components";
+import Link from "next/link";
+
+export const CardLink = styled(Link)`
+    display: block;
+    width: 100%;
+
+    text-decoration: none;
+    color: inherit;
+`;
 
 export const Container = styled.div`
     position: relative;
 
-    width: 90%;
+    width: 100%;
     height: 8rem;
 
     display: flex;
@@ -40,7 +49,7 @@ export const ImageWrapper = styled.img`
 export const ProductName = styled.h5`
     position: absolute;
     top: .8rem;
-    left: 60%;
+    left: 65%;
     transform: translateX(-50%);
     width: calc(100% - 1.6rem);
     text-align: center;
@@ -54,7 +63,7 @@ export const ProductName = styled.h5`
     color: ${({ theme }) => theme.COLORS.BLACK_900};
 `;
 
-export const Button = styled.a`
+export const ButtonText = styled.span`
     position: absolute;
     right: .8rem;
     bottom: .8rem;
@@ -67,6 +76,8 @@ export const Button = styled.a`
     border: none;
 
     color: ${({ theme }) => theme.COLORS.BLUE};
+
+    cursor: pointer;
 
     &:hover {
         text-decoration: underline;

@@ -1,9 +1,8 @@
 'use client'
 
 import React from "react";
-import Link from "next/link";
 
-import { Container, ImageWrapper, ProductName, Button } from "./styles";
+import { Container, CardLink, ImageWrapper, ProductName, ButtonText } from "./styles";
 
 
 export interface ProductCardProps {
@@ -14,13 +13,13 @@ export interface ProductCardProps {
 
 export function ProductCard({ imageUrl, name, href }: ProductCardProps) {
     return (
-        <Link href={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-            <Container>
+        <CardLink href={href} >
+            <Container >
                 <ImageWrapper src={imageUrl} alt={name} />
                 <ProductName>{name}</ProductName>
                 
-                <Button>Ver mais</Button>
+                <ButtonText>Ver mais</ButtonText>
             </Container>
-        </Link>
+        </CardLink>
     )
 }

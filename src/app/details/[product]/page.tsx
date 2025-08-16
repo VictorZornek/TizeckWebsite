@@ -15,11 +15,25 @@ type PageProps = {
     }>
 }
 
+
 export default async function ProductDetailsPage({ params }: PageProps) {
     const { product } = await params;
     const productName = decodeURIComponent(product);
 
     const productResponse = await getProductByName(productName);
+
+    const imgs = [
+        { src: 'https://picsum.photos/seed/a/1200/800', alt: 'Slide A' },
+        { src: 'https://picsum.photos/seed/b/1200/800', alt: 'Slide B' },
+        { src: 'https://picsum.photos/seed/c/1200/800', alt: 'Slide C' },
+    ];
+
+    const specsMock = [
+        { label: 'Material',   value: 'Aço inoxidável' },
+        { label: 'Dimensões',  value: '25 x 15 x 30 cm' },
+        { label: 'Peso',       value: '1.2 kg' },
+        { label: 'Acabamento', value: 'Polido'}
+    ];
 
     if (!product) {
         return notFound();
@@ -47,10 +61,10 @@ export default async function ProductDetailsPage({ params }: PageProps) {
                 <p>{productResponse.description ?? "Sem descrição cadastrada"}</p>
 
                 
-                <div>
-                    <ImageSlider items={images} />
+                <div className="wrapper-images-specs">
+                    <ImageSlider items={imgs} height={300} />
                     
-                    <SpecsList items={specs} />
+                    <SpecsList items={specsMock} />
                 </div>
             </main>
 
