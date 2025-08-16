@@ -18,3 +18,11 @@ export async function listProductsByCategory(category: string) {
     return products;
 }
 
+export async function getProductByName(name: string) {
+    await connectMongo();
+
+    const product = await Products.findOne({ name });
+
+    return product;
+}
+

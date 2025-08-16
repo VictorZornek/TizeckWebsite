@@ -46,16 +46,11 @@ export default async function ProductsPage({ params }: PageProps) {
                             <ProductCard 
                                 name={product.name}
                                 imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
+                                href={`/details/${encodeURIComponent(`${product.name}`)}`}
                             />
                         </div>
                     ))}
                 </div>
-
-                <ImageSlider items={imgs} autoPlay interval={4500} height={300} />
-
-                <SpecsList items={specs} />
-
-                <BudgetButton />
             </main>
         </Container>
     )
