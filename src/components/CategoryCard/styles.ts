@@ -1,14 +1,16 @@
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.div`
-    width: 30rem;
-    height: 22.5rem;
+    width: 100%;
+    max-width: 30rem;
+    max-height: 22.5rem;
 
     display: flex;
     flex-direction: column;
     gap: 2rem;
 
-    padding: 1rem 1.5rem 2rem;
+    padding: 1rem 0 2rem;
 
     border-radius: .8rem;
 
@@ -19,6 +21,11 @@ export const Container = styled.div`
     &:hover {
         transform: translateY(-0.8rem);
         box-shadow: 0 1.6rem 3.2rem rgba(0, 0, 0, 1);
+    }
+
+    ${up("lg")} {
+        max-width: 32rem;
+        max-height: 27rem;
     }
 `;
 
@@ -36,14 +43,13 @@ export const ImageWrapper = styled.img`
 `;
 
 export const WrapperText = styled.div`
-    width: 30rem;
+    width: 100%;
 
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
     padding: 1rem 2rem;
-    margin-left: -1.5rem;
 
     border-radius: 0 0 .8rem .8rem;
 
