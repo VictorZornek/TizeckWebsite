@@ -1,6 +1,7 @@
 'use client';
 
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
@@ -40,11 +41,16 @@ export const Container = styled.div`
         }
 
         .wrapper-images-specs {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 3rem;
 
             margin-top: 4rem;
+
+            ${up("lg")} {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
         }
 
     }

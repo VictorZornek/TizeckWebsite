@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { Container } from "./styles";
+import { Container as PageContainer } from "./styles";
+import { Container } from "@/components/Container";
 
 import { getProductByName } from "@/database/services/productsService"; 
 
@@ -52,25 +53,26 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     //     ];
 
     return (
-        <Container>
+        <PageContainer>
             <Header />
 
             <main>
-                <h1>{productResponse.name}</h1>
+                <Container>
+                    <h1>{productResponse.name}</h1>
 
-                <p>{productResponse.description ?? "Sem descrição cadastrada"}</p>
+                    <p>{productResponse.description ?? "Sem descrição cadastrada"}</p>
 
-                
-                <div className="wrapper-images-specs">
-                    <ImageSlider items={imgs} height={300} />
-                    
-                    <SpecsList items={specsMock} />
-                </div>
+                    <div className="wrapper-images-specs">
+                        <ImageSlider items={imgs} height={300} />
+
+                        <SpecsList items={specsMock} />
+                    </div>
+                </Container>
             </main>
 
             <footer>
                 <BudgetButton />
             </footer>
-        </Container>
+        </PageContainer>
     )
 }

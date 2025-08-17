@@ -21,5 +21,13 @@ declare module 'styled-components' {
       SEMI_BOLD: number
       BOLD: number
     }
+    BREAKPOINTS: {
+      xs: number
+      sm: number
+      md: number
+      lg: number
+      xl: number
+      xxl: number
+    }
   }
 }

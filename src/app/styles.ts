@@ -1,6 +1,7 @@
 'use client'
 
 import styled, { keyframes } from "styled-components";
+import { up } from "@/styles/media";
 
 const arrowBounce = keyframes`
     0%, 100% { transform: translateY(0);   opacity: .9; }
@@ -56,7 +57,7 @@ export const Container = styled.div`
                 position: absolute;
                 left: 50%;
                 bottom: 2.5rem;
-                
+
                 transform: translateX(-50%);
 
                 width: 4.4rem;
@@ -77,6 +78,26 @@ export const Container = styled.div`
                 fill: none;
                 animation: ${arrowBounce} 1.2s ease-in-out infinite;
                 will-change: transform;
+            }
+
+            ${up("lg")} {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                text-align: left;
+
+                .wrapper-text {
+                    padding: 0 3rem 0 8rem;
+                    margin-bottom: 0;
+                }
+
+                .wrapper-buttons {
+                    flex-direction: row;
+                    justify-content: center;
+                    gap: 2rem;
+                }
+
+                .arrow { display: none; }
             }
         }
 
@@ -130,14 +151,25 @@ export const Container = styled.div`
 
             .wrapper-counters-image {
                 margin-top: 2rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
 
                 img {
-                    width: 30rem;
-                    height: 15rem;
+                    width: 100%;
+                    max-width: 30rem;
+                    height: auto;
 
                     border-radius: .8rem;
 
                     margin-top: 1rem;
+                }
+
+                ${up("lg")} {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    align-items: center;
                 }
             }
         }
@@ -173,16 +205,17 @@ export const Container = styled.div`
             }
 
             .wrapper-categories {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 7rem;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1.6rem;
+
+                ${up("md")} { grid-template-columns: repeat(2, 1fr); }
+                ${up("lg")} { grid-template-columns: repeat(3, 1fr); }
+                ${up("xl")} { grid-template-columns: repeat(4, 1fr); }
             }
         }
 
         .contact {
-            height: 78rem;
-
             margin: 0 auto;
 
             background-color: ${({ theme }) => theme.COLORS.DARK_BLUE};
@@ -215,7 +248,7 @@ export const Container = styled.div`
                 gap: 2rem;
 
                 margin-bottom: 4rem;
-                
+
                 h3 {
                     margin-bottom: 1rem;
                 }
@@ -225,6 +258,21 @@ export const Container = styled.div`
                 display: flex;
                 flex-direction: column;
                 gap: 2rem;
+            }
+
+            ${up("lg")} {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 4rem;
+
+                .wrapper-text {
+                    grid-column: 1 / -1;
+                    margin: 3rem 0 6rem;
+                }
+
+                .contact-info {
+                    margin-bottom: 0;
+                }
             }
         }
     }
