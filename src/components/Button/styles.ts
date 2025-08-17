@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.button<{ $isdark: boolean }>`
     display: flex;
@@ -6,7 +7,8 @@ export const Container = styled.button<{ $isdark: boolean }>`
     align-items: center;
     gap: 1rem;
 
-    width: 34rem;
+    width: 100%;
+    max-width: 38rem;
     height: 3.8rem;
 
     margin: 0 auto;
@@ -23,5 +25,10 @@ export const Container = styled.button<{ $isdark: boolean }>`
 
     &:hover {
         background-color: ${({ theme, $isdark }) => $isdark ? "none" : theme.COLORS.GRAY_300};
+    }
+
+    ${up("lg")} {
+        height: 4.4rem;
+        padding: 1.2rem 2.4rem;
     }
 `;
