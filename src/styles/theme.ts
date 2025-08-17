@@ -24,6 +24,15 @@ const theme: DefaultTheme = {
         MEDIUM: 500,
         SEMI_BOLD: 600,
         BOLD: 800
+    },
+
+    BREAKPOINTS: {
+        xs: 320,
+        sm: 375,
+        md: 768,
+        lg: 1024,
+        xl: 1280,
+        xxl: 1440
     }
 }
 

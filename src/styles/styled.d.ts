@@ -15,11 +15,21 @@ declare module 'styled-components' {
       DARK_BLUE: string
       GREEN: string
     }
+
     FONTS_WEIGHT: {
       REGULAR: number
       MEDIUM: number
       SEMI_BOLD: number
       BOLD: number
+    }
+
+    BREAKPOINTS: {
+      xs: number
+      sm: number
+      md: number
+      lg: number
+      xl: number
+      xxl: number
     }
   }
 }
