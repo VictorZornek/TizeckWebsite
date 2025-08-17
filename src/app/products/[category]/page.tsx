@@ -1,4 +1,5 @@
-import { Container } from "./styles";
+import { Container as PageContainer } from "./styles";
+import { Container } from "@/components/Container";
 
 import { listProductsByCategory } from "@/database/services/productsService";
 
@@ -23,25 +24,27 @@ export default async function ProductsPage({ params }: PageProps) {
     const products = await listProductsByCategory(categoryName);
 
     return(
-        <Container>
+        <PageContainer>
             <Header />
 
             <main>
-                <h1>Produtos de {categoryName}</h1>
-                
-                <div className="wrapper-products">
-                    {products.map((product: product) => (
-                        <div className="product-row" key={String(product._id)}>
-                            <ProductCard 
-                                name={product.name}
-                                // imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
-                                imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                                href={`/details/${encodeURIComponent(`${product.name}`)}`}
-                            />
-                        </div>
-                    ))}
-                </div>
+                <Container>
+                    <h1>Produtos de {categoryName}</h1>
+
+                    <div className="wrapper-products">
+                        {products.map((product: product) => (
+                            <div className="product-row" key={String(product._id)}>
+                                <ProductCard
+                                    name={product.name}
+                                    // imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
+                                    imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                                    href={`/details/${encodeURIComponent(`${product.name}`)}`}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </Container>
             </main>
-        </Container>
+        </PageContainer>
     )
 }

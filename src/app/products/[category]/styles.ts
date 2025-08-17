@@ -1,6 +1,7 @@
 "use client"
 
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
@@ -34,9 +35,8 @@ export const Container = styled.div`
         .wrapper-products {
             width: 100%;
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: .5rem;
 
             margin: 0 auto;
@@ -46,19 +46,21 @@ export const Container = styled.div`
                 display: flex;
                 justify-content: center;
             }
+
+            ${up("md")} {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            ${up("lg")} {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
 
     }
 
-    @media (min-width: 768px) {
+    ${up("md")} {
         max-width: 200rem;
-
-        > main {
-            .wrapper-products {
-                display: flex;
-                gap: 10rem;
-            }
-        }
     }
 `;

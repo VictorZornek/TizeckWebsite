@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.header`
     --header-h: 5.6rem;
@@ -31,7 +32,7 @@ export const Nav = styled.nav`
     display: none;
     gap: 2rem;
 
-    @media (min-width: 768px) {
+    ${up("lg")} {
         display: flex;
     }
 `;
@@ -110,7 +111,7 @@ export const MenuButton = styled.button`
     width: 4rem;
     height: 4rem;
 
-    @media (min-width: 768px) {
+    ${up("lg")} {
         display: none;
     }
 
@@ -163,7 +164,7 @@ export const MobileMenu = styled.div<{ open: boolean }>`
         padding: .3rem 1rem;  /* afina ainda mais */
     }
 
-    @media (min-width: 768px) {
+    ${up("lg")} {
         display: none;
     }
 `;

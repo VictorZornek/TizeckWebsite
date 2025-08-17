@@ -1,8 +1,10 @@
 import styled from "styled-components";
+import { up } from "@/styles/media";
 
 export const Container = styled.div`
-    width: 30rem;
-    height: 22.5rem;
+    width: 100%;
+    max-width: 30rem;
+    min-height: 22.5rem;
 
     display: flex;
     flex-direction: column;
@@ -20,11 +22,16 @@ export const Container = styled.div`
         transform: translateY(-0.8rem);
         box-shadow: 0 1.6rem 3.2rem rgba(0, 0, 0, 1);
     }
+
+    ${up("lg")} {
+        max-width: 32rem;
+    }
 `;
 
 export const ImageWrapper = styled.img`
-    width: 14rem;
-    height: 9rem;
+    width: 100%;
+    max-width: 14rem;
+    height: auto;
 
     object-fit: cover;
 
@@ -36,7 +43,7 @@ export const ImageWrapper = styled.img`
 `;
 
 export const WrapperText = styled.div`
-    width: 30rem;
+    width: 100%;
 
     display: flex;
     flex-direction: column;

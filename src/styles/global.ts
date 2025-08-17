@@ -25,8 +25,17 @@ export default createGlobalStyle`
 
     body, input, button, textarea {
         font-family: var(--font-inter);
-        font-size: 16px;
+        font-size: 1.6rem;
         outline: none;
+    }
+
+    h1 {
+        font-size: clamp(2rem, 1.2rem + 2vw, 3.2rem);
+    }
+
+    p {
+        font-size: clamp(1.4rem, 1rem + 0.5vw, 1.8rem);
+        line-height: 1.5;
     }
 
     a {
