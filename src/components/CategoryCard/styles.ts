@@ -4,19 +4,21 @@ import { up } from "@/styles/media";
 export const Container = styled.div`
     width: 100%;
     max-width: 30rem;
-    max-height: 22.5rem;
+    height: 26.75rem;
 
     display: flex;
     flex-direction: column;
     gap: 2rem;
 
-    padding: 1rem 0 2rem;
+    padding-top: 1rem;
 
     border-radius: .8rem;
 
     background-color: rgba(255, 255, 255, 0.07);
 
     transition: transform 0.2s, box-shadow 0.2s;
+
+    overflow: hidden;
 
     &:hover {
         transform: translateY(-0.8rem);
@@ -25,7 +27,6 @@ export const Container = styled.div`
 
     ${up("lg")} {
         max-width: 32rem;
-        max-height: 27rem;
     }
 `;
 
@@ -68,9 +69,14 @@ export const Description = styled.p`
     font-size: 1.4rem;
     color: ${({ theme }) => theme.COLORS.GRAY_400};
     text-align: justify;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;    /* ajuste para 3–4 linhas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 `;
 
-export const Button = styled.a`
+export const Button = styled.button`
     background: none;
     border: none;
 

@@ -50,15 +50,17 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-counters-image">
-                        <Counter>
-                            <span>+20</span>
-                            <p>Anos de Experiência</p>
-                        </Counter>
+                        <div className='wrapper-counters'>
+                            <Counter>
+                                <span>+20</span>
+                                <p>Anos de Experiência</p>
+                            </Counter>
 
-                        <Counter>
-                            <span>+500</span>
-                            <p>Clientes Satisfeitos</p>
-                        </Counter>
+                            <Counter>
+                                <span>+500</span>
+                                <p>Clientes Satisfeitos</p>
+                            </Counter>
+                        </div>
 
                         <img src={tizeckFront.src} alt="Frente da Tizeck" />
                     </div>

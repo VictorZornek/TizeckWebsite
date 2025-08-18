@@ -1,6 +1,7 @@
 'use client'
 
 import styled, { keyframes } from "styled-components";
+import { up } from "@/styles/media";
 
 const arrowBounce = keyframes`
     0%, 100% { transform: translateY(0);   opacity: .9; }
@@ -50,6 +51,9 @@ export const Container = styled.div`
                 display: flex;
                 flex-direction: column;
                 gap: 1rem;
+
+                padding: 0 3rem;
+                
             }
 
             .arrow {
@@ -78,10 +82,17 @@ export const Container = styled.div`
                 animation: ${arrowBounce} 1.2s ease-in-out infinite;
                 will-change: transform;
             }
+
+            ${up("lg")} {
+                .wrapper-buttons {
+                    justify-content: center;
+                    gap: 2rem;
+                }
+            }
         }
 
         .about {
-            height: 65rem;
+            height: 70rem;
 
             margin: 0 auto;
             text-align: center;
@@ -131,19 +142,45 @@ export const Container = styled.div`
             .wrapper-counters-image {
                 margin-top: 2rem;
 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+                
                 img {
-                    width: 30rem;
+                    width: 100%;
+                    max-width: 30rem;
                     height: 15rem;
 
                     border-radius: .8rem;
 
                     margin-top: 1rem;
                 }
+
+                .wrapper-counters {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2rem;
+                }
+
+                ${up("lg")} {
+                    .wrapper-counters {
+                        flex-direction: row;
+                        gap: 4rem;
+                    }
+                }
+            }
+
+            ${up('md')} {
+                height: 65rem;
+            }
+
+            ${up('lg')} {
+                height: 55rem;
             }
         }
 
         .categories {
-
             margin: 0 auto;
             text-align: center;
 
@@ -173,10 +210,39 @@ export const Container = styled.div`
             }
 
             .wrapper-categories {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 7rem;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 3.5rem;
+
+                justify-items: center;
+
+                ${up("md")} { 
+                    grid-template-columns: repeat(2, 1fr); 
+
+                    .wrapper-categories > *:nth-last-child(1):nth-child(2n + 1) {
+                        grid-column: 1 / span 2;
+                    }
+                }
+
+                ${up("lg")} { 
+                    grid-template-columns: repeat(3, 1fr); 
+                
+                    .wrapper-categories > *:nth-last-child(1):nth-child(3n + 1) {
+                        grid-column: 2;
+                    }
+                }
+
+                ${up("xl")} { 
+                    grid-template-columns: repeat(4, 1fr); 
+                
+                    .wrapper-categories > *:nth-last-child(1):nth-child(4n + 1) {
+                        grid-column: 2 / span 2;
+                    }
+
+                    .wrapper-categories > *:nth-last-child(2):nth-child(4n + 1) {
+                        grid-column: 2;
+                    }
+                }
             }
         }
 
