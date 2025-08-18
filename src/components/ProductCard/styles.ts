@@ -49,7 +49,7 @@ export const ImageWrapper = styled.img`
 export const ProductName = styled.h5`
     position: absolute;
     top: .8rem;
-    left: 65%;
+    left: calc( (13rem + .5rem) + ( (100% - (13rem + .5rem) - .8rem) / 2 ) );
     transform: translateX(-50%);
     width: calc(100% - 1.6rem);
     text-align: center;
