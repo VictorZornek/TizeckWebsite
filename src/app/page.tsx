@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image';
 import { MdPhone, MdPlace, MdMail } from 'react-icons/md';
 
 import { Container, Counter, WorktimeWrapper } from "./styles";
@@ -62,7 +63,7 @@ export default function HomePage() {
                             </Counter>
                         </div>
 
-                        <img src={tizeckFront.src} alt="Frente da Tizeck" />
+                        <Image src={tizeckFront} alt="Frente da Tizeck" />
                     </div>
                 </section>
 
