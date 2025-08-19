@@ -4,6 +4,8 @@ export const Container = styled.div`
     position: relative;
     width: 100%;
 
+    margin: 0 auto;
+
     border-radius: 1.2rem;
 
     background: ${({ theme }) => theme.COLORS.GRAY_300};
@@ -15,7 +17,7 @@ export const Container = styled.div`
 export const Viewport = styled.div`
     position: relative;
 
-    height: calc(100% - 4.4rem); /* deixa espaço para a barra inferior */
+    height: calc(100% - 4.5rem); /* deixa espaço para a barra inferior */
     padding: 0 6.4rem;           /* espaço para as setas laterais */
 
     display: flex;
@@ -43,7 +45,7 @@ export const Slide = styled.div`
 `;
 
 export const Image = styled.img`
-    max-width: min(90%, 100rem);
+    max-width: min(90%, 30rem);
     max-height: 100%;
 
     object-fit: contain;
