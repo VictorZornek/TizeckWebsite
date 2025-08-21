@@ -26,8 +26,8 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-buttons">
-                        <Button title="Conheça Nossos Produtos"/>
-                        <Button title="Sobre a Empresa" isDark />
+                        <Button title="Conheça Nossos Produtos" href="#categories" />
+                        <Button title="Sobre a Empresa" isDark href="#about" />
                     </div>
 
                     <span className="arrow">
@@ -38,7 +38,7 @@ export default function HomePage() {
                     </span>
                 </section>
 
-                <section className="about">
+                <section className="about" id="about">
                     <div className="wrapper-title-text">
                         <h2>Sobre a Tizeck</h2>
                         <p>Uma trajetória de sucesso construída com dedicação, qualidade e compromisso com nossos clientes e parceiros</p>
@@ -67,7 +67,7 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                <section className="categories">
+                <section className="categories" id="categories">
                     <div className="wrapper-title-text">
                         <h2>Nossas Categorias de Produtos</h2>
                         <p>Conheça nossa linha completa de produtos desenvolvidos com tecnologia e qualidade superior</p>

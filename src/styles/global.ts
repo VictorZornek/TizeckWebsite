@@ -16,6 +16,11 @@ export default createGlobalStyle`
         scroll-behavior: smooth;
     }
 
+    // compensa o header fixo
+    [id] { 
+        scroll-margin-top: 4rem; 
+    }
+
     body {
         background: ${({ theme }) => theme.COLORS.WHITE_900};
         color: ${({ theme }) => theme.COLORS.WHITE_900};

@@ -46,8 +46,11 @@ export function Header(){
             label: 'Produtos', 
             icon: <FaBoxOpen />,
             categories: [
-                { href: '#products-suportes', label: 'Suportes' },
-                { href: '#products-acessorios', label: 'Acessórios' }
+                { href: '#filtros', label: 'Filtros' },
+                { href: '#suportes-quadrados', label: 'Suportes Quadrados' },
+                { href: '#suportes-redondos', label: 'Suportes Redondos' },
+                { href: '#torneiras', label: 'Torneiras' },
+                { href: '#galoes', label: 'Galões' },
             ],
         },
         { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
