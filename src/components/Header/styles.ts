@@ -66,6 +66,20 @@ export const NavLink = styled.a`
     &:hover {
         color: ${({ theme }) => theme.COLORS.BLUE};
     }
+
+    /* variações para o drawer */
+    &.drawer-item {
+        width: 100%;
+        padding: 1.2rem 1.6rem;
+        justify-content: flex-start;
+        font-size: 1.6rem;
+    }
+    &.drawer-subitem {
+        width: 100%;
+        padding: 0.8rem 2.8rem;
+        font-size: 1.5rem;
+        color: ${({ theme }) => theme.COLORS.BLACK_900};
+    }
   
 `;
 
@@ -122,49 +136,101 @@ export const MenuButton = styled.button`
     }
 `;
 
-export const MobileMenu = styled.div<{ open: boolean }>`
-    position: absolute;
-    top: calc(100% + 0.25rem);
-    right: 1.5rem;
-    width: max-content;
-    min-width: 160px;
-    
-    display: ${({ open }) => (open ? 'flex' : 'none')};
+export const Backdrop = styled.div<{ open: boolean }>`
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.35);
+    opacity: ${({ open }) => open ? 1 : 0};
+    pointer-events: ${({ open }) => open ? 'auto' : 'none'};
+    transition: opacity .25s ease;
+    z-index: 1099;
+
+    ${up('lg')} { 
+        display: none; 
+    }
+`;
+
+export const Sidebar = styled.aside<{ open: boolean }>`
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    height: 100dvh;
+    width: 80%;
+    max-width: 34rem;
+
+    background: ${({ theme }) => theme.COLORS.WHITE_900};
+    border-left: 1px solid ${({ theme }) => theme.COLORS.WHITE_600};
+    box-shadow: -8px 0 2.4rem rgba(0,0,0,.12);
+
+    transform: translateX(${({ open }) => open ? '0' : '100%'});
+    transition: transform .3s ease;
+
+    display: flex;
     flex-direction: column;
 
-    font-size: 1.4rem;
+    z-index: 1100;
 
-    border: 1px solid ${({ theme }) => theme.COLORS.WHITE_600};
-    border-radius: 0.5rem;
-
-    background-color: rgba(214, 214, 214, 0.8);
-
-    overflow: hidden;
-    z-index: 1;
-
-    a {
-        padding: 0.75rem 1rem;
+    ${up('lg')} { 
+        display: none; 
     }
+`;
 
-    .wrapper-categories {
-        padding: 0.75rem 2rem;
+export const DrawerHeader = styled.div`
+    height: var(--header-h);
+
+    padding: 0 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid ${({ theme }) => theme.COLORS.WHITE_600};
+`;
+
+export const CloseButton = styled.button`
+    all: unset;
+    cursor: pointer;
+
+    display: grid;
+    place-items: center;
+
+    width: 3.2rem;
+    height: 3.2rem;
+
+    svg path { 
+        fill: ${({ theme }) => theme.COLORS.GRAY_700}; 
     }
+`;
 
-    .wrapper-categories-labels {
-        display: flex;
-        flex-direction: column;
+export const DrawerNav = styled.nav`
+    display: flex;
+    flex-direction: column;
 
-        padding-left: 1.5rem;
-        padding: 0 2rem 0 0.75rem;
+    padding: .4rem 0 1.6rem;
 
-        margin-top: 1rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .caret {
+        margin-left: auto;
+        transition: transform .2s ease;
     }
-
-    .wrapper-categories-labels a {
-        padding: .3rem 1rem;  /* afina ainda mais */
+    .caret.open { 
+        transform: rotate(180deg); 
     }
+`;
 
-    ${up("lg")} {
-        display: none;
-    }
+
+export const DrawerSectionTitle = styled.p`
+    font-family: var(--font-inter);
+    font-size: 1.2rem;
+    letter-spacing: .06rem;
+    text-transform: uppercase;
+
+    color: ${({ theme }) => theme.COLORS.BLACK_700};
+    
+    padding: .4rem 1.6rem;
+    margin-top: .6rem;
 `;

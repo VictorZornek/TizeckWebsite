@@ -1,19 +1,44 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import { FaHome, FaBoxOpen } from 'react-icons/fa';
 import { MdBusiness } from 'react-icons/md';
 
-import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, MobileMenu } from "./styles";
+import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, Backdrop, Sidebar, DrawerHeader, CloseButton, DrawerNav, DrawerSectionTitle } from "./styles";
 
 import logoTizeck from '@/assets/Group 12.svg';
 
 export function Header(){
     const [menuOpen, setMenuOpen] = useState(false)
     const [categoriesOpen, setCategoriesOpen] = useState(false)
+
+    useEffect(() => {
+        if (menuOpen) {
+            const original = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            
+            return () => { 
+                document.body.style.overflow = original; 
+            }
+        }
+    }, [menuOpen]);
+
+    // fecha no ESC
+    useEffect(() => {
+        function onKeyDown(e: KeyboardEvent) {
+            if (e.key === 'Escape') {
+                setMenuOpen(false);
+                setCategoriesOpen(false);
+            }
+        }
+
+        window.addEventListener('keydown', onKeyDown);
+
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, []);
 
     const links = [
         { href: '#home', label: 'Início', icon: <FaHome /> },
@@ -27,6 +52,11 @@ export function Header(){
         },
         { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
+
+    const closeAll = () => {
+        setMenuOpen(false);
+        setCategoriesOpen(false);
+    };
 
     return (
         <Container>
@@ -64,6 +94,7 @@ export function Header(){
 
             <MenuButton
                 aria-label="Abrir menu"
+                aria-expanded={menuOpen}
                 onClick={() => setMenuOpen((o) => !o)}
             >
                 <svg viewBox="0 0 100 80">
@@ -73,46 +104,58 @@ export function Header(){
                 </svg>
             </MenuButton>
 
-            <MobileMenu open={menuOpen}>                
-                {links.map(link => (
-                    link.categories ? (
-                        <div key={link.label} className="wrapper-categories">
-                            <NavLink
-                                as="button"
-                                onClick={() => setCategoriesOpen(open => !open)}
-                            >
-                                {link.icon}
-                                {link.label}
-                            </NavLink>
-                            {categoriesOpen && (
-                                <div className="wrapper-categories-labels">
-                                    {link.categories.map(category => (
+            <Backdrop open={menuOpen} onClick={closeAll} />
+
+            <Sidebar open={menuOpen} aria-hidden={!menuOpen} aria-label="Menu principal">
+                <DrawerHeader>
+                    <Image src={logoTizeck} alt="Logo Tizeck" width={120} height={34} />
+                
+                    <CloseButton aria-label="Fechar menu" onClick={closeAll} >
+                        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden>
+                            <path d="M18.3 5.7a1 1 0 0 0-1.4-1.4L12 9.17 7.1 4.3A1 1 0 1 0 5.7 5.7L10.6 10.6 5.7 15.5a1 1 0 1 0 1.4 1.4L12 12.03l4.9 4.87a1 1 0 0 0 1.4-1.4l-4.88-4.9 4.88-4.9Z"/>
+                        </svg>
+                    </CloseButton>
+                </DrawerHeader>
+
+                <DrawerNav>
+                    {links.map(link => (
+                        link.categories ? (
+                            <div key={link.label}>
+                                <NavLink 
+                                    as="button" 
+                                    className="drawer-item" 
+                                    onClick={() => setCategoriesOpen(o => !o)}
+                                >
+                                    {link.icon}
+                                    {link.label}
+                                    <span className={`caret ${categoriesOpen ? 'open' : ''}`} aria-hidden>▾</span>
+                                </NavLink>
+                                
+                                {categoriesOpen && (
+                                    <>
+                                        <DrawerSectionTitle>Categorias</DrawerSectionTitle>
+                                    
+                                        {link.categories.map(category => (
                                             <Link key={category.href} href={category.href} passHref>
-                                                <NavLink
-                                                    onClick={() => {
-                                                        setMenuOpen(false);
-                                                        setCategoriesOpen(false);
-                                                    }}
-                                                    style={{ paddingLeft: '2rem' }}
-                                                >
+                                                <NavLink className="drawer-subitem" onClick={closeAll}>
                                                     {category.label}
                                                 </NavLink>
-
                                             </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <Link key={link.href} href={link.href} passHref>
-                            <NavLink onClick={() => setMenuOpen(false)}>
-                                {link.icon}
-                                {link.label}
-                            </NavLink>
-                        </Link>
-                    )
-                ))}
-            </MobileMenu>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <Link key={(link as any).href} href={(link as any).href} passHref>
+                                <NavLink className="drawer-item" onClick={closeAll}>
+                                    {link.icon}
+                                    {link.label}
+                                </NavLink>
+                            </Link>
+                        )
+                    ))}
+                </DrawerNav>
+            </Sidebar>
         </Container>
     )
 }
