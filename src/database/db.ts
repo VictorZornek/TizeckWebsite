@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const MONGO_CONNECTION = process.env.MONGO_CONNECTION;
-if (!MONGO_CONNECTION) {
-  throw new Error("Env MONGO_CONNECTION não definida.");
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  throw new Error("Env MONGODB_URI não definida.");
 }
 
 // Cache global para evitar múltiplas conexoes em dev/hot-reload
@@ -24,7 +24,7 @@ export async function connectMongo() {
   if (global._mongoose!.conn) return global._mongoose!.conn;
 
   if (!global._mongoose!.promise) {
-    global._mongoose!.promise = mongoose.connect(MONGO_CONNECTION!, {
+    global._mongoose!.promise = mongoose.connect(MONGODB_URI!, {
       bufferCommands: false,
     });
   }
