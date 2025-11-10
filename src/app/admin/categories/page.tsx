@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import { Modal } from "@/components/Modal";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -21,16 +22,33 @@ const Header = styled.header`
     color: #101a33;
   }
 
-  button {
-    padding: 0.5rem 1rem;
-    background: #3b81f5;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  .actions {
+    display: flex;
+    gap: 1rem;
 
-    &:hover {
-      background: #2563eb;
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+
+      &.back {
+        background: #6b7280;
+        color: white;
+
+        &:hover {
+          background: #4b5563;
+        }
+      }
+
+      &.new {
+        background: #10b981;
+        color: white;
+
+        &:hover {
+          background: #059669;
+        }
+      }
     }
   }
 `;
@@ -42,12 +60,6 @@ const Main = styled.main`
 `;
 
 const Form = styled.form`
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-
   h2 {
     margin-bottom: 1rem;
     color: #101a33;
@@ -67,16 +79,55 @@ const Form = styled.form`
     resize: vertical;
   }
 
-  button {
-    padding: 1rem 2rem;
-    background: #10b981;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  .image-upload {
+    margin-bottom: 1rem;
 
-    &:hover {
-      background: #059669;
+    input[type="file"] {
+      margin-bottom: 0.5rem;
+    }
+
+    .image-preview {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+
+      &.save {
+        background: #10b981;
+        color: white;
+
+        &:hover {
+          background: #059669;
+        }
+      }
+
+      &.cancel {
+        background: #6b7280;
+        color: white;
+
+        &:hover {
+          background: #4b5563;
+        }
+      }
     }
   }
 `;
@@ -99,6 +150,8 @@ const CategoryItem = styled.div`
   }
 
   .info {
+    flex: 1;
+
     h3 {
       color: #101a33;
       margin-bottom: 0.5rem;
@@ -156,6 +209,8 @@ export default function CategoriesPage() {
     image: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -186,8 +241,7 @@ export default function CategoriesPage() {
       });
 
       if (response.ok) {
-        setFormData({ name: "", description: "", image: "" });
-        setEditingId(null);
+        handleCloseModal();
         fetchCategories();
       }
     } catch (error) {
@@ -202,6 +256,53 @@ export default function CategoriesPage() {
       image: category.image,
     });
     setEditingId(category._id);
+    setIsModalOpen(true);
+  };
+
+  const handleNewCategory = () => {
+    setFormData({
+      name: "",
+      description: "",
+      image: "",
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setFormData({
+      name: "",
+      description: "",
+      image: "",
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    const file = files[0];
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataUpload,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(prev => ({ ...prev, image: data.url }));
+      }
+    } catch (error) {
+      console.error("Erro no upload:", error);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -219,48 +320,58 @@ export default function CategoriesPage() {
     <Container>
       <Header>
         <h1>Gerenciar Categorias</h1>
-        <button onClick={() => router.push("/admin/dashboard")}>
-          Voltar ao Dashboard
-        </button>
+        <div className="actions">
+          <button className="new" onClick={handleNewCategory}>
+            + Nova Categoria
+          </button>
+          <button className="back" onClick={() => router.push("/admin/dashboard")}>
+            Voltar ao Dashboard
+          </button>
+        </div>
       </Header>
       <Main>
-        <Form onSubmit={handleSubmit}>
-          <h2>{editingId ? "Editar Categoria" : "Nova Categoria"}</h2>
-          <input
-            type="text"
-            placeholder="Nome da categoria"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
-          <textarea
-            placeholder="Descrição"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            required
-          />
-          <input
-            type="url"
-            placeholder="URL da imagem"
-            value={formData.image}
-            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-          />
-          <button type="submit">
-            {editingId ? "Atualizar" : "Criar"} Categoria
-          </button>
-          {editingId && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditingId(null);
-                setFormData({ name: "", description: "", image: "" });
-              }}
-              style={{ marginLeft: "1rem", background: "#6b7280" }}
-            >
-              Cancelar
-            </button>
-          )}
-        </Form>
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <Form onSubmit={handleSubmit}>
+            <h2>{editingId ? "Editar Categoria" : "Nova Categoria"}</h2>
+            <input
+              type="text"
+              placeholder="Nome da categoria"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
+            />
+            <textarea
+              placeholder="Descrição"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+            />
+            
+            <div className="image-upload">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+              />
+              {uploading && <p>Fazendo upload...</p>}
+              {formData.image && (
+                <div className="image-preview">
+                  <img src={formData.image} alt="Preview" />
+                </div>
+              )}
+            </div>
+            
+            <div className="form-actions">
+              <button type="submit" className="save">
+                {editingId ? "Atualizar" : "Criar"} Categoria
+              </button>
+              <button type="button" className="cancel" onClick={handleCloseModal}>
+                Cancelar
+              </button>
+            </div>
+          </Form>
+        </Modal>
 
         <CategoryList>
           {categories.map((category) => (
