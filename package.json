@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "create-admin": "node src/scripts/createAdmin.js"
+    "create-admin": "node src/scripts/createAdmin.js",
+    "list-data": "node src/scripts/listData.js",
+    "update-specs": "node src/scripts/updateSpecs.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
