@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import { Modal } from "@/components/Modal";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -21,16 +22,33 @@ const Header = styled.header`
     color: #101a33;
   }
 
-  button {
-    padding: 0.5rem 1rem;
-    background: #3b81f5;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  .actions {
+    display: flex;
+    gap: 1rem;
 
-    &:hover {
-      background: #2563eb;
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+
+      &.back {
+        background: #6b7280;
+        color: white;
+
+        &:hover {
+          background: #4b5563;
+        }
+      }
+
+      &.new {
+        background: #10b981;
+        color: white;
+
+        &:hover {
+          background: #059669;
+        }
+      }
     }
   }
 `;
@@ -42,12 +60,6 @@ const Main = styled.main`
 `;
 
 const Form = styled.form`
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-
   h2 {
     margin-bottom: 1rem;
     color: #101a33;
@@ -88,16 +100,34 @@ const Form = styled.form`
     }
   }
 
-  button {
-    padding: 1rem 2rem;
-    background: #10b981;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
 
-    &:hover {
-      background: #059669;
+    button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+
+      &.save {
+        background: #10b981;
+        color: white;
+
+        &:hover {
+          background: #059669;
+        }
+      }
+
+      &.cancel {
+        background: #6b7280;
+        color: white;
+
+        &:hover {
+          background: #4b5563;
+        }
+      }
     }
   }
 `;
@@ -120,6 +150,8 @@ const ProductItem = styled.div`
   }
 
   .info {
+    flex: 1;
+
     h3 {
       color: #101a33;
       margin-bottom: 0.5rem;
@@ -189,6 +221,7 @@ export default function ProductsPage() {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -270,14 +303,7 @@ export default function ProductsPage() {
       });
 
       if (response.ok) {
-        setFormData({
-          name: "",
-          description: "",
-          category: "",
-          images: [],
-          specifications: "",
-        });
-        setEditingId(null);
+        handleCloseModal();
         fetchProducts();
       }
     } catch (error) {
@@ -294,6 +320,31 @@ export default function ProductsPage() {
       specifications: JSON.stringify(product.specifications, null, 2),
     });
     setEditingId(product._id);
+    setIsModalOpen(true);
+  };
+
+  const handleNewProduct = () => {
+    setFormData({
+      name: "",
+      description: "",
+      category: "",
+      images: [],
+      specifications: "",
+    });
+    setEditingId(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setFormData({
+      name: "",
+      description: "",
+      category: "",
+      images: [],
+      specifications: "",
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -311,83 +362,77 @@ export default function ProductsPage() {
     <Container>
       <Header>
         <h1>Gerenciar Produtos</h1>
-        <button onClick={() => router.push("/admin/dashboard")}>
-          Voltar ao Dashboard
-        </button>
+        <div className="actions">
+          <button className="new" onClick={handleNewProduct}>
+            + Novo Produto
+          </button>
+          <button className="back" onClick={() => router.push("/admin/dashboard")}>
+            Voltar ao Dashboard
+          </button>
+        </div>
       </Header>
       <Main>
-        <Form onSubmit={handleSubmit}>
-          <h2>{editingId ? "Editar Produto" : "Novo Produto"}</h2>
-          <input
-            type="text"
-            placeholder="Nome do produto"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
-          <textarea
-            placeholder="Descrição"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            required
-          />
-          <select
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            required
-          >
-            <option value="">Selecione uma categoria</option>
-            {categories.map((category) => (
-              <option key={category._id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-          
-          <div className="image-upload">
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <Form onSubmit={handleSubmit}>
+            <h2>{editingId ? "Editar Produto" : "Novo Produto"}</h2>
             <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageUpload}
-              disabled={uploading}
+              type="text"
+              placeholder="Nome do produto"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
             />
-            {uploading && <p>Fazendo upload...</p>}
-            <div className="image-preview">
-              {formData.images.map((url, index) => (
-                <img key={index} src={url} alt={`Preview ${index}`} />
-              ))}
-            </div>
-          </div>
-
-          <textarea
-            placeholder="Especificações (JSON)"
-            value={formData.specifications}
-            onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
-          />
-          
-          <button type="submit">
-            {editingId ? "Atualizar" : "Criar"} Produto
-          </button>
-          {editingId && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditingId(null);
-                setFormData({
-                  name: "",
-                  description: "",
-                  category: "",
-                  images: [],
-                  specifications: "",
-                });
-              }}
-              style={{ marginLeft: "1rem", background: "#6b7280" }}
+            <textarea
+              placeholder="Descrição"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+            />
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              required
             >
-              Cancelar
-            </button>
-          )}
-        </Form>
+              <option value="">Selecione uma categoria</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            
+            <div className="image-upload">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+              />
+              {uploading && <p>Fazendo upload...</p>}
+              <div className="image-preview">
+                {formData.images.map((url, index) => (
+                  <img key={index} src={url} alt={`Preview ${index}`} />
+                ))}
+              </div>
+            </div>
+
+            <textarea
+              placeholder="Especificações (JSON)"
+              value={formData.specifications}
+              onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
+            />
+            
+            <div className="form-actions">
+              <button type="submit" className="save">
+                {editingId ? "Atualizar" : "Criar"} Produto
+              </button>
+              <button type="button" className="cancel" onClick={handleCloseModal}>
+                Cancelar
+              </button>
+            </div>
+          </Form>
+        </Modal>
 
         <ProductList>
           {products.map((product) => (
