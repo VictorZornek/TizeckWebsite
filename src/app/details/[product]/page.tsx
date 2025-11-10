@@ -22,34 +22,28 @@ export default async function ProductDetailsPage({ params }: PageProps) {
 
     const productResponse = await getProductByName(productName);
 
-    const imgs = [
-        { src: 'https://picsum.photos/seed/a/1200/800', alt: 'Slide A' },
-        { src: 'https://picsum.photos/seed/b/1200/800', alt: 'Slide B' },
-        { src: 'https://picsum.photos/seed/c/1200/800', alt: 'Slide C' },
-    ];
+    // Usar imagens reais do produto ou imagem padrão
+    const images = productResponse.images?.length 
+        ? productResponse.images.map((src: string, i: number) => ({ src, alt: `${productResponse.name} - ${i + 1}` }))
+        : [{ src: "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png", alt: productResponse.name }];
 
-    const specsMock = [
-        { label: 'Material',   value: 'Aço inoxidável' },
-        { label: 'Dimensões',  value: '25 x 15 x 30 cm' },
-        { label: 'Peso',       value: '1.2 kg' },
-        { label: 'Acabamento', value: 'Polido'}
-    ];
+    // Converter especificações do banco para formato da lista
+    const specs = productResponse.specifications && Object.keys(productResponse.specifications).length > 0
+        ? Object.entries(productResponse.specifications).map(([key, value]) => ({
+            label: key.charAt(0).toUpperCase() + key.slice(1),
+            value: String(value)
+          }))
+        : [
+            { label: "Material", value: "—" },
+            { label: "Dimensões", value: "—" },
+            { label: "Peso", value: "—" },
+          ];
 
     if (!product) {
         return notFound();
     }
 
-    // const images: { src: string; alt: string }[] = productResponse.images?.length 
-    //     ? productResponse.images.map((src: string, i: number) => ({ src, alt: `${productResponse.name} - ${i + 1}` }))
-    //     : [{ src: "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png", alt: productResponse.name }];
 
-    // const specs = productResponse.specs?.length
-    //     ? productResponse.specs
-    //     : [
-    //         { label: "Material", value: "—" },
-    //         { label: "Dimensões", value: "—" },
-    //         { label: "Peso", value: "—" },
-    //     ];
 
     return (
         <Container>
@@ -62,9 +56,9 @@ export default async function ProductDetailsPage({ params }: PageProps) {
 
                 
                 <div className="wrapper-images-specs">
-                    <ImageSlider items={imgs} height={300} />
+                    <ImageSlider items={images} height={300} />
                     
-                    <SpecsList items={specsMock} />
+                    <SpecsList items={specs} />
                 </div>
             </main>
 
