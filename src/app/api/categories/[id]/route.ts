@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectMongo } from "@/database/db";
 import Category from "@/database/models/Category";
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const { name, description, image, activated } = await request.json();
     
     await connectMongo();
     
     const category = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       { name, description, image, activated },
       { new: true }
     );
@@ -24,11 +25,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     await connectMongo();
     
-    const category = await Category.findByIdAndDelete(params.id);
+    const category = await Category.findByIdAndDelete(id);
     
     if (!category) {
       return NextResponse.json({ error: "Categoria não encontrada" }, { status: 404 });

@@ -11,6 +11,20 @@ import { Container, Nav, NavItem, NavLink, SubMenu, SubMenuItem, MenuButton, Bac
 
 import logoTizeck from '@/assets/Group 12.svg';
 
+type LinkWithHref = {
+    href: string;
+    label: string;
+    icon: React.ReactNode;
+};
+
+type LinkWithCategories = {
+    label: string;
+    icon: React.ReactNode;
+    categories: Array<{ href: string; label: string }>;
+};
+
+type NavLink = LinkWithHref | LinkWithCategories;
+
 export function Header(){
     const [menuOpen, setMenuOpen] = useState(false)
     const [categoriesOpen, setCategoriesOpen] = useState(false)
@@ -40,7 +54,7 @@ export function Header(){
         return () => window.removeEventListener('keydown', onKeyDown);
     }, []);
 
-    const links = [
+    const links: NavLink[] = [
         { href: '#home', label: 'Início', icon: <FaHome /> },
         { 
             label: 'Produtos', 
@@ -69,7 +83,7 @@ export function Header(){
 
             <Nav>
                 {links.map(link => (
-                    link.categories ? (
+                    'categories' in link ? (
                         <NavItem
                             key={link.label}
                             onMouseEnter={() => setCategoriesOpen(true)}
@@ -87,13 +101,13 @@ export function Header(){
                                 ))}
                             </SubMenu>
                         </NavItem>
-                    ) : (
+                    ) : 'href' in link ? (
                         <Link key={link.href} href={link.href} passHref>
                             <NavLink onClick={() => setMenuOpen(false)}>
                                 {link.label}
                             </NavLink>
                         </Link>
-                    )
+                    ) : null
                 ))}
             </Nav>
 
@@ -126,7 +140,7 @@ export function Header(){
 
                 <DrawerNav>
                     {links.map(link => (
-                        link.categories ? (
+                        'categories' in link ? (
                             <div key={link.label}>
                                 <NavLink 
                                     as="button" 
@@ -152,14 +166,14 @@ export function Header(){
                                     </>
                                 )}
                             </div>
-                        ) : (
-                            <Link key={(link as any).href} href={(link as any).href} passHref>
+                        ) : 'href' in link ? (
+                            <Link key={link.href} href={link.href} passHref>
                                 <NavLink className="drawer-item" onClick={closeAll}>
                                     {link.icon}
                                     {link.label}
                                 </NavLink>
                             </Link>
-                        )
+                        ) : null
                     ))}
                 </DrawerNav>
             </Sidebar>

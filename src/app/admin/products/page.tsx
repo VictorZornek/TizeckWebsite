@@ -200,7 +200,7 @@ interface Product {
   description: string;
   category: string;
   images: string[];
-  specifications: Record<string, any>;
+  specifications: Record<string, string | number | boolean>;
   activated: boolean;
 }
 
