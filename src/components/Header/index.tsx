@@ -63,7 +63,9 @@ export function Header(){
 
     return (
         <Container>
-            <Image src={logoTizeck} alt="Logo Tizeck" width={140} height={40} priority />
+            <Link href="/">
+                <Image src={logoTizeck} alt="Logo Tizeck" width={140} height={40} priority style={{ cursor: 'pointer' }} />
+            </Link>
 
             <Nav>
                 {links.map(link => (
@@ -111,7 +113,9 @@ export function Header(){
 
             <Sidebar open={menuOpen} aria-hidden={!menuOpen} aria-label="Menu principal">
                 <DrawerHeader>
-                    <Image src={logoTizeck} alt="Logo Tizeck" width={120} height={34} />
+                    <Link href="/" onClick={closeAll}>
+                        <Image src={logoTizeck} alt="Logo Tizeck" width={120} height={34} style={{ cursor: 'pointer' }} />
+                    </Link>
                 
                     <CloseButton aria-label="Fechar menu" onClick={closeAll} >
                         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden>
