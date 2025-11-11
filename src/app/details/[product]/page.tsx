@@ -63,7 +63,7 @@ export default async function ProductDetailsPage({ params }: PageProps) {
             </main>
 
             <footer>
-                <BudgetButton />
+                <BudgetButton href="https://wa.me/5511982240551?text=Gostaria%20de%20saber%20mais%20sobre%20os%20produtos%20do%20site" />
             </footer>
         </Container>
     )
