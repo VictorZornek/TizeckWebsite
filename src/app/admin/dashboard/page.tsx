@@ -38,6 +38,10 @@ const Main = styled.main`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  h2 {
+    color: #101a33;
+  }
 `;
 
 const Grid = styled.div`
