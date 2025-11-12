@@ -160,7 +160,7 @@ export default function HomePage() {
                             </div>
                         </WorktimeWrapper>
 
-                        <Button title="Solicitar Orçamento" />
+                        <Button title="Solicitar Orçamento" href="https://wa.me/5511987822169" />
                     </div>
                 </section>
             </main>
