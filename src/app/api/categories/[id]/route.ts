@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     return NextResponse.json(category);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao atualizar categoria" }, { status: 500 });
   }
 }
@@ -37,7 +37,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
     
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao deletar categoria" }, { status: 500 });
   }
 }

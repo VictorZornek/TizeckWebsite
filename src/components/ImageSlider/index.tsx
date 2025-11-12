@@ -66,6 +66,7 @@ export function ImageSlider({
 
         const id = window.setInterval(next, interval);
         return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoPlay, interval, isHover, hasItems, index, loop]);
 
     // keyboard navigation

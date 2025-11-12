@@ -7,7 +7,7 @@ export async function GET() {
     await connectMongo();
     const products = await Products.find({ activated: true });
     return NextResponse.json(products);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao buscar produtos" }, { status: 500 });
   }
 }
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     await product.save();
     
     return NextResponse.json(product, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
   }
 }

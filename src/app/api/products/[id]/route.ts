@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     return NextResponse.json(product);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao atualizar produto" }, { status: 500 });
   }
 }
@@ -37,7 +37,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
     
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao deletar produto" }, { status: 500 });
   }
 }

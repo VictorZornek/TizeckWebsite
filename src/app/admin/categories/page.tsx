@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import Image from "next/image";
 import { Modal } from "@/components/Modal";
 
 const Container = styled.div`
@@ -357,7 +358,7 @@ export default function CategoriesPage() {
               {uploading && <p>Fazendo upload...</p>}
               {formData.image && (
                 <div className="image-preview">
-                  <img src={formData.image} alt="Preview" />
+                  <Image src={formData.image} alt="Preview" width={100} height={100} />
                 </div>
               )}
             </div>

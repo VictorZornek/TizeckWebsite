@@ -12,7 +12,6 @@ type Cached = {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var _mongoose: Cached | undefined;
 }
 

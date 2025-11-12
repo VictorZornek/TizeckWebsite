@@ -7,7 +7,7 @@ export async function GET() {
     await connectMongo();
     const categories = await Category.find({ activated: true });
     return NextResponse.json(categories);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao buscar categorias" }, { status: 500 });
   }
 }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     await category.save();
     
     return NextResponse.json(category, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro ao criar categoria" }, { status: 500 });
   }
 }

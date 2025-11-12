@@ -87,7 +87,7 @@ export default function LoginPage() {
         const data = await response.json();
         setError(data.error || "Erro no login");
       }
-    } catch (error) {
+    } catch {
       setError("Erro de conexão");
     } finally {
       setLoading(false);

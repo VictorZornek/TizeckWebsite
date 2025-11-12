@@ -1,7 +1,7 @@
 "use client"
 
 import styled from "styled-components";
-import { down, up } from "@/styles/media";
+import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;

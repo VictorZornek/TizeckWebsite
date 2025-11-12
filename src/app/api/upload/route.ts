@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const result = await s3.upload(uploadParams).promise();
     
     return NextResponse.json({ url: result.Location });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Erro no upload" }, { status: 500 });
   }
 }

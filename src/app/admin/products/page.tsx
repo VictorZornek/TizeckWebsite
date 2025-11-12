@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import Image from "next/image";
 import { Modal } from "@/components/Modal";
 
 const Container = styled.div`
@@ -412,7 +413,7 @@ export default function ProductsPage() {
               {uploading && <p>Fazendo upload...</p>}
               <div className="image-preview">
                 {formData.images.map((url, index) => (
-                  <img key={index} src={url} alt={`Preview ${index}`} />
+                  <Image key={index} src={url} alt={`Preview ${index}`} width={100} height={100} />
                 ))}
               </div>
             </div>

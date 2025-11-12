@@ -16,7 +16,7 @@ export function InformationCard({ icon: Icon, title, information }: InformationC
         <Container>
             {Icon && (
                 <IconBox>
-                    <Icon aria-hiden />   {/* svg herda cor/tamanho do CSS do IconBox */}
+                    <Icon aria-hidden />   {/* svg herda cor/tamanho do CSS do IconBox */}
                 </IconBox>
             )}
 
