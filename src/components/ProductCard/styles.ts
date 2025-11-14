@@ -74,7 +74,7 @@ export const ButtonText = styled.span`
     cursor: pointer;
 
     &:hover {
-        background: ${({ theme }) => theme.COLORS.BLUE_DARK || '#2563eb'};
+        background: ${({ theme }) => theme.COLORS.DARK_BLUE};
         transform: scale(1.05);
     }
 `;
