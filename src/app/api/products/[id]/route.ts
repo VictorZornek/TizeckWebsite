@@ -45,9 +45,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
     // Deletar pasta do produto no S3
     try {
+      const sanitizedProductName = product.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
       const listParams = {
         Bucket: process.env.AWS_S3_BUCKET_NAME!,
-        Prefix: `${product.category}/${id}/`,
+        Prefix: `${product.category}/${sanitizedProductName}/`,
       };
 
       const listedObjects = await s3.listObjectsV2(listParams).promise();

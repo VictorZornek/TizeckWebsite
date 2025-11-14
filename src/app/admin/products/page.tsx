@@ -386,7 +386,7 @@ export default function ProductsPage() {
         const uploadFormData = new FormData();
         uploadFormData.append("file", file);
         uploadFormData.append("category", formData.category);
-        uploadFormData.append("productId", productId!);
+        uploadFormData.append("productName", formData.name);
 
         const response = await fetch("/api/upload", {
           method: "POST",
