@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
+import AWS from "aws-sdk";
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
+import { Toast } from "@/components/Toast";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -92,11 +93,36 @@ const Form = styled.form`
       gap: 1rem;
       flex-wrap: wrap;
 
-      img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 0.5rem;
+      .image-wrapper {
+        position: relative;
+
+        img {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 0.5rem;
+        }
+
+        .remove-btn {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: #dc2626;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+
+          &:hover {
+            background: #b91c1c;
+          }
+        }
       }
     }
   }
@@ -223,6 +249,9 @@ export default function ProductsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [originalImages, setOriginalImages] = useState<string[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -250,18 +279,46 @@ export default function ProductsPage() {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
 
+    const newFiles = Array.from(files);
+    setPendingFiles(prev => [...prev, ...newFiles]);
+    
+    const previewUrls = newFiles.map(file => URL.createObjectURL(file));
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...previewUrls]
+    }));
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const imageUrl = formData.images[index];
+    
+    if (imageUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(imageUrl);
+      const fileIndex = index - originalImages.length;
+      setPendingFiles(prev => prev.filter((_, i) => i !== fileIndex));
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setUploading(true);
-    const uploadedUrls: string[] = [];
 
-    for (const file of Array.from(files)) {
-      const formData = new FormData();
-      formData.append("file", file);
+    try {
+      const uploadedUrls: string[] = [];
+      
+      for (const file of pendingFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      try {
         const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
@@ -270,23 +327,32 @@ export default function ProductsPage() {
         if (response.ok) {
           const data = await response.json();
           uploadedUrls.push(data.url);
+        } else {
+          setToast({ message: "Erro ao fazer upload da imagem", type: "error" });
+          setUploading(false);
+          return;
         }
-      } catch (error) {
-        console.error("Erro no upload:", error);
       }
-    }
 
-    setFormData(prev => ({
-      ...prev,
-      images: [...prev.images, ...uploadedUrls]
-    }));
-    setUploading(false);
-  };
+      const finalImages = formData.images
+        .filter(img => !img.startsWith('blob:'))
+        .concat(uploadedUrls);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+      if (editingId) {
+        const imagesToDelete = originalImages.filter(img => !finalImages.includes(img));
+        for (const imageUrl of imagesToDelete) {
+          try {
+            await fetch("/api/upload/delete", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ imageUrl }),
+            });
+          } catch (error) {
+            console.error("Erro ao deletar imagem:", error);
+          }
+        }
+      }
 
-    try {
       const specifications = formData.specifications 
         ? JSON.parse(formData.specifications) 
         : {};
@@ -299,17 +365,27 @@ export default function ProductsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
+          images: finalImages,
           specifications,
         }),
       });
 
       if (response.ok) {
+        setToast({ 
+          message: editingId ? "Produto atualizado com sucesso!" : "Produto criado com sucesso!", 
+          type: "success" 
+        });
         handleCloseModal();
         fetchProducts();
+      } else {
+        setToast({ message: "Erro ao salvar produto", type: "error" });
       }
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
+      setToast({ message: "Erro ao salvar produto", type: "error" });
     }
+    
+    setUploading(false);
   };
 
   const handleEdit = (product: Product) => {
@@ -320,6 +396,7 @@ export default function ProductsPage() {
       images: product.images,
       specifications: JSON.stringify(product.specifications, null, 2),
     });
+    setOriginalImages(product.images);
     setEditingId(product._id);
     setIsModalOpen(true);
   };
@@ -332,13 +409,22 @@ export default function ProductsPage() {
       images: [],
       specifications: "",
     });
+    setPendingFiles([]);
+    setOriginalImages([]);
     setEditingId(null);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    formData.images.forEach(img => {
+      if (img.startsWith('blob:')) {
+        URL.revokeObjectURL(img);
+      }
+    });
     setIsModalOpen(false);
     setEditingId(null);
+    setPendingFiles([]);
+    setOriginalImages([]);
     setFormData({
       name: "",
       description: "",
@@ -351,16 +437,23 @@ export default function ProductsPage() {
   const handleDelete = async (id: string) => {
     if (confirm("Tem certeza que deseja deletar este produto?")) {
       try {
-        await fetch(`/api/products/${id}`, { method: "DELETE" });
-        fetchProducts();
+        const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
+        if (response.ok) {
+          setToast({ message: "Produto deletado com sucesso!", type: "success" });
+          fetchProducts();
+        } else {
+          setToast({ message: "Erro ao deletar produto", type: "error" });
+        }
       } catch (error) {
         console.error("Erro ao deletar produto:", error);
+        setToast({ message: "Erro ao deletar produto", type: "error" });
       }
     }
   };
 
   return (
     <Container>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <Header>
         <h1>Gerenciar Produtos</h1>
         <div className="actions">
@@ -408,12 +501,20 @@ export default function ProductsPage() {
                 multiple
                 accept="image/*"
                 onChange={handleImageUpload}
-                disabled={uploading}
               />
               {uploading && <p>Fazendo upload...</p>}
               <div className="image-preview">
                 {formData.images.map((url, index) => (
-                  <Image key={index} src={url} alt={`Preview ${index}`} width={100} height={100} />
+                  <div key={index} className="image-wrapper">
+                    <Image src={url} alt={`Preview ${index}`} width={100} height={100} />
+                    <button 
+                      type="button" 
+                      className="remove-btn" 
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      ×
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
