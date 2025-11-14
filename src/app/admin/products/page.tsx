@@ -349,15 +349,48 @@ export default function ProductsPage() {
     setIsLoading(true);
 
     try {
+      // Criar produto primeiro para obter o ID
+      let productId = editingId;
+      
+      if (!editingId) {
+        const specifications = formData.specifications 
+          ? JSON.parse(formData.specifications) 
+          : {};
+
+        const createResponse = await fetch("/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            description: formData.description,
+            category: formData.category,
+            images: [],
+            specifications,
+          }),
+        });
+
+        if (!createResponse.ok) {
+          setToast({ message: "Erro ao criar produto", type: "error" });
+          setUploading(false);
+          setIsLoading(false);
+          return;
+        }
+
+        const newProduct = await createResponse.json();
+        productId = newProduct._id;
+      }
+
       const uploadedUrls: string[] = [];
       
       for (const file of pendingFiles) {
-        const formData = new FormData();
-        formData.append("file", file);
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
+        uploadFormData.append("category", formData.category);
+        uploadFormData.append("productId", productId!);
 
         const response = await fetch("/api/upload", {
           method: "POST",
-          body: formData,
+          body: uploadFormData,
         });
 
         if (response.ok) {
@@ -366,6 +399,7 @@ export default function ProductsPage() {
         } else {
           setToast({ message: "Erro ao fazer upload da imagem", type: "error" });
           setUploading(false);
+          setIsLoading(false);
           return;
         }
       }
@@ -387,42 +421,61 @@ export default function ProductsPage() {
             console.error("Erro ao deletar imagem:", error);
           }
         }
-      }
 
-      const specifications = formData.specifications 
-        ? JSON.parse(formData.specifications) 
-        : {};
+        const specifications = formData.specifications 
+          ? JSON.parse(formData.specifications) 
+          : {};
 
-      const url = editingId ? `/api/products/${editingId}` : "/api/products";
-      const method = editingId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          images: finalImages,
-          specifications,
-        }),
-      });
-
-      if (response.ok) {
-        setToast({ 
-          message: editingId ? "Produto atualizado com sucesso!" : "Produto criado com sucesso!", 
-          type: "success" 
+        const response = await fetch(`/api/products/${editingId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            images: finalImages,
+            specifications,
+          }),
         });
-        handleCloseModal();
-        fetchProducts();
+
+        if (response.ok) {
+          setToast({ message: "Produto atualizado com sucesso!", type: "success" });
+          handleCloseModal();
+          fetchProducts();
+        } else {
+          setToast({ message: "Erro ao atualizar produto", type: "error" });
+        }
       } else {
-        setToast({ message: "Erro ao salvar produto", type: "error" });
+        // Atualizar produto com as imagens
+        const specifications = formData.specifications 
+          ? JSON.parse(formData.specifications) 
+          : {};
+
+        const response = await fetch(`/api/products/${productId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            description: formData.description,
+            category: formData.category,
+            images: finalImages,
+            specifications,
+          }),
+        });
+
+        if (response.ok) {
+          setToast({ message: "Produto criado com sucesso!", type: "success" });
+          handleCloseModal();
+          fetchProducts();
+        } else {
+          setToast({ message: "Erro ao criar produto", type: "error" });
+        }
       }
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
       setToast({ message: "Erro ao salvar produto", type: "error" });
+    } finally {
+      setUploading(false);
+      setIsLoading(false);
     }
-    
-    setUploading(false);
-    setIsLoading(false);
   };
 
   const handleEdit = (product: Product) => {

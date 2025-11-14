@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -212,6 +213,7 @@ export default function CategoriesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -306,19 +308,40 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Tem certeza que deseja deletar esta categoria?")) {
-      try {
-        await fetch(`/api/categories/${id}`, { method: "DELETE" });
-        fetchCategories();
-      } catch (error) {
-        console.error("Erro ao deletar categoria:", error);
-      }
+  const handleDeleteClick = (id: string, categoryName: string) => {
+    setConfirmDelete({ id, name: categoryName });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    
+    try {
+      await fetch(`/api/categories/${confirmDelete.id}`, { method: "DELETE" });
+      fetchCategories();
+    } catch (error) {
+      console.error("Erro ao deletar categoria:", error);
+    } finally {
+      setConfirmDelete(null);
     }
   };
 
   return (
     <Container>
+      <ConfirmModal
+        isOpen={!!confirmDelete}
+        title="ATENÇÃO: Ação Irreversível"
+        message={`
+          <p>Você está prestes a deletar a categoria <strong>"${confirmDelete?.name}"</strong>.</p>
+          <ul>
+            <li>Remover TODOS os produtos desta categoria</li>
+            <li>Deletar TODAS as imagens associadas do S3</li>
+            <li>Esta ação é IRREVERSÍVEL</li>
+          </ul>
+          <div class="warning">Tem certeza que deseja continuar?</div>
+        `}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDelete(null)}
+      />
       <Header>
         <h1>Gerenciar Categorias</h1>
         <div className="actions">
@@ -385,7 +408,7 @@ export default function CategoriesPage() {
                 <button className="edit" onClick={() => handleEdit(category)}>
                   Editar
                 </button>
-                <button className="delete" onClick={() => handleDelete(category._id)}>
+                <button className="delete" onClick={() => handleDeleteClick(category._id, category.name)}>
                   Deletar
                 </button>
               </div>

@@ -11,19 +11,26 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
+    const category = formData.get("category") as string;
+    const productId = formData.get("productId") as string;
     
     if (!file) {
       return NextResponse.json({ error: "Nenhum arquivo enviado" }, { status: 400 });
+    }
+
+    if (!category || !productId) {
+      return NextResponse.json({ error: "Categoria e ID do produto são obrigatórios" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     const fileName = `${Date.now()}-${file.name}`;
+    const key = `${category}/${productId}/${fileName}`;
     
     const uploadParams = {
       Bucket: process.env.AWS_S3_BUCKET_NAME!,
-      Key: fileName,
+      Key: key,
       Body: buffer,
       ContentType: file.type,
     };
@@ -31,7 +38,8 @@ export async function POST(request: NextRequest) {
     const result = await s3.upload(uploadParams).promise();
     
     return NextResponse.json({ url: result.Location });
-  } catch {
+  } catch (error) {
+    console.error("Erro no upload:", error);
     return NextResponse.json({ error: "Erro no upload" }, { status: 500 });
   }
 }

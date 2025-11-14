@@ -37,14 +37,38 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const { id } = await params;
     await connectMongo();
     
-    const product = await Products.findByIdAndDelete(id);
+    const product = await Products.findById(id);
     
     if (!product) {
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
     }
+
+    // Deletar pasta do produto no S3
+    try {
+      const listParams = {
+        Bucket: process.env.AWS_S3_BUCKET_NAME!,
+        Prefix: `${product.category}/${id}/`,
+      };
+
+      const listedObjects = await s3.listObjectsV2(listParams).promise();
+
+      if (listedObjects.Contents && listedObjects.Contents.length > 0) {
+        const deleteParams = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME!,
+          Delete: { Objects: listedObjects.Contents.map(({ Key }) => ({ Key: Key! })) },
+        };
+
+        await s3.deleteObjects(deleteParams).promise();
+      }
+    } catch (error) {
+      console.error("Erro ao deletar pasta do produto no S3:", error);
+    }
+    
+    await Products.findByIdAndDelete(id);
     
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("Erro ao deletar produto:", error);
     return NextResponse.json({ error: "Erro ao deletar produto" }, { status: 500 });
   }
 }
