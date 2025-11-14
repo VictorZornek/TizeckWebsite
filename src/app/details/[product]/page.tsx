@@ -56,7 +56,7 @@ export default async function ProductDetailsPage({ params }: PageProps) {
 
                 
                 <div className="wrapper-images-specs">
-                    <ImageSlider items={images} height={300} />
+                    <ImageSlider items={images} height={400} />
                     
                     <SpecsList items={specs} />
                 </div>

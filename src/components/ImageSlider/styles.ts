@@ -45,8 +45,8 @@ export const Slide = styled.div`
 `;
 
 export const Image = styled.img`
-    max-width: min(90%, 30rem);
-    max-height: 100%;
+    max-width: min(80%, 26.5rem);
+    max-height: 90%;
 
     object-fit: contain;
 
