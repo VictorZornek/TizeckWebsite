@@ -141,10 +141,32 @@ const Form = styled.form`
       &.save {
         background: #10b981;
         color: white;
+        position: relative;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: #059669;
         }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        &.loading::after {
+          content: '';
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          margin-left: 8px;
+          border: 2px solid #ffffff;
+          border-radius: 50%;
+          border-top-color: transparent;
+          animation: spin 0.6s linear infinite;
+        }
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
 
       &.cancel {
@@ -204,8 +226,13 @@ const ProductItem = styled.div`
         background: #f59e0b;
         color: white;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: #d97706;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       }
 
@@ -213,8 +240,13 @@ const ProductItem = styled.div`
         background: #dc2626;
         color: white;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: #b91c1c;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
       }
     }
@@ -248,6 +280,7 @@ export default function ProductsPage() {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
@@ -310,7 +343,10 @@ export default function ProductsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+    
     setUploading(true);
+    setIsLoading(true);
 
     try {
       const uploadedUrls: string[] = [];
@@ -386,6 +422,7 @@ export default function ProductsPage() {
     }
     
     setUploading(false);
+    setIsLoading(false);
   };
 
   const handleEdit = (product: Product) => {
@@ -435,7 +472,9 @@ export default function ProductsPage() {
   };
 
   const handleDelete = async (id: string) => {
+    if (isLoading) return;
     if (confirm("Tem certeza que deseja deletar este produto?")) {
+      setIsLoading(true);
       try {
         const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
         if (response.ok) {
@@ -448,6 +487,7 @@ export default function ProductsPage() {
         console.error("Erro ao deletar produto:", error);
         setToast({ message: "Erro ao deletar produto", type: "error" });
       }
+      setIsLoading(false);
     }
   };
 
@@ -526,10 +566,10 @@ export default function ProductsPage() {
             />
             
             <div className="form-actions">
-              <button type="submit" className="save">
-                {editingId ? "Atualizar" : "Criar"} Produto
+              <button type="submit" className={`save ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+                {isLoading ? 'Salvando...' : editingId ? "Atualizar Produto" : "Criar Produto"}
               </button>
-              <button type="button" className="cancel" onClick={handleCloseModal}>
+              <button type="button" className="cancel" onClick={handleCloseModal} disabled={isLoading}>
                 Cancelar
               </button>
             </div>
@@ -545,11 +585,11 @@ export default function ProductsPage() {
                 <p>{product.description}</p>
               </div>
               <div className="actions">
-                <button className="edit" onClick={() => handleEdit(product)}>
+                <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
                   Editar
                 </button>
-                <button className="delete" onClick={() => handleDelete(product._id)}>
-                  Deletar
+                <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
+                  {isLoading ? 'Processando...' : 'Deletar'}
                 </button>
               </div>
             </ProductItem>
