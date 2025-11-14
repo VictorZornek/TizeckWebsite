@@ -15,7 +15,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "URL da imagem não fornecida" }, { status: 400 });
     }
 
-    const key = imageUrl.split('/').pop();
+    const url = new URL(imageUrl);
+    const key = decodeURIComponent(url.pathname.substring(1));
     
     if (!key) {
       return NextResponse.json({ error: "Chave da imagem inválida" }, { status: 400 });
@@ -27,7 +28,8 @@ export async function DELETE(request: NextRequest) {
     }).promise();
     
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("Erro ao deletar do S3:", error);
     return NextResponse.json({ error: "Erro ao deletar imagem" }, { status: 500 });
   }
 }
