@@ -10,76 +10,71 @@ export const CardLink = styled(Link)`
 `;
 
 export const Container = styled.div`
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
 
     width: 100%;
-    height: 8rem;
-
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-
-    padding: .8rem;
-    padding-left: 0;
+    padding: 2rem;
     margin-bottom: 2rem;
 
-    border-radius: .8rem;
+    border-radius: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 
-    background-color: ${({ theme }) => theme.COLORS.WHITE_600};
-
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
 
     &:hover {
-        transform: translateY(-0.8rem);
-        box-shadow: 0 1.6rem 3.2rem rgba(255, 255, 255, 0.2);
+        transform: translateY(-0.4rem);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
     }
 `;
 
 export const ImageWrapper = styled.img`
-    width: 13rem;
-    height: 8rem;
+    width: 100%;
+    max-width: 20rem;
+    height: 16rem;
 
-    object-fit: cover;
+    object-fit: contain;
 
-    padding: 1rem .5rem 1rem 0;
-
-    border-radius: 1rem;
+    border-radius: .8rem;
 `;
 
 export const ProductName = styled.h5`
-    position: absolute;
-    top: .8rem;
-    left: calc( (13rem + .5rem) + ( (100% - (13rem + .5rem) - .8rem) / 2 ) );
-    transform: translateX(-50%);
-    width: calc(100% - 1.6rem);
-    text-align: center;
     margin: 0;
+    padding: 0;
 
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+    line-height: 1.3;
 
     text-align: center;
 
-    color: ${({ theme }) => theme.COLORS.BLACK_900};
+    color: ${({ theme }) => theme.COLORS.WHITE_900};
 `;
 
 export const ButtonText = styled.span`
-    position: absolute;
-    right: .8rem;
-    bottom: .8rem;
+    padding: 1rem 2.4rem;
+    margin-top: .4rem;
 
     font-size: 1.4rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
     text-decoration: none;
 
-    border-radius: .5rem;
-    border: none;
+    border-radius: .6rem;
+    background: ${({ theme }) => theme.COLORS.BLUE};
+    color: ${({ theme }) => theme.COLORS.WHITE_900};
 
-    color: ${({ theme }) => theme.COLORS.BLUE};
+    transition: all 0.2s ease;
 
     cursor: pointer;
 
     &:hover {
-        text-decoration: underline;
+        background: ${({ theme }) => theme.COLORS.BLUE_DARK || '#2563eb'};
+        transform: scale(1.05);
     }
 `;

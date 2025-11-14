@@ -14,6 +14,7 @@ type PageProps = {
 type product = {
     _id: string;
     name: string;
+    images: string[];
 }
 
 export default async function ProductsPage({ params }: PageProps) {
@@ -34,8 +35,7 @@ export default async function ProductsPage({ params }: PageProps) {
                         <div className="product-row" key={String(product._id)}>
                             <ProductCard 
                                 name={product.name}
-                                // imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
-                                imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+                                imageUrl={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"}
                                 href={`/details/${encodeURIComponent(`${product.name}`)}`}
                             />
                         </div>
