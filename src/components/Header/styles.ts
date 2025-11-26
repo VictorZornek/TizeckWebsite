@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { up } from "@/styles/media";
 
 export const Container = styled.header`
-    --header-h: 5.6rem;
+    --header-h: 7rem;
 
     position: fixed;
     top: 0;
@@ -10,19 +10,21 @@ export const Container = styled.header`
 
     width: 100%;
     height: var(--header-h);
-    padding: 0 1.5rem;
+    padding: 0 3rem;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    background: ${({ theme }) => theme.COLORS.WHITE_900};
-    color: ${({ theme }) => theme.COLORS.WHITE_900};
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 
     z-index: 1000;
 
     > img {
-        height: calc(var(--header-h) - 1.2rem);
+        height: calc(var(--header-h) - 2rem);
         width: 10rem;
         display: block;
     }
@@ -30,7 +32,7 @@ export const Container = styled.header`
 
 export const Nav = styled.nav`
     display: none;
-    gap: 2rem;
+    gap: 0.5rem;
 
     ${up('lg')} {
         display: flex;
@@ -44,27 +46,56 @@ export const NavItem = styled.div`
 
 export const NavLink = styled.a`
     font-family: var(--font-inter);
-    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.MEDIUM};
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
     font-size: 1.5rem;
     text-decoration: none;
 
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     
     color: ${({ theme }) => theme.COLORS.BLACK_900};
 
     background: transparent;
     border: none;
-    padding: 0;        /* zera qualquer padding extra */
-    line-height: 1;    /* manter altura de linha enxuta */
+    padding: 1rem 1.6rem;
+    border-radius: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
 
     svg {
+        font-size: 1.8rem;
         color: ${({ theme }) => theme.COLORS.BLUE};
+        transition: transform 0.3s ease;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(90deg, ${({ theme }) => theme.COLORS.BLUE} 0%, ${({ theme }) => theme.COLORS.DARK_BLUE} 100%);
+        border-radius: 2px;
+        transition: transform 0.3s ease;
     }
 
     &:hover {
         color: ${({ theme }) => theme.COLORS.BLUE};
+        background: rgba(30, 67, 177, 0.08);
+        transform: translateY(-2px);
+
+        svg {
+            transform: scale(1.1);
+        }
+
+        &::after {
+            transform: translateX(-50%) scaleX(1);
+        }
     }
 
     /* variações para o drawer */
@@ -85,33 +116,112 @@ export const NavLink = styled.a`
 
 export const SubMenu = styled.div<{ open: boolean }>`
     position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 0;
+    top: calc(100% + 1rem);
+    left: 50%;
+    transform: translateX(-50%);
 
-    display: ${({ open }) => (open ? 'flex' : 'none')};
-    flex-direction: column;
+    display: ${({ open }) => (open ? 'grid' : 'none')};
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    min-width: 28rem;
 
-    background-color: ${({ theme }) => theme.COLORS.WHITE_900};
-
-    border: 1px solid ${({ theme }) => theme.COLORS.BLACK_900};
-    border-radius: 0.5rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(30, 67, 177, 0.15);
+    border-radius: 1.6rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    padding: 1.2rem;
 
     overflow: hidden;
+    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 1rem solid transparent;
+        border-right: 1rem solid transparent;
+        border-bottom: 1rem solid rgba(255, 255, 255, 0.98);
+        filter: drop-shadow(0 -2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+    }
 
     z-index: 1000;
 `;
 
 export const SubMenuItem = styled.a`
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
     text-decoration: none;
     
-    padding: 0.75rem 1rem;
+    padding: 1.4rem 1.8rem;
+    border-radius: 1.2rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
     color: ${({ theme }) => theme.COLORS.BLACK_900};
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(30, 67, 177, 0.08);
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 5px;
+        background: linear-gradient(180deg, ${({ theme }) => theme.COLORS.BLUE} 0%, ${({ theme }) => theme.COLORS.DARK_BLUE} 100%);
+        transform: scaleY(0);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 0 4px 4px 0;
+    }
+
+    &::after {
+        content: '→';
+        position: absolute;
+        right: 1.6rem;
+        font-size: 1.8rem;
+        color: ${({ theme }) => theme.COLORS.BLUE};
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
 
     &:hover {
-        background-color: ${({ theme }) => theme.COLORS.GRAY_300};
+        background: linear-gradient(135deg, rgba(30, 67, 177, 0.15) 0%, rgba(37, 99, 235, 0.1) 100%);
         color: ${({ theme }) => theme.COLORS.BLUE};
+        padding-left: 2.4rem;
+        transform: translateX(8px) scale(1.02);
+        border-color: rgba(30, 67, 177, 0.2);
+        box-shadow: 0 8px 24px rgba(30, 67, 177, 0.15);
+
+        &::before {
+            transform: scaleY(1);
+        }
+
+        &::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 `;
 

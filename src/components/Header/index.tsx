@@ -40,7 +40,7 @@ export function Header(){
         }
     }, [menuOpen]);
 
-    // fecha no ESC
+    // fecha no ESC e ao clicar fora
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
             if (e.key === 'Escape') {
@@ -49,10 +49,21 @@ export function Header(){
             }
         }
 
-        window.addEventListener('keydown', onKeyDown);
+        function onClickOutside(e: MouseEvent) {
+            const target = e.target as HTMLElement;
+            if (!target.closest('nav') && categoriesOpen) {
+                setCategoriesOpen(false);
+            }
+        }
 
-        return () => window.removeEventListener('keydown', onKeyDown);
-    }, []);
+        window.addEventListener('keydown', onKeyDown);
+        document.addEventListener('click', onClickOutside);
+
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            document.removeEventListener('click', onClickOutside);
+        }
+    }, [categoriesOpen]);
 
     const links: NavLink[] = [
         { href: '#home', label: 'Início', icon: <FaHome /> },
@@ -84,12 +95,13 @@ export function Header(){
             <Nav>
                 {links.map(link => (
                     'categories' in link ? (
-                        <NavItem
-                            key={link.label}
-                            onMouseEnter={() => setCategoriesOpen(true)}
-                            onMouseLeave={() => setCategoriesOpen(false)}
-                        >
-                            <NavLink as="button">{link.label}</NavLink>
+                        <NavItem key={link.label}>
+                            <NavLink 
+                                as="button" 
+                                onClick={() => setCategoriesOpen(o => !o)}
+                            >
+                                {link.label}
+                            </NavLink>
 
                             <SubMenu open={categoriesOpen}>
                                 {link.categories.map(category => (
