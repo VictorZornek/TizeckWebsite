@@ -104,12 +104,69 @@ export const NavLink = styled.a`
         padding: 1.2rem 1.6rem;
         justify-content: flex-start;
         font-size: 1.6rem;
+        border-radius: 0.8rem;
+        margin: 0.2rem 0.8rem;
+        width: calc(100% - 1.6rem);
+
+        &:hover {
+            background: rgba(30, 67, 177, 0.08);
+        }
     }
     &.drawer-subitem {
-        width: 100%;
-        padding: 0.8rem 2.8rem;
-        font-size: 1.5rem;
+        width: calc(100% - 1.6rem);
+        padding: 1.2rem 1.6rem;
+        margin: 0.4rem 0.8rem;
+        font-size: 1.4rem;
+        font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
         color: ${({ theme }) => theme.COLORS.BLACK_900};
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(30, 67, 177, 0.08);
+        border-radius: 1rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, ${({ theme }) => theme.COLORS.BLUE} 0%, ${({ theme }) => theme.COLORS.DARK_BLUE} 100%);
+            transform: scaleY(0);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 0 4px 4px 0;
+        }
+
+        &::after {
+            content: '→';
+            position: absolute;
+            right: 1.4rem;
+            font-size: 1.6rem;
+            color: ${({ theme }) => theme.COLORS.BLUE};
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, rgba(30, 67, 177, 0.15) 0%, rgba(37, 99, 235, 0.1) 100%);
+            color: ${({ theme }) => theme.COLORS.BLUE};
+            padding-left: 2rem;
+            transform: translateX(4px) scale(1.01);
+            border-color: rgba(30, 67, 177, 0.2);
+            box-shadow: 0 6px 20px rgba(30, 67, 177, 0.12);
+
+            &::before {
+                transform: scaleY(1);
+            }
+
+            &::after {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
     }
   
 `;
@@ -338,9 +395,10 @@ export const DrawerSectionTitle = styled.p`
     font-size: 1.2rem;
     letter-spacing: .06rem;
     text-transform: uppercase;
+    font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
 
-    color: ${({ theme }) => theme.COLORS.BLACK_700};
+    color: ${({ theme }) => theme.COLORS.BLUE};
     
-    padding: .4rem 1.6rem;
-    margin-top: .6rem;
+    padding: 1.2rem 1.6rem 0.6rem;
+    margin-top: 0.4rem;
 `;

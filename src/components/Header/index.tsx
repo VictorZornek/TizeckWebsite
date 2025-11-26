@@ -162,7 +162,6 @@ export function Header(){
                                     className="drawer-item" 
                                     onClick={() => setCategoriesOpen(o => !o)}
                                 >
-                                    {link.icon}
                                     {link.label}
                                     <span className={`caret ${categoriesOpen ? 'open' : ''}`} aria-hidden>▾</span>
                                 </NavLink>
@@ -184,7 +183,6 @@ export function Header(){
                         ) : 'href' in link ? (
                             <Link key={link.href} href={link.href}>
                                 <NavLink className="drawer-item" onClick={closeAll}>
-                                    {link.icon}
                                     {link.label}
                                 </NavLink>
                             </Link>
