@@ -9,6 +9,8 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/Button";
 import { CategoryCard } from "@/components/CategoryCard";
 import { InformationCard } from "@/components/InformationCard";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
 
@@ -16,6 +18,7 @@ export default function HomePage() {
     return(
         <Container>
             <Header />
+            <WhatsAppButton />
 
             <main>
                 <section className="hero">
@@ -26,8 +29,8 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-buttons">
-                        <Button title="Conheça Nossos Produtos" href="#categories" />
-                        <Button title="Sobre a Empresa" isDark href="#about" />
+                        <Button title="Fale no WhatsApp" href="https://wa.me/5511987822169" />
+                        <Button title="Ver Produtos" isDark href="#featured" />
                     </div>
 
                     <span className="arrow">
@@ -37,6 +40,8 @@ export default function HomePage() {
                         </svg>
                     </span>
                 </section>
+
+                <FeaturedProducts />
 
                 <section className="about" id="about">
                     <div className="wrapper-title-text">

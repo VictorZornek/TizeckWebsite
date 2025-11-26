@@ -50,10 +50,15 @@ export const Container = styled.div`
             .wrapper-buttons {
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
 
                 padding: 0 3rem;
-                
+
+                ${up("md")} {
+                    flex-direction: row;
+                    justify-content: center;
+                    gap: 2rem;
+                }
             }
 
             .arrow {
@@ -83,12 +88,7 @@ export const Container = styled.div`
                 will-change: transform;
             }
 
-            ${up("lg")} {
-                .wrapper-buttons {
-                    justify-content: center;
-                    gap: 2rem;
-                }
-            }
+
         }
 
         .about {
