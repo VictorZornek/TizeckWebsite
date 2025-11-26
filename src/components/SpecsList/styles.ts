@@ -4,8 +4,11 @@ export const Container = styled.div`
     width: 100%;
 
     border-radius: 1.2rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
 
-    box-shadow: 0 2px 12px rgba(16, 24, 40, 0.04);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
     padding: 2rem 0 .8rem;
 `;
 
@@ -16,7 +19,10 @@ export const Title = styled.h3`
     font-family: var(--font-inter, inherit);
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
 
-    color: ${({ theme }) => theme.COLORS.DARK_BLUE};
+    background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 `;
 
 export const List = styled.dl`
@@ -30,12 +36,20 @@ export const Row = styled.div`
     align-items: center;
     gap: 1.6rem;
 
-    padding: 1.4rem 0;
+    padding: 1.4rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 0.8rem;
 
-    border-top: .5px solid ${({ theme }) => theme.COLORS.GRAY_300};
+    border-top: .5px solid rgba(30, 67, 177, 0.2);
+    transition: all 0.3s ease;
 
     &:first-of-type {
         border-top: none;
+    }
+
+    &:hover {
+        background: linear-gradient(90deg, rgba(30, 67, 177, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+        transform: translateX(5px);
     }
 
     @media (max-width: 480px) {
@@ -57,7 +71,10 @@ export const Value = styled.dd`
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
     text-align: center;
 
-    color: ${({ theme }) => theme.COLORS.DARK_BLUE};
+    background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 
     @media (max-width: 480px) {
         text-align: left;

@@ -8,9 +8,11 @@ export const Container = styled.div`
 
     border-radius: 1.2rem;
 
-    background: ${({ theme }) => theme.COLORS.GRAY_300};
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
 
-    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.06) inset;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
     overflow: hidden;
 `;
 
@@ -67,9 +69,9 @@ export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
     border-radius: 1rem;
     border: none;
 
-    background: ${({ theme }) => theme.COLORS.WHITE_900};
-    color: ${({ theme }) => theme.COLORS.BLUE};
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
+    color: ${({ theme }) => theme.COLORS.WHITE_900};
+    box-shadow: 0 6px 16px rgba(30, 67, 177, 0.4);
 
     display: grid;
     place-items: center;
@@ -77,6 +79,12 @@ export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
     z-index: 1;
 
     cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 8px 20px rgba(30, 67, 177, 0.6);
+    }
 
     &:disabled {
         opacity: 0.4;
@@ -84,7 +92,7 @@ export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
     }
 
     &:focus-visible {
-        outline: 3px solid rgba(31, 73, 215, 0.45);
+        outline: 3px solid rgba(30, 67, 177, 0.6);
         outline-offset: 2px;
     }
 `;
@@ -115,11 +123,11 @@ export const Dot = styled.button<{ $active?: boolean }>`
         $active &&
         css`
             transform: scale(1.15);
-            background: ${({ theme }) => theme.COLORS.BLUE}; /* ativo azul */
+            background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
         `}
 
     &:focus-visible {
-        outline: 2px solid rgba(31,73,215,0.45);
+        outline: 2px solid rgba(30, 67, 177, 0.6);
         outline-offset: 2px;
     }
 `;

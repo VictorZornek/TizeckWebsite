@@ -15,7 +15,15 @@ export const Container = styled.div`
     
     overflow-x: hidden;
 
-    background-color: ${({ theme }) => theme.COLORS.WHITE_600};
+    background: linear-gradient(135deg, #1E43B1 0%, #2563eb 25%, #3b82f6 50%, #60a5fa 75%, #93c5fd 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
     > main {
         width: 100%;
@@ -24,7 +32,8 @@ export const Container = styled.div`
 
         > h1 {
             font-size: 2.2rem;
-            color: ${({ theme }) => theme.COLORS.BLACK_900};
+            color: ${({ theme }) => theme.COLORS.WHITE_900};
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 
             text-align: center;
 
@@ -33,7 +42,8 @@ export const Container = styled.div`
 
         > p {
             font-size: 1.6rem;
-            color: ${({ theme }) => theme.COLORS.BLACK_900};
+            color: ${({ theme }) => theme.COLORS.WHITE_900};
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 
             text-align: center;
 
