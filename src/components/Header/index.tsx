@@ -66,7 +66,7 @@ export function Header(){
     }, [categoriesOpen]);
 
     const links: NavLink[] = [
-        { href: '/', label: 'Início', icon: <FaHome /> },
+        { href: '#home', label: 'Início', icon: <FaHome /> },
         { 
             label: 'Produtos', 
             icon: <FaBoxOpen />,
@@ -79,7 +79,7 @@ export function Header(){
                 { href: '/products/Torneira', label: 'Torneiras' },
             ],
         },
-        { href: '/', label: 'Sobre Tizeck', icon: <MdBusiness /> },
+        { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
     const closeAll = () => {
@@ -106,7 +106,7 @@ export function Header(){
 
                             <SubMenu open={categoriesOpen}>
                                 {link.categories.map(category => (
-                                    <Link key={category.href} href={category.href} passHref>
+                                    <Link key={category.href} href={category.href}>
                                         <SubMenuItem onClick={() => setCategoriesOpen(false)}>
                                             {category.label}
                                         </SubMenuItem>
@@ -115,11 +115,13 @@ export function Header(){
                             </SubMenu>
                         </NavItem>
                     ) : 'href' in link ? (
-                        <Link key={link.href} href={link.href} passHref>
-                            <NavLink onClick={() => setMenuOpen(false)}>
-                                {link.label}
-                            </NavLink>
-                        </Link>
+                        <NavItem key={link.href}>
+                            <Link href={link.href}>
+                                <NavLink onClick={() => setMenuOpen(false)}>
+                                    {link.label}
+                                </NavLink>
+                            </Link>
+                        </NavItem>
                     ) : null
                 ))}
             </Nav>
@@ -170,7 +172,7 @@ export function Header(){
                                         <DrawerSectionTitle>Categorias</DrawerSectionTitle>
                                     
                                         {link.categories.map(category => (
-                                            <Link key={category.href} href={category.href} passHref>
+                                            <Link key={category.href} href={category.href}>
                                                 <NavLink className="drawer-subitem" onClick={closeAll}>
                                                     {category.label}
                                                 </NavLink>
@@ -180,7 +182,7 @@ export function Header(){
                                 )}
                             </div>
                         ) : 'href' in link ? (
-                            <Link key={link.href} href={link.href} passHref>
+                            <Link key={link.href} href={link.href}>
                                 <NavLink className="drawer-item" onClick={closeAll}>
                                     {link.icon}
                                     {link.label}
