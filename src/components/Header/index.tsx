@@ -66,19 +66,20 @@ export function Header(){
     }, [categoriesOpen]);
 
     const links: NavLink[] = [
-        { href: '#home', label: 'Início', icon: <FaHome /> },
+        { href: '/', label: 'Início', icon: <FaHome /> },
         { 
             label: 'Produtos', 
             icon: <FaBoxOpen />,
             categories: [
-                { href: '#filtros', label: 'Filtros' },
-                { href: '#suportes-quadrados', label: 'Suportes Quadrados' },
-                { href: '#suportes-redondos', label: 'Suportes Redondos' },
-                { href: '#torneiras', label: 'Torneiras' },
-                { href: '#galoes', label: 'Galões' },
+                { href: '/products/Bomba', label: 'Bombas' },
+                { href: '/products/Suporte%20MAX', label: 'Suporte MAX' },
+                { href: '/products/Suporte%20Master', label: 'Suporte Master' },
+                { href: '/products/Suporte%20Quadrado', label: 'Suporte Quadrado' },
+                { href: '/products/Suporte%20Redondo', label: 'Suporte Redondo' },
+                { href: '/products/Torneira', label: 'Torneiras' },
             ],
         },
-        { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
+        { href: '/', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
     const closeAll = () => {
