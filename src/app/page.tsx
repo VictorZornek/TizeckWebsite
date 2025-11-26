@@ -51,24 +51,25 @@ export default function HomePage() {
 
                     <div className="wrapper-history">
                         <h3>Nossa História</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus ratione voluptates at omnis eos, corporis soluta dicta explicabo ipsa harum repudiandae voluptatem amet mollitia a nostrum, perferendis quaerat culpa laborum.</p>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi magni laborum corporis. Culpa illum nihil ipsum. Perspiciatis aut aperiam maiores laborum maxime dolorum molestias nulla quo et? Totam, fugiat repellendus.</p>
+                        <p>Fundada em 2008, a Tizeck nasceu da paixão e determinação de um jovem que começou aos 12 anos trabalhando em ferramentaria. O interesse pelo setor de injeção plástica surgiu após contato com um amigo da família, quando começou a vender peças produzidas por uma pequena máquina adquirida em parceria.</p>
+                        <p>Com esforço e dedicação, as vendas cresceram de 2 mil para mais de 30 mil peças mensais. Aos 21 anos, investiu o dinheiro da venda de um imóvel herdado na compra de sua própria máquina, iniciando o negócio de forma independente. Buscando aperfeiçoamento, formou-se em um curso técnico em plásticos, o que impulsionou o crescimento da empresa.</p>
+                        <p>Hoje, somos reconhecidos pela qualidade, tradição familiar e pelos valores que nos guiam: dedicação, inovação e excelência. Oferecemos soluções plásticas que simplificam o cotidiano com preços acessíveis.</p>
                     </div>
 
-                    <div className="wrapper-counters-image">
-                        <div className='wrapper-counters'>
-                            <Counter>
-                                <span>+20</span>
-                                <p>Anos de Experiência</p>
-                            </Counter>
+                    <div className="wrapper-counters">
+                        <Counter>
+                            <span>+16</span>
+                            <p>Anos de Experiência</p>
+                        </Counter>
 
-                            <Counter>
-                                <span>+500</span>
-                                <p>Clientes Satisfeitos</p>
-                            </Counter>
-                        </div>
+                        <Counter>
+                            <span>+500</span>
+                            <p>Clientes Satisfeitos</p>
+                        </Counter>
+                    </div>
 
-                        <Image src={tizeckFront} alt="Frente da Tizeck" />
+                    <div className="wrapper-image">
+                        <Image src={tizeckFront} alt="Fachada da Tizeck" />
                     </div>
                 </section>
 
