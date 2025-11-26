@@ -194,16 +194,16 @@ export const Container = styled.div`
 
             .wrapper-counters {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: center;
                 align-items: center;
-                gap: 3rem;
+                gap: 2rem;
                 margin-top: 5rem;
                 position: relative;
                 z-index: 1;
+                padding: 0 2rem;
 
                 ${up('md')} {
-                    flex-direction: row;
-                    justify-content: center;
                     gap: 10rem;
                 }
             }
