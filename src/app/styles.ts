@@ -43,7 +43,7 @@ export const Container = styled.div`
                 }
 
                 p {
-                    font-size: 1.2rem;
+                    font-size: 1.8rem;
                 }
             }
 
@@ -154,7 +154,7 @@ export const Container = styled.div`
                 }
 
                 p {
-                    font-size: 1.6rem;
+                    font-size: 1.8rem;
                     color: ${({ theme }) => theme.COLORS.GRAY_400};
                     max-width: 70rem;
                     margin: 0 auto;
@@ -255,7 +255,7 @@ export const Container = styled.div`
                 }
 
                 p {
-                    font-size: 1.4rem;
+                    font-size: 1.6rem;
                     color: ${({ theme }) => theme.COLORS.WHITE_600};
 
                 }

@@ -8,7 +8,7 @@ export default createGlobalStyle`
     }
 
     :root {
-        font-size: 62.5%;
+        font-size: 68.75%;
         --font-inter: 'Inter', sans-serif;
     }
 
