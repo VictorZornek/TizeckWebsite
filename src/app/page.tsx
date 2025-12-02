@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { MdPhone, MdPlace, MdMail } from 'react-icons/md';
 
@@ -14,7 +15,39 @@ import { FeaturedProducts } from "@/components/FeaturedProducts";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
 
+type Category = {
+    name: string;
+    image: string;
+};
+
+const categoryLabels: Record<string, string> = {
+    "Bomba": "Bombas",
+    "Suporte MAX": "Suporte MAX",
+    "Suporte Master": "Suporte Master",
+    "Suporte Quadrado": "Suportes Quadrados",
+    "Suporte Redondo": "Suportes Redondos",
+    "Torneira": "Torneiras"
+};
+
+const categoryDescriptions: Record<string, string> = {
+    "Bomba": "Linha completa de bombas para diversos tipos de aplicações.",
+    "Suporte MAX": "Suportes MAX com alta resistência e durabilidade.",
+    "Suporte Master": "Suportes Master com design moderno e funcional.",
+    "Suporte Quadrado": "Suportes quadrados disponíveis em diversas cores e tamanhos.",
+    "Suporte Redondo": "Suportes redondos com acabamento de qualidade superior.",
+    "Torneira": "Torneiras práticas e duráveis para diversos usos."
+};
+
 export default function HomePage() {
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useEffect(() => {
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(() => setCategories([]));
+    }, []);
+
     return(
         <Container>
             <Header />
@@ -80,40 +113,15 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-categories">
-                        <CategoryCard 
-                            name="Filtros" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Filtro")}`}
-                        />
-
-                        <CategoryCard 
-                            name="Suportes Quadrados" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Suporte Quadrado")}`}
-                        />
-
-                        <CategoryCard 
-                            name="Suportes Redondos" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Suporte Redondo")}`}
-                        />
-
-                        <CategoryCard 
-                            name="Torneiras" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Torneira")}`}
-                        />
-
-                        <CategoryCard 
-                            name="Galões" 
-                            description="Descrição detalhada do produto, suas principais características, benefícios e aplicações no mercado." 
-                            imageUrl="https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-                            href={`/products/${encodeURIComponent("Galões")}`}
-                        />
+                        {categories.map((category) => (
+                            <CategoryCard 
+                                key={category.name}
+                                name={categoryLabels[category.name] || category.name}
+                                description={categoryDescriptions[category.name] || ""}
+                                imageUrl={category.image}
+                                href={`/products/${encodeURIComponent(category.name)}`}
+                            />
+                        ))}
                     </div>
                 </section>
 

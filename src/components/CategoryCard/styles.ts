@@ -4,13 +4,13 @@ import { up } from "@/styles/media";
 export const Container = styled.div`
     width: 100%;
     max-width: 30rem;
-    height: 26.75rem;
+    height: 32rem;
 
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 0;
 
-    padding-top: 1rem;
+    padding-top: 2rem;
 
     border-radius: .8rem;
 
@@ -31,26 +31,28 @@ export const Container = styled.div`
 `;
 
 export const ImageWrapper = styled.img`
-    width: 14rem;
-    height: 9rem;
+    width: 18rem;
+    height: 14rem;
 
-    object-fit: cover;
+    object-fit: contain;
 
     padding: .5rem;
 
     border-radius: .8rem;
 
     align-self: center;
+    margin-bottom: 1rem;
 `;
 
 export const WrapperText = styled.div`
     width: 100%;
+    flex: 1;
 
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem 2rem;
 
     border-radius: 0 0 .8rem .8rem;
 

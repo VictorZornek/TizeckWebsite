@@ -36,3 +36,25 @@ export async function getFeaturedProducts() {
     return products;
 }
 
+export async function getCategoriesWithImages() {
+    await connectMongo();
+
+    const categories = ["Bomba", "Suporte MAX", "Suporte Master", "Suporte Quadrado", "Suporte Redondo", "Torneira"];
+    
+    const categoriesWithImages = await Promise.all(
+        categories.map(async (category) => {
+            const product = await Products.findOne({ 
+                category, 
+                images: { $exists: true, $ne: [] } 
+            });
+            
+            return {
+                name: category,
+                image: product?.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
+            };
+        })
+    );
+
+    return categoriesWithImages;
+}
+
