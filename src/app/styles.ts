@@ -30,8 +30,8 @@ export const Container = styled.div`
             background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
 
             .wrapper-text {
-                padding: 5rem 3rem 0;
-                margin-bottom: 3rem;
+                padding: 8rem 3rem 0;
+                margin-bottom: 5rem;
 
                 display: flex;
                 flex-direction: column;
@@ -53,6 +53,7 @@ export const Container = styled.div`
                 gap: 1.5rem;
 
                 padding: 0 3rem;
+                margin-bottom: 1.5rem;
 
                 ${up("md")} {
                     flex-direction: row;
