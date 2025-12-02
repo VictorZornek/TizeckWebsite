@@ -5,7 +5,7 @@ import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -13,7 +13,7 @@ export const Container = styled.div`
 
     margin: 0 auto;
     
-    overflow-x: hidden;
+    overflow: hidden;
 
     background: linear-gradient(135deg, #1E43B1 0%, #2563eb 25%, #3b82f6 50%, #60a5fa 75%, #93c5fd 100%);
     background-size: 400% 400%;
@@ -27,8 +27,14 @@ export const Container = styled.div`
 
     > main {
         width: 100%;
+        flex: 1;
         padding: 0 1.6rem;
-        margin: 0 auto 10rem;
+        margin-bottom: 8rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1.5rem;
 
         > h1 {
             font-size: 2.2rem;
@@ -37,29 +43,27 @@ export const Container = styled.div`
 
             text-align: center;
 
-            margin: 8rem 0 2rem;
+            margin: 0;
         }
 
         > p {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: ${({ theme }) => theme.COLORS.WHITE_900};
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 
             text-align: center;
 
-            margin-bottom: 3rem;
+            margin: 0;
         }
 
         .wrapper-images-specs {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 3rem;
-
-            margin-top: 4rem;
+            gap: 2rem;
 
             ${up("lg")} {
                 grid-template-columns: 1fr 1fr;
-                align-items: start;
+                align-items: center;
             }
         }
 

@@ -3,24 +3,26 @@ import styled, { css } from "styled-components";
 export const Container = styled.div`
     position: relative;
     width: 100%;
+    max-width: 50rem;
+    aspect-ratio: 1 / 1;
 
     margin: 0 auto;
 
-    border-radius: 1.2rem;
+    border-radius: 2rem;
 
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 255, 0.95) 100%);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 `;
 
 export const Viewport = styled.div`
     position: relative;
 
-    height: calc(100% - 4.5rem); /* deixa espaço para a barra inferior */
-    padding: 0 6.4rem;           /* espaço para as setas laterais */
+    height: calc(100% - 5rem);
+    padding: 1rem 6rem;
 
     display: flex;
     align-items: center;
@@ -47,47 +49,46 @@ export const Slide = styled.div`
 `;
 
 export const Image = styled.img`
-    max-width: min(80%, 26.5rem);
+    max-width: 90%;
     max-height: 90%;
 
     object-fit: contain;
 
-    border-radius: 1.4rem;
-
-    box-shadow: 0 6px 20px rgba(31, 73, 215, 0.12);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 `;
 
 export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
     position: absolute;
     top: 50%;
-    ${(p) => (p.side === 'left' ? 'left: 16px;' : 'right: 16px;')}
+    ${(p) => (p.side === 'left' ? 'left: 1.5rem;' : 'right: 1.5rem;')}
     transform: translateY(-50%);
 
-    width: 4.2rem;
-    height: 4.2rem;
+    width: 4rem;
+    height: 4rem;
 
-    border-radius: 1rem;
+    border-radius: 50%;
     border: none;
 
-    background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
-    color: ${({ theme }) => theme.COLORS.WHITE_900};
-    box-shadow: 0 6px 16px rgba(30, 67, 177, 0.4);
+    background: rgba(255, 255, 255, 0.9);
+    color: #1E43B1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
     display: grid;
     place-items: center;
 
-    z-index: 1;
+    z-index: 2;
 
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover:not(:disabled) {
         transform: translateY(-50%) scale(1.1);
-        box-shadow: 0 8px 20px rgba(30, 67, 177, 0.6);
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
     &:disabled {
-        opacity: 0.4;
+        opacity: 0.3;
         cursor: default;
     }
 
@@ -98,36 +99,37 @@ export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
 `;
 
 export const BottomBar = styled.div`
-    height: 4.5rem;
-    background: ${({ theme }) => theme.COLORS.WHITE_900}; /* faixa clara como no mock */
+    height: 5rem;
+    background: rgba(255, 255, 255, 0.1);
     
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 1rem;
 `;
 
 export const Dot = styled.button<{ $active?: boolean }>`
-    width: .9rem;
-    height: .9rem;
+    width: 1rem;
+    height: 1rem;
 
     border-radius: 50%;
     border: none;
 
     cursor: pointer;
 
-    background: #c9cdd6;
-    transition: transform 160ms ease, background 160ms ease;
+    background: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
 
     ${({ $active }) =>
         $active &&
         css`
-            transform: scale(1.15);
-            background: linear-gradient(135deg, #1E43B1 0%, #2563eb 100%);
+            width: 2.5rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.9);
         `}
 
     &:focus-visible {
-        outline: 2px solid rgba(30, 67, 177, 0.6);
+        outline: 2px solid rgba(255, 255, 255, 0.8);
         outline-offset: 2px;
     }
 `;
