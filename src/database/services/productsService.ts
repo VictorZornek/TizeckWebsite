@@ -26,3 +26,13 @@ export async function getProductByName(name: string) {
     return product;
 }
 
+export async function getFeaturedProducts() {
+    await connectMongo();
+
+    const products = await Products.find({
+        name: { $in: ["Suporte Quadrado Branco", "Suporte Redondo Branco", "Suporte Quadrado Preto"] }
+    }).limit(3);
+
+    return products;
+}
+
