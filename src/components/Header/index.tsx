@@ -66,7 +66,7 @@ export function Header(){
     }, [categoriesOpen]);
 
     const links: NavLink[] = [
-        { href: '#home', label: 'Início', icon: <FaHome /> },
+        { href: '/', label: 'Início', icon: <FaHome /> },
         { 
             label: 'Produtos', 
             icon: <FaBoxOpen />,
@@ -79,7 +79,7 @@ export function Header(){
                 { href: '/products/Torneira', label: 'Torneiras' },
             ],
         },
-        { href: '#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
+        { href: '/#about', label: 'Sobre Tizeck', icon: <MdBusiness /> },
     ]
 
     const closeAll = () => {
