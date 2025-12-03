@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <style dangerouslySetInnerHTML={{
           __html: `
             html, body {
-              background-color: #000000;
+              background-color: #FFFFFF;
               margin: 0;
               padding: 0;
             }
