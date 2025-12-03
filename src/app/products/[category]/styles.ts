@@ -15,7 +15,7 @@ export const Container = styled.div`
     
     overflow-x: hidden;
 
-    background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
+    background: linear-gradient(135deg,rgb(25, 54, 132) 0%, rgba(59, 129, 245, 1) 100%);
 
 
     > main {
