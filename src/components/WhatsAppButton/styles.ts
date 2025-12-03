@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import { up } from '@/styles/media';
 
 const pulse = keyframes`
     0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
@@ -8,23 +9,26 @@ const pulse = keyframes`
 
 export const Container = styled.a`
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
     z-index: 9999;
 
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
+    gap: 0.8rem;
 
-    padding: 1.4rem 2rem;
+    padding: 1.2rem;
+    min-width: 5.6rem;
+    min-height: 5.6rem;
     
     background: #25D366;
     color: white;
     
-    border-radius: 5rem;
+    border-radius: 50%;
     border: none;
     
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
     text-decoration: none;
     
@@ -41,8 +45,25 @@ export const Container = styled.a`
     }
 
     span {
-        @media (max-width: 480px) {
-            display: none;
+        display: none;
+        white-space: nowrap;
+    }
+
+    @media (min-width: 480px) {
+        padding: 1.4rem 2rem;
+        border-radius: 5rem;
+        min-width: auto;
+        min-height: auto;
+        font-size: 1.6rem;
+        gap: 1rem;
+
+        span {
+            display: block;
         }
+    }
+
+    @media (min-width: 768px) {
+        bottom: 2rem;
+        right: 2rem;
     }
 `;

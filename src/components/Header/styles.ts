@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { up } from "@/styles/media";
 
 export const Container = styled.header`
-    --header-h: 7rem;
+    --header-h: 6rem;
 
     position: fixed;
     top: 0;
@@ -10,7 +10,7 @@ export const Container = styled.header`
 
     width: 100%;
     height: var(--header-h);
-    padding: 0 3rem;
+    padding: 0 1.5rem;
 
     display: flex;
     align-items: center;
@@ -24,9 +24,20 @@ export const Container = styled.header`
     z-index: 1000;
 
     > img {
-        height: calc(var(--header-h) - 2rem);
-        width: 10rem;
+        height: calc(var(--header-h) - 1.5rem);
+        width: auto;
+        max-width: 8rem;
         display: block;
+    }
+
+    ${up('md')} {
+        --header-h: 7rem;
+        padding: 0 3rem;
+
+        > img {
+            height: calc(var(--header-h) - 2rem);
+            max-width: 10rem;
+        }
     }
 `;
 
@@ -289,17 +300,33 @@ export const MenuButton = styled.button`
 
     display: grid;
     place-items: center;
-    width: 4rem;
-    height: 4rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
 
     ${up("lg")} {
         display: none;
     }
 
     svg {
-        width: 2.8rem;
-        height: 2.8rem;
+        width: 2.4rem;
+        height: 2.4rem;
         fill: ${({ theme }) => theme.COLORS.GRAY_700};
+    }
+
+    ${up('md')} {
+        width: 4rem;
+        height: 4rem;
+
+        svg {
+            width: 2.8rem;
+            height: 2.8rem;
+        }
     }
 `;
 
@@ -324,8 +351,8 @@ export const Sidebar = styled.aside<{ open: boolean }>`
     right: 0;
 
     height: 100dvh;
-    width: 80%;
-    max-width: 34rem;
+    width: 85%;
+    max-width: 32rem;
 
     background: ${({ theme }) => theme.COLORS.WHITE_900};
     border-left: 1px solid ${({ theme }) => theme.COLORS.WHITE_600};
@@ -338,6 +365,11 @@ export const Sidebar = styled.aside<{ open: boolean }>`
     flex-direction: column;
 
     z-index: 1100;
+
+    ${up('sm')} {
+        width: 80%;
+        max-width: 34rem;
+    }
 
     ${up('lg')} { 
         display: none; 

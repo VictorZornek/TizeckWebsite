@@ -18,32 +18,73 @@ export const Container = styled.div`
     margin: 0;
 
     > main {
-        margin-top: 3rem;
+        margin-top: 6rem;
+
+        ${up('md')} {
+            margin-top: 7rem;
+        }
 
         .hero {
             position: relative;
-            height: 50rem;
+            min-height: 100vh;
+            height: auto;
 
             margin: 0 auto;
             text-align: center;
 
             background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+
             .wrapper-text {
-                padding: 8rem 3rem 0;
-                margin-bottom: 5rem;
+                padding: 2rem 1rem 0;
+                margin-bottom: 3rem;
 
                 display: flex;
                 flex-direction: column;
-                gap: 2rem;
+                gap: 1.5rem;
+                max-width: 90rem;
+                width: 100%;
+
+                img {
+                    max-width: 280px !important;
+                    width: 100% !important;
+                    height: auto !important;
+                }
 
                 h1 {
-                    font-size: 3rem;
+                    font-size: 2.2rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                    line-height: 1.2;
                 }
 
                 p {
-                    font-size: 1.8rem;
+                    font-size: 1.4rem;
+                    line-height: 1.5;
+                    padding: 0 1rem;
+                }
+
+                ${up('md')} {
+                    padding: 4rem 2rem 0;
+                    margin-bottom: 4rem;
+                    gap: 2rem;
+
+                    img {
+                        max-width: 400px !important;
+                    }
+
+                    h1 {
+                        font-size: 3rem;
+                    }
+
+                    p {
+                        font-size: 1.8rem;
+                        padding: 0;
+                    }
                 }
             }
 
@@ -51,14 +92,17 @@ export const Container = styled.div`
                 display: flex;
                 flex-direction: column;
                 gap: 1.5rem;
+                width: 100%;
+                max-width: 50rem;
 
-                padding: 0 3rem;
-                margin-bottom: 1.5rem;
+                padding: 0 1rem;
+                margin-bottom: 2rem;
 
                 ${up("md")} {
                     flex-direction: row;
                     justify-content: center;
                     gap: 2rem;
+                    padding: 0 2rem;
                 }
             }
 
@@ -125,8 +169,8 @@ export const Container = styled.div`
             }
 
             .wrapper-title-text {
-                padding: 0 3rem;
-                margin-bottom: 4rem;
+                padding: 0 1.5rem;
+                margin-bottom: 3rem;
                 position: relative;
                 z-index: 1;
 
@@ -135,11 +179,12 @@ export const Container = styled.div`
                 gap: 1.5rem;
 
                 h2 {
-                    font-size: 3.5rem;
+                    font-size: 2.5rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
                     color: ${({ theme }) => theme.COLORS.DARK_BLUE};
                     position: relative;
                     padding-bottom: 2rem;
+                    line-height: 1.2;
 
                     &::after {
                         content: '';
@@ -147,25 +192,43 @@ export const Container = styled.div`
                         bottom: 0;
                         left: 50%;
                         transform: translateX(-50%);
-                        width: 8rem;
+                        width: 6rem;
                         height: 0.4rem;
                         background: linear-gradient(90deg, ${({ theme }) => theme.COLORS.BLUE} 0%, ${({ theme }) => theme.COLORS.DARK_BLUE} 100%);
                         border-radius: 2px;
                     }
+
+                    ${up('md')} {
+                        font-size: 3.5rem;
+
+                        &::after {
+                            width: 8rem;
+                        }
+                    }
                 }
 
                 p {
-                    font-size: 1.8rem;
+                    font-size: 1.5rem;
                     color: ${({ theme }) => theme.COLORS.GRAY_400};
                     max-width: 70rem;
                     margin: 0 auto;
+                    line-height: 1.6;
+
+                    ${up('md')} {
+                        font-size: 1.8rem;
+                    }
+                }
+
+                ${up('md')} {
+                    padding: 0 3rem;
+                    margin-bottom: 4rem;
                 }
             }
 
             .wrapper-history {
-                padding: 3rem 2.5rem;
+                padding: 2rem 1.5rem;
                 max-width: 90rem;
-                margin: 0 auto;
+                margin: 0 1rem;
                 position: relative;
                 z-index: 1;
 
@@ -179,34 +242,56 @@ export const Container = styled.div`
                 gap: 1.5rem;
 
                 h3 {
-                    font-size: 2.2rem;
+                    font-size: 1.8rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
                     color: ${({ theme }) => theme.COLORS.BLUE};
                     text-align: center;
                     margin-bottom: 1rem;
+                    line-height: 1.3;
+
+                    ${up('md')} {
+                        font-size: 2.2rem;
+                    }
                 }
 
                 p {
-                    font-size: 1.4rem;
+                    font-size: 1.3rem;
                     color: ${({ theme }) => theme.COLORS.GRAY_400};
                     line-height: 1.8;
-                    text-align: justify;
+                    text-align: left;
+
+                    ${up('md')} {
+                        font-size: 1.4rem;
+                        text-align: justify;
+                    }
+                }
+
+                ${up('md')} {
+                    padding: 3rem 2.5rem;
+                    margin: 0 auto;
                 }
             }
 
             .wrapper-counters {
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 gap: 2rem;
-                margin-top: 5rem;
+                margin-top: 3rem;
                 position: relative;
                 z-index: 1;
-                padding: 0 2rem;
+                padding: 0 1rem;
+
+                ${up('sm')} {
+                    flex-direction: row;
+                    gap: 3rem;
+                }
 
                 ${up('md')} {
                     gap: 10rem;
+                    margin-top: 5rem;
+                    padding: 0 2rem;
                 }
             }
 
@@ -242,23 +327,37 @@ export const Container = styled.div`
             padding: 1rem 1.5rem 8rem;
 
             .wrapper-title-text {
-                padding: 3rem 3rem 0;
-                margin-bottom: 3rem;
+                padding: 2rem 1.5rem 0;
+                margin-bottom: 2rem;
 
                 display: flex;
                 flex-direction: column;
                 gap: 1rem;
 
                 h2 {
-                    font-size: 2.2rem;
+                    font-size: 2rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
                     color: ${({ theme }) => theme.COLORS.WHITE_900};
+                    line-height: 1.3;
+
+                    ${up('md')} {
+                        font-size: 2.2rem;
+                    }
                 }
 
                 p {
-                    font-size: 1.6rem;
+                    font-size: 1.4rem;
                     color: ${({ theme }) => theme.COLORS.WHITE_600};
+                    line-height: 1.5;
 
+                    ${up('md')} {
+                        font-size: 1.6rem;
+                    }
+                }
+
+                ${up('md')} {
+                    padding: 3rem 3rem 0;
+                    margin-bottom: 3rem;
                 }
             }
 
@@ -313,51 +412,81 @@ export const Container = styled.div`
 
                 text-align: center;
 
-                margin-bottom: 5rem;
+                margin-bottom: 3rem;
 
                 h1 {
-                    font-size: 3rem;
+                    font-size: 2.2rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+                    line-height: 1.3;
+
+                    ${up('md')} {
+                        font-size: 3rem;
+                    }
                 }
 
                 p {
-                    font-size: 1.6rem;
+                    font-size: 1.4rem;
                     color: ${({ theme }) => theme.COLORS.GRAY_300};
+                    line-height: 1.5;
+                    padding: 0 1rem;
+
+                    ${up('md')} {
+                        font-size: 1.6rem;
+                        padding: 0;
+                    }
+                }
+
+                ${up('md')} {
+                    margin-bottom: 5rem;
                 }
             }
 
             .contact-info {
                 display: grid;
                 grid-template-columns: 1fr;
-                gap: 2.5rem;
+                gap: 2rem;
                 max-width: 120rem;
-                margin: 0 auto 3rem;
+                margin: 0 auto 2rem;
                 
                 h3 {
-                    font-size: 2rem;
-                    margin-bottom: 2rem;
+                    font-size: 1.8rem;
+                    margin-bottom: 1.5rem;
                     grid-column: 1 / -1;
+                    line-height: 1.3;
+
+                    ${up('md')} {
+                        font-size: 2rem;
+                        margin-bottom: 2rem;
+                        text-align: center;
+                    }
                 }
 
                 ${up('md')} {
                     grid-template-columns: repeat(3, 1fr);
-                    
-                    h3 {
-                        text-align: center;
-                    }
+                    gap: 2.5rem;
+                    margin: 0 auto 3rem;
                 }
             }
 
             .worktime {
                 display: flex;
                 flex-direction: column;
-                gap: 2rem;
+                gap: 1.5rem;
                 max-width: 50rem;
                 margin: 0 auto;
 
                 h3 {
-                    font-size: 2rem;
+                    font-size: 1.8rem;
                     text-align: center;
+                    line-height: 1.3;
+
+                    ${up('md')} {
+                        font-size: 2rem;
+                    }
+                }
+
+                ${up('md')} {
+                    gap: 2rem;
                 }
             }
         }
@@ -370,10 +499,12 @@ export const Counter = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 20rem;
 
     background: rgba(255, 255, 255, 0.9);
-    padding: 3rem 4rem;
+    padding: 2rem 1.5rem;
     border-radius: 1.5rem;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     transition: all 0.3s ease;
@@ -384,29 +515,47 @@ export const Counter = styled.div`
     }
 
     span {
-        font-size: 4rem;
+        font-size: 3rem;
         font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
         background: linear-gradient(135deg, ${({ theme }) => theme.COLORS.BLUE} 0%, ${({ theme }) => theme.COLORS.DARK_BLUE} 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        line-height: 1;
+
+        ${up('md')} {
+            font-size: 4rem;
+        }
     }
 
     p {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         color: ${({ theme }) => theme.COLORS.GRAY_400};
         font-weight: ${({ theme }) => theme.FONTS_WEIGHT.MEDIUM};
+        text-align: center;
+        line-height: 1.3;
+
+        ${up('md')} {
+            font-size: 1.4rem;
+        }
+    }
+
+    ${up('md')} {
+        gap: 1rem;
+        padding: 3rem 4rem;
+        max-width: none;
+        width: auto;
     }
 `;
 
 export const WorktimeWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
 
     width: 100%;
 
-    padding: 2rem;
+    padding: 1.5rem;
 
     border-radius: 1rem;
 
@@ -415,13 +564,33 @@ export const WorktimeWrapper = styled.div`
     .wrapper-day-hour {
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         .day {
             color: ${({ theme }) => theme.COLORS.GRAY_300};
+            font-size: 1.3rem;
+            line-height: 1.3;
         }
 
         .hour {
             font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
+            font-size: 1.3rem;
+            line-height: 1.3;
+        }
+    }
+
+    @media (min-width: 768px) {
+        gap: 1rem;
+        padding: 2rem;
+
+        .wrapper-day-hour {
+            .day {
+                font-size: 1.4rem;
+            }
+
+            .hour {
+                font-size: 1.4rem;
+            }
         }
     }
 `;

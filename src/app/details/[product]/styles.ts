@@ -5,7 +5,7 @@ import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
 
     display: flex;
     flex-direction: column;
@@ -13,7 +13,7 @@ export const Container = styled.div`
 
     margin: 0 auto;
     
-    overflow: hidden;
+    overflow-x: hidden;
 
     background: linear-gradient(135deg, #1E43B1 0%, #2563eb 25%, #3b82f6 50%, #60a5fa 75%, #93c5fd 100%);
     background-size: 400% 400%;
@@ -28,13 +28,13 @@ export const Container = styled.div`
     > main {
         width: 100%;
         flex: 1;
-        padding: 0 1.6rem;
-        margin-bottom: 8rem;
+        padding: 8rem 1.6rem 12rem;
+        max-width: 120rem;
+        margin: 0 auto;
 
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        gap: 1.5rem;
+        gap: 2rem;
 
         > h1 {
             font-size: 2.2rem;
@@ -47,13 +47,15 @@ export const Container = styled.div`
         }
 
         > p {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             color: ${({ theme }) => theme.COLORS.WHITE_900};
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            line-height: 1.6;
 
             text-align: center;
 
             margin: 0;
+            padding: 0 1rem;
         }
 
         .wrapper-images-specs {
