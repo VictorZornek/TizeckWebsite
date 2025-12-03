@@ -16,10 +16,10 @@ export const Container = styled.header`
     align-items: center;
     justify-content: space-between;
 
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
 
     z-index: 1000;
 
@@ -70,7 +70,7 @@ export const NavLink = styled.a`
     background: transparent;
     border: none;
     padding: 1rem 1.6rem;
-    border-radius: 0.8rem;
+    border-radius: 1.2rem;
     line-height: 1;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -97,8 +97,8 @@ export const NavLink = styled.a`
 
     &:hover {
         color: ${({ theme }) => theme.COLORS.BLUE};
-        background: rgba(30, 67, 177, 0.08);
-        transform: translateY(-2px);
+        background: rgba(59, 129, 245, 0.08);
+        transform: translateY(-1px);
 
         svg {
             transform: scale(1.1);
