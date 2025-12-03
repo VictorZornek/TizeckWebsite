@@ -42,16 +42,16 @@ export const Container = styled.div`
 
 export const ImageWrapper = styled.img`
     width: 100%;
-    max-width: 16rem;
-    height: 12rem;
+    max-width: 20rem;
+    height: 16rem;
 
     object-fit: contain;
 
     border-radius: .8rem;
 
     @media (min-width: 768px) {
-        max-width: 20rem;
-        height: 16rem;
+        max-width: 26rem;
+        height: 20rem;
     }
 `;
 
