@@ -64,7 +64,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="wrapper-buttons">
-                        <Button title="Fale no WhatsApp" href="https://wa.me/5511987822169" />
+                        <Button title="Fale no WhatsApp" href="https://wa.link/pp0z8u" />
                         <Button title="Ver Produtos" isDark href="#categories" />
                     </div>
 
@@ -176,7 +176,7 @@ export default function HomePage() {
                             </div>
                         </WorktimeWrapper>
 
-                        <Button title="Solicitar Orçamento" href="https://wa.me/5511987822169" />
+                        <Button title="Solicitar Orçamento" href="https://wa.link/pp0z8u" />
                     </div>
                 </section>
             </main>
