@@ -14,6 +14,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 
 import tizeckFront from '@/assets/TizeckFront.jpg';
+import logoTizeck from '@/assets/LogoTizeck.png';
 
 type Category = {
     name: string;
@@ -56,6 +57,7 @@ export default function HomePage() {
             <main>
                 <section className="hero">
                     <div className="wrapper-text">
+                        <Image src={logoTizeck} alt="Logo Tizeck" width={400} height={160} priority style={{ margin: '0 auto 1rem' }} />
                         <h1>Excelência em Produtos</h1>
 
                         <p>Há mais de 20 anos no mercado, oferecemos soluções de qualidade com compromisso e inovação</p>

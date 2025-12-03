@@ -22,7 +22,7 @@ export const Container = styled.div`
 
         .hero {
             position: relative;
-            height: 40rem;
+            height: 50rem;
 
             margin: 0 auto;
             text-align: center;
@@ -65,15 +65,16 @@ export const Container = styled.div`
             .arrow {
                 position: absolute;
                 left: 50%;
-                bottom: 2.5rem;
+                bottom: 1rem;
                 
                 transform: translateX(-50%);
 
                 width: 4.4rem;
                 height: 4.4rem;
 
-                display: grid;
-                place-items: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 color: ${({ theme }) => theme.COLORS.WHITE_900};
                 pointer-events: none; /* garante que não “vire botão” */
