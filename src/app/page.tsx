@@ -65,7 +65,7 @@ export default function HomePage() {
 
                     <div className="wrapper-buttons">
                         <Button title="Fale no WhatsApp" href="https://wa.me/5511987822169" />
-                        <Button title="Ver Produtos" isDark href="#featured" />
+                        <Button title="Ver Produtos" isDark href="#categories" />
                     </div>
 
                     <span className="arrow">
