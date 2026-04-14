@@ -114,6 +114,13 @@ export default function DashboardPage() {
               Gerenciar Categorias
             </button>
           </Card>
+          <Card>
+            <h2>Clientes</h2>
+            <p>Gerencie clientes e seus arquivos</p>
+            <button onClick={() => router.push("/admin/clientes")}>
+              Gerenciar Clientes
+            </button>
+          </Card>
         </Grid>
       </Main>
     </Container>
