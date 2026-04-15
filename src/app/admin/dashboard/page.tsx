@@ -114,6 +114,13 @@ export default function DashboardPage() {
               Gerenciar Categorias
             </button>
           </Card>
+          <Card>
+            <h2>Importação</h2>
+            <p>Importe dados do banco legado Firebird</p>
+            <button onClick={() => router.push("/admin/import")}>
+              Importar Banco Legado
+            </button>
+          </Card>
         </Grid>
       </Main>
     </Container>
