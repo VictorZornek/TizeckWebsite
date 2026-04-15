@@ -10,7 +10,9 @@
     "create-admin": "node src/scripts/createAdmin.js",
     "list-data": "node src/scripts/listData.js",
     "update-specs": "node src/scripts/updateSpecs.js",
-    "create-categories": "node src/scripts/createCategories.js"
+    "create-categories": "node src/scripts/createCategories.js",
+    "explore-firebird": "node src/scripts/exploreFirebird.js",
+    "analyze-firebird": "node src/scripts/analyzeFirebird.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",

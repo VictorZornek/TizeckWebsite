@@ -89,6 +89,7 @@ const UploadSection = styled.div`
     background: #10b981;
     color: white;
     width: 100%;
+    position: relative;
 
     &:hover:not(:disabled) {
       background: #059669;
@@ -97,6 +98,64 @@ const UploadSection = styled.div`
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+    }
+
+    &.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin-left: 8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.6s linear infinite;
+    }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .progress {
+    text-align: center;
+    color: #666;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+`;
+
+const LogsSection = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+
+  h3 {
+    color: #101a33;
+    margin-bottom: 1rem;
+  }
+
+  .logs-container {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+
+    .log-line {
+      margin-bottom: 0.25rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+
+      &:hover {
+        background: #2d2d2d;
+      }
     }
   }
 `;
@@ -250,6 +309,7 @@ interface ImportResult {
     orders: { imported: number; errors: number };
   };
   errors: string[];
+  logs: string[];
 }
 
 interface HistoryItem {
@@ -269,6 +329,8 @@ export default function ImportPage() {
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [logs, setLogs] = useState<string[]>([]);
+  const [progress, setProgress] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -296,11 +358,14 @@ export default function ImportPage() {
 
     setImporting(true);
     setResult(null);
+    setLogs([]);
+    setProgress("Enviando arquivo...");
 
     try {
       const formData = new FormData();
       formData.append("file", file);
 
+      setProgress("Processando importação...");
       const response = await fetch("/api/import", {
         method: "POST",
         body: formData,
@@ -308,9 +373,14 @@ export default function ImportPage() {
 
       const data = await response.json();
       setResult(data);
+      if (data.logs) {
+        setLogs(data.logs);
+      }
+      setProgress("");
       fetchHistory();
     } catch (error) {
       console.error("Erro na importação:", error);
+      setProgress("");
     } finally {
       setImporting(false);
     }
@@ -339,10 +409,22 @@ export default function ImportPage() {
             </label>
             <p>Apenas arquivos .GDB do Firebird são aceitos</p>
           </div>
-          <button onClick={handleImport} disabled={!file || importing}>
+          <button onClick={handleImport} disabled={!file || importing} className={importing ? 'loading' : ''}>
             {importing ? "Importando..." : "Iniciar Importação"}
           </button>
+          {progress && <div className="progress">{progress}</div>}
         </UploadSection>
+
+        {logs.length > 0 && (
+          <LogsSection>
+            <h3>Logs da Importação</h3>
+            <div className="logs-container">
+              {logs.map((log, index) => (
+                <div key={index} className="log-line">{log}</div>
+              ))}
+            </div>
+          </LogsSection>
+        )}
 
         {result && (
           <ResultSection>
