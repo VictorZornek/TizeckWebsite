@@ -192,6 +192,7 @@ const ResultSection = styled.div`
       .numbers {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 0.5rem;
 
         span {
           font-size: 1.5rem;
@@ -201,10 +202,19 @@ const ResultSection = styled.div`
             color: #10b981;
           }
 
+          &.info {
+            color: #3b82f6;
+          }
+
           &.error {
             color: #dc2626;
           }
         }
+      }
+
+      small {
+        color: #666;
+        font-size: 0.75rem;
       }
     }
   }
@@ -304,12 +314,13 @@ const HistorySection = styled.div`
 interface ImportResult {
   status: string;
   stats: {
-    customers: { imported: number; errors: number };
-    products: { imported: number; errors: number };
-    orders: { imported: number; errors: number };
+    customers: { imported: number; errors: number; new: number; updated: number };
+    products: { imported: number; errors: number; new: number; updated: number };
+    orders: { imported: number; errors: number; new: number; updated: number };
   };
   errors: string[];
   logs: string[];
+  processingTime: number;
 }
 
 interface HistoryItem {
@@ -318,10 +329,11 @@ interface HistoryItem {
   importDate: string;
   status: string;
   stats: {
-    customers: { imported: number; errors: number };
-    products: { imported: number; errors: number };
-    orders: { imported: number; errors: number };
+    customers: { imported: number; errors: number; new: number; updated: number };
+    products: { imported: number; errors: number; new: number; updated: number };
+    orders: { imported: number; errors: number; new: number; updated: number };
   };
+  processingTime: number;
 }
 
 export default function ImportPage() {
@@ -428,28 +440,34 @@ export default function ImportPage() {
 
         {result && (
           <ResultSection>
-            <h3>Resultado da Importação</h3>
+            <h3>Resultado da Importação - {result.processingTime}s</h3>
             <div className="stats">
               <div className="stat-card">
                 <h4>Clientes</h4>
                 <div className="numbers">
-                  <span className="success">{result.stats.customers.imported}</span>
-                  <span className="error">{result.stats.customers.errors}</span>
+                  <span className="success" title="Novos">{result.stats.customers.new}</span>
+                  <span className="info" title="Atualizados">{result.stats.customers.updated}</span>
+                  <span className="error" title="Erros">{result.stats.customers.errors}</span>
                 </div>
+                <small>Novos / Atualizados / Erros</small>
               </div>
               <div className="stat-card">
                 <h4>Produtos</h4>
                 <div className="numbers">
-                  <span className="success">{result.stats.products.imported}</span>
+                  <span className="success">{result.stats.products.new}</span>
+                  <span className="info">{result.stats.products.updated}</span>
                   <span className="error">{result.stats.products.errors}</span>
                 </div>
+                <small>Novos / Atualizados / Erros</small>
               </div>
               <div className="stat-card">
                 <h4>Pedidos</h4>
                 <div className="numbers">
-                  <span className="success">{result.stats.orders.imported}</span>
+                  <span className="success">{result.stats.orders.new}</span>
+                  <span className="info">{result.stats.orders.updated}</span>
                   <span className="error">{result.stats.orders.errors}</span>
                 </div>
+                <small>Novos / Atualizados / Erros</small>
               </div>
             </div>
             {result.errors.length > 0 && (
@@ -482,9 +500,10 @@ export default function ImportPage() {
                 {item.status === "success" ? "Sucesso" : item.status === "error" ? "Erro" : "Parcial"}
               </span>
               <div className="summary">
-                Clientes: {item.stats.customers.imported} | 
-                Produtos: {item.stats.products.imported} | 
-                Pedidos: {item.stats.orders.imported}
+                Clientes: {item.stats.customers.new}N/{item.stats.customers.updated}A | 
+                Produtos: {item.stats.products.new}N/{item.stats.products.updated}A | 
+                Pedidos: {item.stats.orders.new}N/{item.stats.orders.updated}A
+                {item.processingTime && ` | ${item.processingTime}s`}
               </div>
             </div>
           ))}

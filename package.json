@@ -12,7 +12,8 @@
     "update-specs": "node src/scripts/updateSpecs.js",
     "create-categories": "node src/scripts/createCategories.js",
     "explore-firebird": "node src/scripts/exploreFirebird.js",
-    "analyze-firebird": "node src/scripts/analyzeFirebird.js"
+    "analyze-firebird": "node src/scripts/analyzeFirebird.js",
+    "clear-import": "node src/scripts/clearImportData.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
