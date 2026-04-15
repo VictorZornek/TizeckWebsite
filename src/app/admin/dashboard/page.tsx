@@ -121,6 +121,20 @@ export default function DashboardPage() {
               Importar Banco Legado
             </button>
           </Card>
+          <Card>
+            <h2>Clientes</h2>
+            <p>Visualize os clientes importados</p>
+            <button onClick={() => router.push("/admin/customers")}>
+              Ver Clientes
+            </button>
+          </Card>
+          <Card>
+            <h2>Pedidos</h2>
+            <p>Visualize os pedidos importados</p>
+            <button onClick={() => router.push("/admin/orders")}>
+              Ver Pedidos
+            </button>
+          </Card>
         </Grid>
       </Main>
     </Container>

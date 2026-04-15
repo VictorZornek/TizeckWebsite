@@ -13,7 +13,8 @@
     "create-categories": "node src/scripts/createCategories.js",
     "explore-firebird": "node src/scripts/exploreFirebird.js",
     "analyze-firebird": "node src/scripts/analyzeFirebird.js",
-    "clear-import": "node src/scripts/clearImportData.js"
+    "clear-import": "node src/scripts/clearImportData.js",
+    "check-orders": "node src/scripts/checkOrders.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
