@@ -21,10 +21,6 @@ Execute o comando para criar o usuário administrador:
 npm run create-admin
 ```
 
-**Credenciais padrão:**
-- Email: `admin@tizeck.com`
-- Senha: `admin123`
-
 ## Acesso ao Painel
 
 1. Inicie o servidor: `npm run dev`
