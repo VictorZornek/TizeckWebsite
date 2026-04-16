@@ -53,33 +53,32 @@ const Grid = styled.div`
 
 const Card = styled.div`
   background: white;
-  padding: 2rem;
+  padding: 3rem 2rem;
   border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
 
   h2 {
     color: #101a33;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
   }
 
   p {
     color: #666;
-    margin-bottom: 2rem;
-  }
-
-  button {
-    padding: 1rem 2rem;
-    background: #3b81f5;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
     font-size: 1rem;
-
-    &:hover {
-      background: #2563eb;
-    }
   }
 `;
 
@@ -100,40 +99,15 @@ export default function DashboardPage() {
       <Main>
         <h2>Bem-vindo ao painel de administração</h2>
         <Grid>
-          <Card>
-            <h2>Produtos</h2>
-            <p>Gerencie todos os produtos do site</p>
-            <button onClick={() => router.push("/admin/products")}>
-              Gerenciar Produtos
-            </button>
+          <Card onClick={() => router.push("/admin/website")}>
+            <div className="icon">🌐</div>
+            <h2>Gerenciamento do Site</h2>
+            <p>Gerencie produtos e categorias do site</p>
           </Card>
-          <Card>
-            <h2>Categorias</h2>
-            <p>Gerencie as categorias de produtos</p>
-            <button onClick={() => router.push("/admin/categories")}>
-              Gerenciar Categorias
-            </button>
-          </Card>
-          <Card>
-            <h2>Importação</h2>
-            <p>Importe dados do banco legado Firebird</p>
-            <button onClick={() => router.push("/admin/import")}>
-              Importar Banco Legado
-            </button>
-          </Card>
-          <Card>
-            <h2>Clientes</h2>
-            <p>Visualize os clientes importados</p>
-            <button onClick={() => router.push("/admin/customers")}>
-              Ver Clientes
-            </button>
-          </Card>
-          <Card>
-            <h2>Pedidos</h2>
-            <p>Visualize os pedidos importados</p>
-            <button onClick={() => router.push("/admin/orders")}>
-              Ver Pedidos
-            </button>
+          <Card onClick={() => router.push("/admin/system")}>
+            <div className="icon">💾</div>
+            <h2>Backup e Sistema</h2>
+            <p>Importação e gerenciamento de dados legados</p>
           </Card>
         </Grid>
       </Main>
