@@ -5,6 +5,19 @@ export default function OrderInstallmentsPage() {
     <DataTable
       title="📅 Parcelas de Pedidos"
       apiEndpoint="/api/order-installments"
+      filters={[
+        { key: "orderCode", label: "Código do Pedido", type: "text" },
+        { 
+          key: "status", 
+          label: "Status", 
+          type: "select",
+          options: [
+            { value: "P", label: "Pago" },
+            { value: "A", label: "Aberto" },
+            { value: "V", label: "Vencido" },
+          ]
+        },
+      ]}
       columns={[
         { key: "orderCode", label: "Pedido" },
         { key: "installmentCode", label: "Parcela" },
