@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function PaymentConditionsPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="💵 Condições de Pagamento" />
+      <DataTable
       title="💵 Condições de Pagamento"
       apiEndpoint="/api/payment-conditions"
       columns={[
@@ -10,6 +13,7 @@ export default function PaymentConditionsPage() {
         { key: "name", label: "Nome da Condição" },
         { key: "installments", label: "Nº Parcelas" },
       ]}
-    />
+      />
+    </>
   );
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
@@ -28,28 +28,16 @@ const Header = styled.header`
     display: flex;
     gap: 1rem;
 
-    button {
+    button.new {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+      background: #10b981;
+      color: white;
 
-      &.back {
-        background: #6b7280;
-        color: white;
-
-        &:hover {
-          background: #4b5563;
-        }
-      }
-
-      &.new {
-        background: #10b981;
-        color: white;
-
-        &:hover {
-          background: #059669;
-        }
+      &:hover {
+        background: #059669;
       }
     }
   }
@@ -285,7 +273,6 @@ export default function ProductsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     fetchProducts();
@@ -547,14 +534,12 @@ export default function ProductsPage() {
   return (
     <Container>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <PageHeader title="Gerenciar Produtos" backHref="/admin/website" />
       <Header>
-        <h1>Gerenciar Produtos</h1>
+        <div />
         <div className="actions">
           <button className="new" onClick={handleNewProduct}>
             + Novo Produto
-          </button>
-          <button className="back" onClick={() => router.push("/admin/dashboard")}>
-            Voltar ao Dashboard
           </button>
         </div>
       </Header>

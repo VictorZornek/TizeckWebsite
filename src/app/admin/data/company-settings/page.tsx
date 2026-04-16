@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -81,7 +81,6 @@ const Loading = styled.div`
 export default function CompanySettingsPage() {
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     fetchSettings();
@@ -100,12 +99,7 @@ export default function CompanySettingsPage() {
 
   return (
     <Container>
-      <Header>
-        <h1>🏭 Dados da Empresa</h1>
-        <button onClick={() => router.push("/admin/system")}>
-          Voltar
-        </button>
-      </Header>
+      <PageHeader title="🏭 Dados da Empresa" />
       <Main>
         {loading ? (
           <Loading>Carregando...</Loading>

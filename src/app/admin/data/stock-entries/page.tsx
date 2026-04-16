@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function StockEntriesPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="📥 Entradas de Estoque" />
+      <DataTable
       title="📥 Entradas de Estoque"
       apiEndpoint="/api/stock-entries"
       filters={[
@@ -15,6 +18,7 @@ export default function StockEntriesPage() {
         { key: "quantity", label: "Quantidade" },
         { key: "entryDate", label: "Data Entrada", format: "date" },
       ]}
-    />
+      />
+    </>
   );
 }

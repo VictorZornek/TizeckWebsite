@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function OrderInstallmentsPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="📅 Parcelas de Pedidos" />
+      <DataTable
       title="📅 Parcelas de Pedidos"
       apiEndpoint="/api/order-installments"
       filters={[
@@ -26,6 +29,7 @@ export default function OrderInstallmentsPage() {
         { key: "status", label: "Status" },
         { key: "paymentMethod", label: "Forma Pagamento" },
       ]}
-    />
+      />
+    </>
   );
 }

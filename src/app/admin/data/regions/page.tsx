@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function RegionsPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="🌍 Regiões" />
+      <DataTable
       title="🌍 Regiões"
       apiEndpoint="/api/regions"
       columns={[
@@ -10,6 +13,7 @@ export default function RegionsPage() {
         { key: "name", label: "Nome da Região" },
         { key: "tax", label: "Imposto", format: "percent" },
       ]}
-    />
+      />
+    </>
   );
 }

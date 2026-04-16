@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function CustomerItemsPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="📊 Histórico de Compras por Cliente" />
+      <DataTable
       title="📊 Histórico de Compras por Cliente"
       apiEndpoint="/api/customer-items"
       filters={[
@@ -17,6 +20,7 @@ export default function CustomerItemsPage() {
         { key: "date", label: "Data", format: "date" },
         { key: "tableUsed", label: "Tabela" },
       ]}
-    />
+      />
+    </>
   );
 }

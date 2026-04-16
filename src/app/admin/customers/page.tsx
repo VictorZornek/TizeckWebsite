@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -281,7 +281,6 @@ export default function CustomersPage() {
     pages: 0,
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     fetchCustomers();
@@ -316,12 +315,7 @@ export default function CustomersPage() {
 
   return (
     <Container>
-      <Header>
-        <h1>Clientes Importados</h1>
-        <button onClick={() => router.push("/admin/dashboard")}>
-          Voltar ao Dashboard
-        </button>
-      </Header>
+      <PageHeader title="Clientes Importados" />
       <Main>
         <Filters>
           <h3>Filtros</h3>

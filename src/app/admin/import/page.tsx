@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -365,7 +365,6 @@ export default function ImportPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
   const [progress, setProgress] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     fetchHistory();
@@ -422,12 +421,7 @@ export default function ImportPage() {
 
   return (
     <Container>
-      <Header>
-        <h1>Importação de Banco Legado</h1>
-        <button onClick={() => router.push("/admin/dashboard")}>
-          Voltar ao Dashboard
-        </button>
-      </Header>
+      <PageHeader title="Importação de Banco Legado" />
       <Main>
         <UploadSection>
           <h2>Upload do Arquivo .GDB</h2>

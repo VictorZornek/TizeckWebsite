@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function AccountsPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="💳 Contas a Pagar/Receber" />
+      <DataTable
       title="💳 Contas a Pagar/Receber"
       apiEndpoint="/api/accounts"
       filters={[
@@ -30,6 +33,7 @@ export default function AccountsPage() {
         { key: "paidValue", label: "Valor Pago", format: "currency" },
         { key: "paymentType", label: "Tipo" },
       ]}
-    />
+      />
+    </>
   );
 }

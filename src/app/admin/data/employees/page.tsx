@@ -1,8 +1,11 @@
+import PageHeader from "@/components/PageHeader";
 import DataTable from "@/components/DataTable";
 
 export default function EmployeesPage() {
   return (
-    <DataTable
+    <>
+      <PageHeader title="👤 Funcionários" />
+      <DataTable
       title="👤 Funcionários"
       apiEndpoint="/api/employees"
       filters={[
@@ -28,6 +31,7 @@ export default function EmployeesPage() {
         { key: "active", label: "Ativo" },
         { key: "commission1", label: "Comissão %", format: "percent" },
       ]}
-    />
+      />
+    </>
   );
 }
