@@ -99,18 +99,20 @@ export class FirebirdImportService {
           
           // Limpar campo OBS se contiver código JavaScript (erro de leitura do Firebird)
           let notes = c.OBS;
-          if (notes && typeof notes === 'object') {
+          
+          if (typeof notes === 'function') {
+            // Se for function, é erro do Firebird - limpar
+            notes = null;
+          } else if (notes && typeof notes === 'object') {
             // Se for objeto/buffer, converter para string e verificar
             const notesStr = notes.toString();
             if (notesStr.includes('transaction, callback') || notesStr.includes('function')) {
-              this.log(`Cliente ${c.CODCLIENTE} - OBS com erro (objeto) detectado, limpando...`);
               notes = null;
             } else {
               notes = notesStr.trim();
             }
           } else if (typeof notes === 'string') {
             if (notes.includes('transaction, callback') || notes.includes('function')) {
-              this.log(`Cliente ${c.CODCLIENTE} - OBS com erro (string) detectado, limpando...`);
               notes = null;
             } else {
               notes = notes.trim();
