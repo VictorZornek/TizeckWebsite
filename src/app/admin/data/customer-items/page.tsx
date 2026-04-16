@@ -5,6 +5,9 @@ export default function CustomerItemsPage() {
     <DataTable
       title="📊 Histórico de Compras por Cliente"
       apiEndpoint="/api/customer-items"
+      filters={[
+        { key: "customerCode", label: "Código do Cliente", type: "text" },
+      ]}
       columns={[
         { key: "customerCode", label: "Código Cliente" },
         { key: "itemCode", label: "Código Item" },

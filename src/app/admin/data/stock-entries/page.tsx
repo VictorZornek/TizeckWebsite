@@ -5,6 +5,9 @@ export default function StockEntriesPage() {
     <DataTable
       title="📥 Entradas de Estoque"
       apiEndpoint="/api/stock-entries"
+      filters={[
+        { key: "productCode", label: "Código do Produto", type: "text" },
+      ]}
       columns={[
         { key: "entryCode", label: "Código Entrada" },
         { key: "itemCode", label: "Código Item" },
