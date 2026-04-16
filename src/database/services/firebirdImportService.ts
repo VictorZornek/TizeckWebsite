@@ -4,6 +4,17 @@ import Customer from "../models/Customer";
 import Order from "../models/Order";
 import Products from "../models/Product";
 import ImportHistory from "../models/ImportHistory";
+import PaymentCondition from "../models/PaymentCondition";
+import Account from "../models/Account";
+import StockEntry from "../models/StockEntry";
+import JobFunction from "../models/JobFunction";
+import Employee from "../models/Employee";
+import Region from "../models/Region";
+import ConditionItem from "../models/ConditionItem";
+import OrderInstallment from "../models/OrderInstallment";
+import CompanySettings from "../models/CompanySettings";
+import CustomerItem from "../models/CustomerItem";
+import SystemUser from "../models/SystemUser";
 
 interface FirebirdOptions {
   database: string;
@@ -67,7 +78,7 @@ export class FirebirdImportService {
       this.log(`Encontrados ${customers.length} clientes no banco Firebird`);
       
       const conn = await this.getConnection();
-      const CustomerModel = conn.model('Customer', Customer.schema);
+      const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', Customer.schema);
       
       // Buscar IDs existentes no MongoDB
       const existingIds = new Set(
@@ -162,7 +173,7 @@ export class FirebirdImportService {
       const groupMap = new Map(groups.map((g: any) => [g.CODGRUPO, g.GRUPO]));
       
       const conn = await this.getConnection();
-      const ProductsModel = conn.model('LegacyProduct', Products.schema);
+      const ProductsModel = conn.models.LegacyProduct || conn.model('LegacyProduct', Products.schema);
       
       const existingIds = new Set(
         (await ProductsModel.find({}, { "specifications.legacyId": 1 }).lean())
@@ -250,9 +261,9 @@ export class FirebirdImportService {
       this.log(`Encontrados ${items.length} itens de pedido no banco Firebird`);
       
       const conn = await this.getConnection();
-      const OrderModel = conn.model('Order', Order.schema);
-      const CustomerModel = conn.model('Customer', Customer.schema);
-      const ProductsModel = conn.model('LegacyProduct', Products.schema);
+      const OrderModel = conn.models.LegacyOrder || conn.model('LegacyOrder', Order.schema);
+      const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', Customer.schema);
+      const ProductsModel = conn.models.LegacyProduct || conn.model('LegacyProduct', Products.schema);
       
       const existingIds = new Set(
         (await OrderModel.find({}, { legacyId: 1 }).lean()).map(o => o.legacyId)
@@ -351,16 +362,238 @@ export class FirebirdImportService {
     return { stats, errors };
   }
 
+  async importPaymentConditions() {
+    return this.importGenericTable("CONDICAO", "PaymentCondition", PaymentCondition, (c: any) => ({
+      legacyId: c.CODCONDICAO,
+      name: c.CONDICAO,
+      installments: c.NUM_PARCELAS,
+    }));
+  }
+
+  async importAccounts() {
+    return this.importGenericTable("CONTAS", "Account", Account, (a: any) => ({
+      legacyId: a.CODCONTA,
+      installmentCode: a.CODPARCELA,
+      customerSupplierCode: a.CODCLIFOR,
+      issueDate: a.DATA_EMISSAO,
+      dueDate: a.DATA_VENCIMENTO,
+      paymentDate: a.DATA_BAIXA,
+      vendorCode: a.CODVENDEDOR,
+      checkNumber: a.NUMCHEQUE,
+      conditionCode: a.CODCONDICAO,
+      accountNumber: a.CODCONTACORRENTE,
+      history: a.HISTORICO,
+      accountType: a.TIPO_CONTA,
+      installmentValue: a.VALOR_PARCELA,
+      paidValue: a.VALOR_PAGO,
+      debit: a.DEBITO,
+      realDebit: a.DEBITO_REAL,
+      discount: a.DESCONTO,
+      paymentType: a.TIPO_PAGAMENTO,
+      operatorCode: a.CODOPERADORA,
+      closedDate: a.DATA_ENCERRADO,
+      commission: a.COMISSAO,
+      commissionPaymentDate: a.DT_PAG_COMISS,
+    }));
+  }
+
+  async importStockEntries() {
+    return this.importGenericTable("ITEM_ENTRADA", "StockEntry", StockEntry, (s: any) => ({
+      entryCode: s.CODENTRADA,
+      itemCode: s.CODITEM,
+      quantity: s.QUANTIDADE,
+      productCode: s.CODPRODUTO,
+      entryDate: s.DATAENTRADA,
+    }), "entryCode", "itemCode");
+  }
+
+  async importJobFunctions() {
+    return this.importGenericTable("FUNCAO", "JobFunction", JobFunction, (f: any) => ({
+      legacyId: f.CODFUNCAO,
+      name: f.FUNCAO,
+    }));
+  }
+
+  async importEmployees() {
+    return this.importGenericTable("FUNCIONA", "Employee", Employee, (e: any) => ({
+      legacyId: e.CODFUNCIONARIO,
+      userId: e.CODUSUARIO,
+      name: e.NOME,
+      rg: e.RG,
+      cpf: e.CPF,
+      positionCode: e.CODCARGO,
+      shortName: e.NOME_ABREV,
+      active: e.FLAGATIVO,
+      address: e.ENDERECO,
+      neighborhood: e.BAIRRO,
+      city: e.CIDADE,
+      state: e.UF,
+      info: e.INFORMACOES,
+      birthDate: e.NASC,
+      phone: e.TEL_RESIDENCIA,
+      mobile: e.CELULAR,
+      functionCode: e.CODFUNCAO,
+      commission1: e.COMISSAO1,
+      commission2: e.COMISSAO2,
+      commission3: e.COMISSAO3,
+    }));
+  }
+
+  async importRegions() {
+    return this.importGenericTable("REGIAO", "Region", Region, (r: any) => ({
+      legacyId: r.CODREGIAO,
+      name: r.REGIAO,
+      tax: r.IMPOSTO,
+    }));
+  }
+
+  async importConditionItems() {
+    return this.importGenericTable("ITEM_CONDICAO", "ConditionItem", ConditionItem, (i: any) => ({
+      conditionCode: i.CODCONDICAO,
+      itemCode: i.CODITEM,
+      daysQuantity: i.QTDE_DIAS,
+    }), "conditionCode", "itemCode");
+  }
+
+  async importOrderInstallments() {
+    return this.importGenericTable("PARCELA_PEDIDO", "OrderInstallment", OrderInstallment, (p: any) => ({
+      orderCode: p.CODPEDIDO,
+      installmentCode: p.CODPARCELA,
+      dueDate: p.VENCIMENTO,
+      paymentDate: p.PAGAMENTO,
+      installmentValue: p.VALOR_PARCELA,
+      paymentValue: p.VALOR_PAGAMENTO,
+      status: p.SITUACAO,
+      paymentMethod: p.FORMA_PAGAMENTO,
+      operatorCode: p.CODOPERADORA,
+      document: p.DOCUMENTO,
+    }), "orderCode", "installmentCode");
+  }
+
+  async importCompanySettings() {
+    return this.importGenericTable("PARAMETROS", "CompanySettings", CompanySettings, (p: any) => ({
+      legacyId: p.CODEMPRESA,
+      companyName: p.RAZAO_SOCIAL,
+      tradeName: p.FANTASIA,
+      address: p.ENDERECO,
+      neighborhood: p.BAIRRO,
+      city: p.CIDADE,
+      state: p.UF,
+      zipCode: p.CEP,
+      cnpj: p.CNPJ,
+      stateRegistration: p.INSC_EST,
+      phone1: p.TELEFONE1,
+      phone2: p.TELEFONE2,
+      fax: p.FAX,
+      email: p.EMAIL,
+      website: p.SITE,
+      iss: p.ISS,
+      footerMessage: p.MSG_RODAPE,
+      logo: p.LOGO,
+      activeItemsPurchasedByCustomer: p.ATV_ITENS_COMPRADO_CLIENTE,
+      activeBarcode: p.ATV_CODBARRA,
+      paymentMethod: p.FORMA_DE_PAGAMENTO,
+      orderScreen: p.TELA_PEDIDO,
+    }));
+  }
+
+  async importCustomerItems() {
+    return this.importGenericTable("ITEM_CLIENTE", "CustomerItem", CustomerItem, (i: any) => ({
+      customerCode: i.CODCLIENTE,
+      itemCode: i.CODITEM,
+      quantity: i.QTDE,
+      value: i.VALOR,
+      date: i.DATA,
+      userCode: i.CODUSUARIO,
+      discount: i.DESCONTO,
+      tableUsed: i.TABELA_USADA,
+    }), "customerCode", "itemCode", "date");
+  }
+
+  async importSystemUsers() {
+    return this.importGenericTable("USUARIO1", "SystemUser", SystemUser, (u: any) => ({
+      legacyId: u.CODUSER,
+      username: u.USUARIO,
+      password: u.SENHA,
+      employeeCode: u.CODFUNCIONARIO,
+    }));
+  }
+
+  private async importGenericTable(
+    tableName: string,
+    modelName: string,
+    model: any,
+    mapper: (row: any) => any,
+    ...uniqueFields: string[]
+  ) {
+    const stats = { imported: 0, errors: 0, new: 0, updated: 0 };
+    const errors: string[] = [];
+
+    try {
+      this.log(`Iniciando importação de ${tableName}...`);
+      const data = await this.query<any>(`SELECT * FROM ${tableName}`);
+      this.log(`Encontrados ${data.length} registros em ${tableName}`);
+
+      if (data.length === 0) {
+        this.log(`Nenhum registro encontrado em ${tableName}`);
+        return { stats, errors };
+      }
+
+      const conn = await this.getConnection();
+      const Model = conn.models[modelName] || conn.model(modelName, model.schema);
+
+      const BATCH_SIZE = 100;
+      for (let i = 0; i < data.length; i += BATCH_SIZE) {
+        const batch = data.slice(i, i + BATCH_SIZE);
+        const operations = [];
+
+        for (const row of batch) {
+          const mappedData = mapper(row);
+          const filter = uniqueFields.length > 0
+            ? Object.fromEntries(uniqueFields.map(f => [f, mappedData[f]]))
+            : { legacyId: mappedData.legacyId };
+
+          operations.push({
+            updateOne: {
+              filter,
+              update: { $set: mappedData },
+              upsert: true,
+            },
+          });
+        }
+
+        try {
+          const result = await Model.bulkWrite(operations, { ordered: false });
+          stats.imported += batch.length;
+          stats.new += result.upsertedCount || 0;
+          stats.updated += result.modifiedCount || 0;
+          this.log(`Processados ${stats.imported}/${data.length} registros de ${tableName}`);
+        } catch (error) {
+          stats.errors += batch.length;
+          errors.push(`Erro no lote ${i}-${i + BATCH_SIZE} de ${tableName}: ${error}`);
+          this.log(`Erro no lote de ${tableName}: ${error}`);
+        }
+      }
+
+      this.log(`Importação de ${tableName} concluída: ${stats.new} novos, ${stats.updated} atualizados, ${stats.errors} erros`);
+    } catch (error) {
+      const errorMsg = `Erro ao importar ${tableName}: ${error}`;
+      errors.push(errorMsg);
+      this.log(errorMsg);
+    }
+
+    return { stats, errors };
+  }
+
   async runFullImport(fileName: string) {
     const startTime = Date.now();
-    this.log(`========== INICIANDO IMPORTAÇÃO OTIMIZADA ==========`);
+    this.log(`========== INICIANDO IMPORTAÇÃO COMPLETA ==========`);
     this.log(`Arquivo: ${fileName}`);
-    this.log(`Modo: Batch Insert (5x mais rápido)`);
+    this.log(`Modo: Batch Insert Otimizado`);
     
     const conn = await this.getConnection();
-    const ImportHistoryModel = conn.model('ImportHistory', ImportHistory.schema);
+    const ImportHistoryModel = conn.models.ImportHistory || conn.model('ImportHistory', ImportHistory.schema);
     
-    // Buscar última sincronização
     const lastImport = await ImportHistoryModel.findOne().sort({ importDate: -1 }).lean();
     if (lastImport) {
       this.lastSyncDate = lastImport.importDate;
@@ -372,8 +605,34 @@ export class FirebirdImportService {
     const customers = await this.importCustomers();
     const products = await this.importProducts();
     const orders = await this.importOrders();
+    const paymentConditions = await this.importPaymentConditions();
+    const accounts = await this.importAccounts();
+    const stockEntries = await this.importStockEntries();
+    const jobFunctions = await this.importJobFunctions();
+    const employees = await this.importEmployees();
+    const regions = await this.importRegions();
+    const conditionItems = await this.importConditionItems();
+    const orderInstallments = await this.importOrderInstallments();
+    const companySettings = await this.importCompanySettings();
+    const customerItems = await this.importCustomerItems();
+    const systemUsers = await this.importSystemUsers();
 
-    const allErrors = [...customers.errors, ...products.errors, ...orders.errors];
+    const allErrors = [
+      ...customers.errors,
+      ...products.errors,
+      ...orders.errors,
+      ...paymentConditions.errors,
+      ...accounts.errors,
+      ...stockEntries.errors,
+      ...jobFunctions.errors,
+      ...employees.errors,
+      ...regions.errors,
+      ...conditionItems.errors,
+      ...orderInstallments.errors,
+      ...companySettings.errors,
+      ...customerItems.errors,
+      ...systemUsers.errors,
+    ];
     const status = allErrors.length === 0 ? "success" : allErrors.length > 10 ? "error" : "partial";
     
     const processingTime = Math.round((Date.now() - startTime) / 1000);
@@ -385,6 +644,17 @@ export class FirebirdImportService {
         customers: customers.stats,
         products: products.stats,
         orders: orders.stats,
+        paymentConditions: paymentConditions.stats,
+        accounts: accounts.stats,
+        stockEntries: stockEntries.stats,
+        jobFunctions: jobFunctions.stats,
+        employees: employees.stats,
+        regions: regions.stats,
+        conditionItems: conditionItems.stats,
+        orderInstallments: orderInstallments.stats,
+        companySettings: companySettings.stats,
+        customerItems: customerItems.stats,
+        systemUsers: systemUsers.stats,
       },
       errors: allErrors,
       lastSyncDate: new Date(),
@@ -398,7 +668,22 @@ export class FirebirdImportService {
 
     return {
       status,
-      stats: { customers: customers.stats, products: products.stats, orders: orders.stats },
+      stats: {
+        customers: customers.stats,
+        products: products.stats,
+        orders: orders.stats,
+        paymentConditions: paymentConditions.stats,
+        accounts: accounts.stats,
+        stockEntries: stockEntries.stats,
+        jobFunctions: jobFunctions.stats,
+        employees: employees.stats,
+        regions: regions.stats,
+        conditionItems: conditionItems.stats,
+        orderInstallments: orderInstallments.stats,
+        companySettings: companySettings.stats,
+        customerItems: customerItems.stats,
+        systemUsers: systemUsers.stats,
+      },
       errors: allErrors,
       logs: this.logs,
       processingTime,
