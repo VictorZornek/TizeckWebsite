@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongo } from "@/database/db";
+import { connectMongoLegacy } from "@/database/dbLegacy";
 import Order from "@/database/models/Order";
 
 export async function GET(request: NextRequest) {
   try {
-    await connectMongo();
+    const conn = await connectMongoLegacy();
+    const OrderModel = conn.model('Order', Order.schema);
     
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
@@ -37,8 +38,8 @@ export async function GET(request: NextRequest) {
     }
 
     const skip = (page - 1) * limit;
-    const total = await Order.countDocuments(query);
-    const orders = await Order.find(query)
+    const total = await OrderModel.countDocuments(query);
+    const orders = await OrderModel.find(query)
       .populate("customerId", "name fantasyName")
       .sort({ orderDate: -1 })
       .skip(skip)

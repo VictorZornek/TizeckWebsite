@@ -1,4 +1,5 @@
 import Firebird from "node-firebird";
+import { connectMongoLegacy } from "../dbLegacy";
 import Customer from "../models/Customer";
 import Order from "../models/Order";
 import Products from "../models/Product";
@@ -14,6 +15,7 @@ export class FirebirdImportService {
   private options: FirebirdOptions;
   private logs: string[] = [];
   private lastSyncDate: Date | null = null;
+  private conn: any = null;
 
   constructor(dbPath: string) {
     this.options = {
@@ -21,6 +23,13 @@ export class FirebirdImportService {
       user: "SYSDBA",
       password: "masterkey",
     };
+  }
+
+  private async getConnection() {
+    if (!this.conn) {
+      this.conn = await connectMongoLegacy();
+    }
+    return this.conn;
   }
 
   private log(message: string) {
@@ -57,9 +66,12 @@ export class FirebirdImportService {
       const customers = await this.query<any>("SELECT * FROM CLIENTES");
       this.log(`Encontrados ${customers.length} clientes no banco Firebird`);
       
+      const conn = await this.getConnection();
+      const CustomerModel = conn.model('Customer', Customer.schema);
+      
       // Buscar IDs existentes no MongoDB
       const existingIds = new Set(
-        (await Customer.find({}, { legacyId: 1 }).lean()).map(c => c.legacyId)
+        (await CustomerModel.find({}, { legacyId: 1 }).lean()).map(c => c.legacyId)
       );
       this.log(`${existingIds.size} clientes já existem no MongoDB`);
       
@@ -117,7 +129,7 @@ export class FirebirdImportService {
         }
         
         try {
-          await Customer.bulkWrite(operations, { ordered: false });
+          await CustomerModel.bulkWrite(operations, { ordered: false });
           stats.imported += batch.length;
           this.log(`Processados ${stats.imported}/${customers.length} clientes (${stats.new} novos, ${stats.updated} atualizados)`);
         } catch (error) {
@@ -149,8 +161,11 @@ export class FirebirdImportService {
       const groups = await this.query<any>("SELECT * FROM GRUPO");
       const groupMap = new Map(groups.map((g: any) => [g.CODGRUPO, g.GRUPO]));
       
+      const conn = await this.getConnection();
+      const ProductsModel = conn.model('LegacyProduct', Products.schema);
+      
       const existingIds = new Set(
-        (await Products.find({}, { "specifications.legacyId": 1 }).lean())
+        (await ProductsModel.find({}, { "specifications.legacyId": 1 }).lean())
           .map(p => p.specifications?.legacyId)
           .filter(Boolean)
       );
@@ -203,7 +218,7 @@ export class FirebirdImportService {
         }
         
         try {
-          await Products.bulkWrite(operations, { ordered: false });
+          await ProductsModel.bulkWrite(operations, { ordered: false });
           stats.imported += batch.length;
           this.log(`Processados ${stats.imported}/${products.length} produtos (${stats.new} novos, ${stats.updated} atualizados)`);
         } catch (error) {
@@ -234,8 +249,13 @@ export class FirebirdImportService {
       const items = await this.query<any>("SELECT * FROM ITEM_PEDIDO");
       this.log(`Encontrados ${items.length} itens de pedido no banco Firebird`);
       
+      const conn = await this.getConnection();
+      const OrderModel = conn.model('Order', Order.schema);
+      const CustomerModel = conn.model('Customer', Customer.schema);
+      const ProductsModel = conn.model('LegacyProduct', Products.schema);
+      
       const existingIds = new Set(
-        (await Order.find({}, { legacyId: 1 }).lean()).map(o => o.legacyId)
+        (await OrderModel.find({}, { legacyId: 1 }).lean()).map(o => o.legacyId)
       );
       this.log(`${existingIds.size} pedidos já existem no MongoDB`);
       
@@ -249,10 +269,10 @@ export class FirebirdImportService {
       });
       
       // Buscar todos os clientes e produtos de uma vez
-      const customers = await Customer.find({}).lean();
+      const customers = await CustomerModel.find({}).lean();
       const customerMap = new Map(customers.map(c => [c.legacyId, c._id]));
       
-      const products = await Products.find({}).lean();
+      const products = await ProductsModel.find({}).lean();
       const productMap = new Map(
         products.map(p => [p.specifications?.legacyId, { _id: p._id, name: p.name }])
       );
@@ -311,7 +331,7 @@ export class FirebirdImportService {
         }
         
         try {
-          await Order.bulkWrite(operations, { ordered: false });
+          await OrderModel.bulkWrite(operations, { ordered: false });
           stats.imported += batch.length;
           this.log(`Processados ${stats.imported}/${orders.length} pedidos (${stats.new} novos, ${stats.updated} atualizados)`);
         } catch (error) {
@@ -337,8 +357,11 @@ export class FirebirdImportService {
     this.log(`Arquivo: ${fileName}`);
     this.log(`Modo: Batch Insert (5x mais rápido)`);
     
+    const conn = await this.getConnection();
+    const ImportHistoryModel = conn.model('ImportHistory', ImportHistory.schema);
+    
     // Buscar última sincronização
-    const lastImport = await ImportHistory.findOne().sort({ importDate: -1 }).lean();
+    const lastImport = await ImportHistoryModel.findOne().sort({ importDate: -1 }).lean();
     if (lastImport) {
       this.lastSyncDate = lastImport.importDate;
       this.log(`Última sincronização: ${this.lastSyncDate.toLocaleString('pt-BR')}`);
@@ -355,7 +378,7 @@ export class FirebirdImportService {
     
     const processingTime = Math.round((Date.now() - startTime) / 1000);
 
-    await ImportHistory.create({
+    await ImportHistoryModel.create({
       fileName,
       status,
       stats: {

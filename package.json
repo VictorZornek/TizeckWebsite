@@ -14,7 +14,9 @@
     "explore-firebird": "node src/scripts/exploreFirebird.js",
     "analyze-firebird": "node src/scripts/analyzeFirebird.js",
     "clear-import": "node src/scripts/clearImportData.js",
-    "check-orders": "node src/scripts/checkOrders.js"
+    "check-orders": "node src/scripts/checkOrders.js",
+    "analyze-products": "node src/scripts/analyzeProducts.js",
+    "migrate-legacy": "node src/scripts/migrateLegacy.js"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",

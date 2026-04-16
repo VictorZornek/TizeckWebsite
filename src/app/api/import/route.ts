@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, unlink } from "fs/promises";
 import { join } from "path";
-import { connectMongo } from "@/database/db";
+import { connectMongoLegacy } from "@/database/dbLegacy";
 import { FirebirdImportService } from "@/database/services/firebirdImportService";
 
 export async function POST(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     
     await writeFile(tempPath, buffer);
 
-    await connectMongo();
+    await connectMongoLegacy();
     const importService = new FirebirdImportService(tempPath);
     const result = await importService.runFullImport(file.name);
 
