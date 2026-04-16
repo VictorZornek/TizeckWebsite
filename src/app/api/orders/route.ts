@@ -5,7 +5,7 @@ import Order from "@/database/models/Order";
 export async function GET(request: NextRequest) {
   try {
     const conn = await connectMongoLegacy();
-    const OrderModel = conn.model('Order', Order.schema);
+    const OrderModel = conn.models.LegacyOrder || conn.model('LegacyOrder', Order.schema);
     
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
