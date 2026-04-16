@@ -257,7 +257,8 @@ const Modal = styled.div<{ isOpen: boolean }>`
 interface Order {
   _id: string;
   legacyId: number;
-  customerId: { name: string };
+  customer: { name: string; fantasyName: string } | null;
+  customerLegacyId: number;
   orderDate: string;
   totalAmount: number;
   totalItems: number;
@@ -412,7 +413,7 @@ export default function OrdersPage() {
                     setSelectedOrder(order);
                   }}>
                     <td>#{order.legacyId}</td>
-                    <td>{order.customerId?.name || 'Cliente não encontrado'}</td>
+                    <td>{order.customer?.name || order.customer?.fantasyName || `Cliente #${order.customerLegacyId}`}</td>
                     <td>{formatDate(order.orderDate)}</td>
                     <td>{order.totalItems}</td>
                     <td>{formatCurrency(order.totalAmount)}</td>
@@ -452,7 +453,7 @@ export default function OrdersPage() {
               <div className="info-grid">
                 <div className="info-item">
                   <h4>Cliente</h4>
-                  <p>{selectedOrder.customerId?.name || '-'}</p>
+                  <p>{selectedOrder.customer?.name || selectedOrder.customer?.fantasyName || `Cliente #${selectedOrder.customerLegacyId}`}</p>
                 </div>
                 <div className="info-item">
                   <h4>Data</h4>

@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const conn = await connectMongoLegacy();
     const OrderModel = conn.models.LegacyOrder || conn.model('LegacyOrder', Order.schema);
+    const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', (await import('@/database/models/Customer')).default.schema);
     
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
@@ -39,16 +40,26 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
     const total = await OrderModel.countDocuments(query);
+    
     const orders = await OrderModel.find(query)
-      .populate("customerId", "name fantasyName")
       .sort({ orderDate: -1 })
       .skip(skip)
       .limit(limit)
-      .select("+items") // Garantir que items seja incluído
       .lean();
 
+    // Buscar clientes manualmente
+    const customerIds = [...new Set(orders.map(o => o.customerLegacyId).filter(Boolean))];
+    const customers = await CustomerModel.find({ legacyId: { $in: customerIds } }).lean();
+    const customerMap = new Map(customers.map(c => [c.legacyId, c]));
+
+    // Adicionar dados do cliente aos pedidos
+    const ordersWithCustomers = orders.map(order => ({
+      ...order,
+      customer: customerMap.get(order.customerLegacyId) || null,
+    }));
+
     return NextResponse.json({
-      orders,
+      orders: ordersWithCustomers,
       pagination: {
         total,
         page,
@@ -57,6 +68,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
+    console.error('Erro ao buscar pedidos:', error);
+    return NextResponse.json({ error: `Erro ao buscar pedidos: ${error}` }, { status: 500 });
   }
 }
