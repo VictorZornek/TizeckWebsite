@@ -395,8 +395,8 @@ export default function CustomersPage() {
                     <td>{customer.phone}</td>
                     <td>{customer.cpfCnpj}</td>
                     <td className="status">
-                      <span className={customer.blocked === 'A' ? 'active' : 'blocked'}>
-                        {customer.blocked === 'A' ? 'Ativo' : 'Bloqueado'}
+                      <span className={customer.blocked?.trim() === 'A' ? 'active' : 'blocked'}>
+                        {customer.blocked?.trim() === 'A' ? 'Ativo' : 'Bloqueado'}
                       </span>
                     </td>
                   </tr>

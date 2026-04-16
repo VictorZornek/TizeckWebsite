@@ -86,8 +86,8 @@ export class FirebirdImportService {
       );
       this.log(`${existingIds.size} clientes já existem no MongoDB`);
       
-      // Processar em lotes de 100
-      const BATCH_SIZE = 100;
+      // Processar em lotes de 500
+      const BATCH_SIZE = 500;
       for (let i = 0; i < customers.length; i += BATCH_SIZE) {
         const batch = customers.slice(i, i + BATCH_SIZE);
         const operations = [];
@@ -96,6 +96,26 @@ export class FirebirdImportService {
           const isNew = !existingIds.has(c.CODCLIENTE);
           if (isNew) stats.new++;
           else stats.updated++;
+          
+          // Limpar campo OBS se contiver código JavaScript (erro de leitura do Firebird)
+          let notes = c.OBS;
+          if (notes && typeof notes === 'object') {
+            // Se for objeto/buffer, converter para string e verificar
+            const notesStr = notes.toString();
+            if (notesStr.includes('transaction, callback') || notesStr.includes('function')) {
+              this.log(`Cliente ${c.CODCLIENTE} - OBS com erro (objeto) detectado, limpando...`);
+              notes = null;
+            } else {
+              notes = notesStr.trim();
+            }
+          } else if (typeof notes === 'string') {
+            if (notes.includes('transaction, callback') || notes.includes('function')) {
+              this.log(`Cliente ${c.CODCLIENTE} - OBS com erro (string) detectado, limpando...`);
+              notes = null;
+            } else {
+              notes = notes.trim();
+            }
+          }
           
           operations.push({
             updateOne: {
@@ -121,8 +141,8 @@ export class FirebirdImportService {
                   department: c.DEPARTAMENTO,
                   personType: c.PESSOA,
                   birthDate: c.NASCIMENTO,
-                  notes: c.OBS,
-                  blocked: c.FLAGBLOQUEADO,
+                  notes: notes,
+                  blocked: c.FLAGBLOQUEADO?.trim(),
                   type: c.TIPO,
                   regionCode: c.CODREGIAO,
                   vendorCode: c.VENDEDOR,
@@ -182,7 +202,7 @@ export class FirebirdImportService {
       );
       this.log(`${existingIds.size} produtos já existem no MongoDB`);
       
-      const BATCH_SIZE = 100;
+      const BATCH_SIZE = 500;
       for (let i = 0; i < products.length; i += BATCH_SIZE) {
         const batch = products.slice(i, i + BATCH_SIZE);
         const operations = [];
@@ -288,7 +308,7 @@ export class FirebirdImportService {
         products.map(p => [p.specifications?.legacyId, { _id: p._id, name: p.name }])
       );
 
-      const BATCH_SIZE = 50;
+      const BATCH_SIZE = 250;
       for (let i = 0; i < orders.length; i += BATCH_SIZE) {
         const batch = orders.slice(i, i + BATCH_SIZE);
         const operations = [];
@@ -542,7 +562,7 @@ export class FirebirdImportService {
       const conn = await this.getConnection();
       const Model = conn.models[modelName] || conn.model(modelName, model.schema);
 
-      const BATCH_SIZE = 100;
+      const BATCH_SIZE = 500;
       for (let i = 0; i < data.length; i += BATCH_SIZE) {
         const batch = data.slice(i, i + BATCH_SIZE);
         const operations = [];
