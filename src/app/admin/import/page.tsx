@@ -174,7 +174,7 @@ const ResultSection = styled.div`
 
   .stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
 
@@ -317,6 +317,17 @@ interface ImportResult {
     customers: { imported: number; errors: number; new: number; updated: number };
     products: { imported: number; errors: number; new: number; updated: number };
     orders: { imported: number; errors: number; new: number; updated: number };
+    paymentConditions: { imported: number; errors: number; new: number; updated: number };
+    accounts: { imported: number; errors: number; new: number; updated: number };
+    stockEntries: { imported: number; errors: number; new: number; updated: number };
+    jobFunctions: { imported: number; errors: number; new: number; updated: number };
+    employees: { imported: number; errors: number; new: number; updated: number };
+    regions: { imported: number; errors: number; new: number; updated: number };
+    conditionItems: { imported: number; errors: number; new: number; updated: number };
+    orderInstallments: { imported: number; errors: number; new: number; updated: number };
+    companySettings: { imported: number; errors: number; new: number; updated: number };
+    customerItems: { imported: number; errors: number; new: number; updated: number };
+    systemUsers: { imported: number; errors: number; new: number; updated: number };
   };
   errors: string[];
   logs: string[];
@@ -332,6 +343,17 @@ interface HistoryItem {
     customers: { imported: number; errors: number; new: number; updated: number };
     products: { imported: number; errors: number; new: number; updated: number };
     orders: { imported: number; errors: number; new: number; updated: number };
+    paymentConditions: { imported: number; errors: number; new: number; updated: number };
+    accounts: { imported: number; errors: number; new: number; updated: number };
+    stockEntries: { imported: number; errors: number; new: number; updated: number };
+    jobFunctions: { imported: number; errors: number; new: number; updated: number };
+    employees: { imported: number; errors: number; new: number; updated: number };
+    regions: { imported: number; errors: number; new: number; updated: number };
+    conditionItems: { imported: number; errors: number; new: number; updated: number };
+    orderInstallments: { imported: number; errors: number; new: number; updated: number };
+    companySettings: { imported: number; errors: number; new: number; updated: number };
+    customerItems: { imported: number; errors: number; new: number; updated: number };
+    systemUsers: { imported: number; errors: number; new: number; updated: number };
   };
   processingTime: number;
 }
@@ -469,6 +491,105 @@ export default function ImportPage() {
                 </div>
                 <small>Novos / Atualizados / Erros</small>
               </div>
+              <div className="stat-card">
+                <h4>Condições Pagto</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.paymentConditions.new}</span>
+                  <span className="info">{result.stats.paymentConditions.updated}</span>
+                  <span className="error">{result.stats.paymentConditions.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Contas</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.accounts.new}</span>
+                  <span className="info">{result.stats.accounts.updated}</span>
+                  <span className="error">{result.stats.accounts.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Entradas Estoque</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.stockEntries.new}</span>
+                  <span className="info">{result.stats.stockEntries.updated}</span>
+                  <span className="error">{result.stats.stockEntries.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Funções</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.jobFunctions.new}</span>
+                  <span className="info">{result.stats.jobFunctions.updated}</span>
+                  <span className="error">{result.stats.jobFunctions.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Funcionários</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.employees.new}</span>
+                  <span className="info">{result.stats.employees.updated}</span>
+                  <span className="error">{result.stats.employees.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Regiões</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.regions.new}</span>
+                  <span className="info">{result.stats.regions.updated}</span>
+                  <span className="error">{result.stats.regions.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Itens Condição</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.conditionItems.new}</span>
+                  <span className="info">{result.stats.conditionItems.updated}</span>
+                  <span className="error">{result.stats.conditionItems.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Parcelas Pedido</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.orderInstallments.new}</span>
+                  <span className="info">{result.stats.orderInstallments.updated}</span>
+                  <span className="error">{result.stats.orderInstallments.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Config Empresa</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.companySettings.new}</span>
+                  <span className="info">{result.stats.companySettings.updated}</span>
+                  <span className="error">{result.stats.companySettings.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Histórico Cliente</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.customerItems.new}</span>
+                  <span className="info">{result.stats.customerItems.updated}</span>
+                  <span className="error">{result.stats.customerItems.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
+              <div className="stat-card">
+                <h4>Usuários Sistema</h4>
+                <div className="numbers">
+                  <span className="success">{result.stats.systemUsers.new}</span>
+                  <span className="info">{result.stats.systemUsers.updated}</span>
+                  <span className="error">{result.stats.systemUsers.errors}</span>
+                </div>
+                <small>Novos / Atualizados / Erros</small>
+              </div>
             </div>
             {result.errors.length > 0 && (
               <div className="errors">
@@ -502,7 +623,10 @@ export default function ImportPage() {
               <div className="summary">
                 Clientes: {item.stats.customers.new}N/{item.stats.customers.updated}A | 
                 Produtos: {item.stats.products.new}N/{item.stats.products.updated}A | 
-                Pedidos: {item.stats.orders.new}N/{item.stats.orders.updated}A
+                Pedidos: {item.stats.orders.new}N/{item.stats.orders.updated}A | 
+                Condições: {item.stats.paymentConditions?.new || 0}N/{item.stats.paymentConditions?.updated || 0}A | 
+                Contas: {item.stats.accounts?.new || 0}N/{item.stats.accounts?.updated || 0}A | 
+                Funcionários: {item.stats.employees?.new || 0}N/{item.stats.employees?.updated || 0}A
                 {item.processingTime && ` | ${item.processingTime}s`}
               </div>
             </div>
