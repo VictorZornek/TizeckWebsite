@@ -36,7 +36,7 @@ const Header = styled.header`
 
 const Main = styled.main`
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 
   h2 {
@@ -48,49 +48,52 @@ const Main = styled.main`
     color: #666;
     margin-bottom: 2rem;
   }
+
+  .section {
+    margin-bottom: 3rem;
+
+    h3 {
+      color: #101a33;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+  }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 `;
 
 const Card = styled.div`
   background: white;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 
-  .icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   }
 
-  h3 {
+  .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h4 {
     color: #101a33;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
   }
 
   p {
     color: #666;
-    margin-bottom: 2rem;
-  }
-
-  button {
-    padding: 1rem 2rem;
-    background: #3b81f5;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-
-    &:hover {
-      background: #2563eb;
-    }
+    font-size: 0.9rem;
   }
 `;
 
@@ -108,32 +111,96 @@ export default function SystemPage() {
       <Main>
         <h2>Gerenciamento de dados legados</h2>
         <p className="subtitle">Importação e visualização de dados do sistema antigo</p>
-        <Grid>
-          <Card>
-            <div className="icon">📥</div>
-            <h3>Importação</h3>
-            <p>Importe dados do banco legado Firebird</p>
-            <button onClick={() => router.push("/admin/import")}>
-              Importar Banco Legado
-            </button>
-          </Card>
-          <Card>
-            <div className="icon">👥</div>
-            <h3>Clientes</h3>
-            <p>Visualize os clientes importados</p>
-            <button onClick={() => router.push("/admin/customers")}>
-              Ver Clientes
-            </button>
-          </Card>
-          <Card>
-            <div className="icon">📋</div>
-            <h3>Pedidos</h3>
-            <p>Visualize os pedidos importados</p>
-            <button onClick={() => router.push("/admin/orders")}>
-              Ver Pedidos
-            </button>
-          </Card>
-        </Grid>
+        
+        <div className="section">
+          <h3>📥 Importação</h3>
+          <Grid>
+            <Card onClick={() => router.push("/admin/import")}>
+              <div className="icon">📥</div>
+              <h4>Importação</h4>
+              <p>Importe dados do banco Firebird</p>
+            </Card>
+          </Grid>
+        </div>
+
+        <div className="section">
+          <h3>📄 Dados Principais</h3>
+          <Grid>
+            <Card onClick={() => router.push("/admin/customers")}>
+              <div className="icon">👥</div>
+              <h4>Clientes</h4>
+              <p>Visualize clientes importados</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/orders")}>
+              <div className="icon">📋</div>
+              <h4>Pedidos</h4>
+              <p>Visualize pedidos importados</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/employees")}>
+              <div className="icon">👤</div>
+              <h4>Funcionários</h4>
+              <p>Visualize funcionários/vendedores</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/regions")}>
+              <div className="icon">🌍</div>
+              <h4>Regiões</h4>
+              <p>Visualize regiões de venda</p>
+            </Card>
+          </Grid>
+        </div>
+
+        <div className="section">
+          <h3>💰 Financeiro</h3>
+          <Grid>
+            <Card onClick={() => router.push("/admin/data/accounts")}>
+              <div className="icon">💳</div>
+              <h4>Contas</h4>
+              <p>Contas a pagar/receber</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/payment-conditions")}>
+              <div className="icon">💵</div>
+              <h4>Condições Pagamento</h4>
+              <p>Condições de pagamento</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/order-installments")}>
+              <div className="icon">📅</div>
+              <h4>Parcelas Pedidos</h4>
+              <p>Parcelas dos pedidos</p>
+            </Card>
+          </Grid>
+        </div>
+
+        <div className="section">
+          <h3>📦 Estoque e Histórico</h3>
+          <Grid>
+            <Card onClick={() => router.push("/admin/data/stock-entries")}>
+              <div className="icon">📥</div>
+              <h4>Entradas Estoque</h4>
+              <p>Histórico de entradas</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/customer-items")}>
+              <div className="icon">📊</div>
+              <h4>Histórico Clientes</h4>
+              <p>Itens comprados por cliente</p>
+            </Card>
+          </Grid>
+        </div>
+
+        <div className="section">
+          <h3>⚙️ Configurações</h3>
+          <Grid>
+            <Card onClick={() => router.push("/admin/data/company-settings")}>
+              <div className="icon">🏭</div>
+              <h4>Dados da Empresa</h4>
+              <p>Configurações da empresa</p>
+            </Card>
+            <Card onClick={() => router.push("/admin/data/system-users")}>
+              <div className="icon">🔑</div>
+              <h4>Usuários Sistema</h4>
+              <p>Usuários do sistema legado</p>
+            </Card>
+          </Grid>
+        </div>
       </Main>
     </Container>
   );
