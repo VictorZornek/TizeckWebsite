@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const conn = await connectMongoLegacy();
     const StockEntryModel = conn.models.StockEntry || conn.model('StockEntry', StockEntry.schema);
     
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (productCode) query.productCode = parseInt(productCode);
 
     const skip = (page - 1) * limit;

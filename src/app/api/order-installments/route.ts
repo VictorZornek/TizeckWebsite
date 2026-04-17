@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const conn = await connectMongoLegacy();
     const OrderInstallmentModel = conn.models.OrderInstallment || conn.model('OrderInstallment', OrderInstallment.schema);
     
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (orderCode) query.orderCode = parseInt(orderCode);
     if (status) query.status = status;
 

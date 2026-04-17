@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const conn = await connectMongoLegacy();
     const CustomerItemModel = conn.models.CustomerItem || conn.model('CustomerItem', CustomerItem.schema);
     
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (customerCode) query.customerCode = parseInt(customerCode);
 
     const skip = (page - 1) * limit;

@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");
 
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (search) {
       query.$or = [

@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");
 
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (customerCode) {
       query.customerSupplierCode = parseInt(customerCode);
@@ -26,9 +26,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (dateFrom || dateTo) {
-      query.dueDate = {};
-      if (dateFrom) query.dueDate.$gte = new Date(dateFrom);
-      if (dateTo) query.dueDate.$lte = new Date(dateTo);
+      const dateQuery: Record<string, Date> = {};
+      if (dateFrom) dateQuery.$gte = new Date(dateFrom);
+      if (dateTo) dateQuery.$lte = new Date(dateTo);
+      query.dueDate = dateQuery;
     }
 
     const skip = (page - 1) * limit;

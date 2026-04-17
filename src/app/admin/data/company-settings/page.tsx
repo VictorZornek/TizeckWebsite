@@ -9,31 +9,7 @@ const Container = styled.div`
   background: #f5f5f5;
 `;
 
-const Header = styled.header`
-  background: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 
-  h1 {
-    color: #101a33;
-  }
-
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    background: #6b7280;
-    color: white;
-
-    &:hover {
-      background: #4b5563;
-    }
-  }
-`;
 
 const Main = styled.main`
   padding: 2rem;
@@ -79,7 +55,7 @@ const Loading = styled.div`
 `;
 
 export default function CompanySettingsPage() {
-  const [settings, setSettings] = useState<any>(null);
+  const [settings, setSettings] = useState<Record<string, string | number | null> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

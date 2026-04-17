@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Firebird from "node-firebird";
 import { connectMongoLegacy } from "../dbLegacy";
 import Customer from "../models/Customer";

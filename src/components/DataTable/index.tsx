@@ -161,14 +161,15 @@ interface DataTableProps {
   filters?: FilterConfig[];
 }
 
-export default function DataTable({ title, apiEndpoint, columns, filters = [] }: DataTableProps) {
-  const [data, setData] = useState<any[]>([]);
+export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTableProps) {
+  const [data, setData] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 0, limit: 50 });
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page]);
 
   const fetchData = async () => {
@@ -205,18 +206,18 @@ export default function DataTable({ title, apiEndpoint, columns, filters = [] }:
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const formatValue = (value: any, format?: string) => {
+  const formatValue = (value: unknown, format?: string) => {
     if (!value && value !== 0) return '-';
     
     switch (format) {
       case 'currency':
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value));
       case 'date':
-        return new Date(value).toLocaleDateString('pt-BR');
+        return new Date(value as string | number | Date).toLocaleDateString('pt-BR');
       case 'percent':
         return `${value}%`;
       default:
-        return value;
+        return String(value);
     }
   };
 
