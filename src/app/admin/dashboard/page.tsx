@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -15,9 +16,20 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   button {
@@ -27,6 +39,11 @@ const Header = styled.header`
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
+
+    ${media.down('md')} {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background: #b91c1c;
@@ -39,8 +56,17 @@ const Main = styled.main`
   max-width: 1200px;
   margin: 0 auto;
 
+  ${media.down('md')} {
+    padding: 1rem;
+  }
+
   h2 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 `;
 
@@ -49,6 +75,12 @@ const Grid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+
+  ${media.down('md')} {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
 `;
 
 const Card = styled.div`

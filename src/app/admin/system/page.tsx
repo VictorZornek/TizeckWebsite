@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -15,9 +16,20 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   button {
@@ -27,6 +39,11 @@ const Header = styled.header`
     cursor: pointer;
     background: #6b7280;
     color: white;
+
+    ${media.down('md')} {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background: #4b5563;
@@ -39,23 +56,43 @@ const Main = styled.main`
   max-width: 1400px;
   margin: 0 auto;
 
+  ${media.down('md')} {
+    padding: 1rem;
+  }
+
   h2 {
     color: #101a33;
     margin-bottom: 0.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   .subtitle {
     color: #666;
     margin-bottom: 2rem;
+
+    ${media.down('md')} {
+      font-size: 0.9rem;
+    }
   }
 
   .section {
     margin-bottom: 3rem;
 
+    ${media.down('md')} {
+      margin-bottom: 2rem;
+    }
+
     h3 {
       color: #101a33;
       margin-bottom: 1rem;
       font-size: 1.2rem;
+
+      ${media.down('md')} {
+        font-size: 1.1rem;
+      }
     }
   }
 `;
@@ -64,6 +101,11 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
+
+  ${media.down('md')} {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `;
 
 const Card = styled.div`
@@ -75,6 +117,10 @@ const Card = styled.div`
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 
+  ${media.down('md')} {
+    padding: 1.25rem;
+  }
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
@@ -83,17 +129,29 @@ const Card = styled.div`
   .icon {
     font-size: 2.5rem;
     margin-bottom: 0.75rem;
+
+    ${media.down('md')} {
+      font-size: 2rem;
+    }
   }
 
   h4 {
     color: #101a33;
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
+
+    ${media.down('md')} {
+      font-size: 1rem;
+    }
   }
 
   p {
     color: #666;
     font-size: 0.9rem;
+
+    ${media.down('md')} {
+      font-size: 0.85rem;
+    }
   }
 `;
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 const Header = styled.header`
   background: white;
@@ -10,9 +11,20 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   button {
@@ -25,6 +37,11 @@ const Header = styled.header`
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
+    ${media.down('md')} {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background: #4b5563;

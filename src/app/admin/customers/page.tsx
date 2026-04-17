@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -15,6 +16,10 @@ const Main = styled.main`
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 `;
 
 const Filters = styled.div`
@@ -23,6 +28,10 @@ const Filters = styled.div`
   border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h3 {
     color: #101a33;
@@ -34,6 +43,10 @@ const Filters = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
+
+    ${media.down('md')} {
+      grid-template-columns: 1fr;
+    }
 
     input, select {
       padding: 0.75rem;
@@ -47,12 +60,20 @@ const Filters = styled.div`
     display: flex;
     gap: 1rem;
 
+    ${media.down('md')} {
+      flex-direction: column;
+    }
+
     button {
       padding: 0.75rem 1.5rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
       font-weight: 500;
+
+      ${media.down('md')} {
+        width: 100%;
+      }
 
       &.search {
         background: #3b82f6;
@@ -81,9 +102,17 @@ const Table = styled.div`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 
+  ${media.down('md')} {
+    overflow-x: auto;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
+
+    ${media.down('md')} {
+      min-width: 600px;
+    }
 
     thead {
       background: #f9fafb;
@@ -94,6 +123,11 @@ const Table = styled.div`
         font-weight: 600;
         color: #374151;
         border-bottom: 2px solid #e5e7eb;
+
+        ${media.down('md')} {
+          padding: 0.75rem 0.5rem;
+          font-size: 0.85rem;
+        }
       }
     }
 
@@ -109,6 +143,11 @@ const Table = styled.div`
         td {
           padding: 1rem;
           color: #374151;
+
+          ${media.down('md')} {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.85rem;
+          }
 
           &.status {
             span {
@@ -140,6 +179,7 @@ const Pagination = styled.div`
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
+  flex-wrap: wrap;
 
   button {
     padding: 0.5rem 1rem;
@@ -147,6 +187,11 @@ const Pagination = styled.div`
     border-radius: 0.5rem;
     background: white;
     cursor: pointer;
+
+    ${media.down('md')} {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
 
     &:hover:not(:disabled) {
       background: #f9fafb;
@@ -160,6 +205,11 @@ const Pagination = styled.div`
 
   span {
     color: #374151;
+
+    ${media.down('md')} {
+      font-size: 0.9rem;
+      text-align: center;
+    }
   }
 `;
 
@@ -174,6 +224,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
 
   .modal-content {
     background: white;
@@ -184,15 +235,29 @@ const Modal = styled.div<{ isOpen: boolean }>`
     overflow-y: auto;
     width: 90%;
 
+    ${media.down('md')} {
+      padding: 1rem;
+      width: 95%;
+      max-height: 90vh;
+    }
+
     h2 {
       color: #101a33;
       margin-bottom: 1.5rem;
+
+      ${media.down('md')} {
+        font-size: 1.25rem;
+      }
     }
 
     .info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
+
+      ${media.down('md')} {
+        grid-template-columns: 1fr;
+      }
 
       .info-item {
         h4 {
@@ -204,6 +269,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
         p {
           color: #101a33;
           font-weight: 500;
+          word-break: break-word;
         }
       }
     }
@@ -216,6 +282,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+      width: 100%;
 
       &:hover {
         background: #4b5563;

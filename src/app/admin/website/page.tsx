@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -15,9 +16,20 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   button {
@@ -27,6 +39,11 @@ const Header = styled.header`
     cursor: pointer;
     background: #6b7280;
     color: white;
+
+    ${media.down('md')} {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background: #4b5563;
@@ -39,14 +56,26 @@ const Main = styled.main`
   max-width: 1200px;
   margin: 0 auto;
 
+  ${media.down('md')} {
+    padding: 1rem;
+  }
+
   h2 {
     color: #101a33;
     margin-bottom: 0.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+    }
   }
 
   .subtitle {
     color: #666;
     margin-bottom: 2rem;
+
+    ${media.down('md')} {
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -54,6 +83,11 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
+
+  ${media.down('md')} {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `;
 
 const Card = styled.div`
@@ -63,19 +97,36 @@ const Card = styled.div`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 
+  ${media.down('md')} {
+    padding: 1.5rem;
+  }
+
   .icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+
+    ${media.down('md')} {
+      font-size: 2.5rem;
+    }
   }
 
   h3 {
     color: #101a33;
     margin-bottom: 1rem;
+
+    ${media.down('md')} {
+      font-size: 1.1rem;
+    }
   }
 
   p {
     color: #666;
     margin-bottom: 2rem;
+
+    ${media.down('md')} {
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
   }
 
   button {
@@ -87,6 +138,11 @@ const Card = styled.div`
     cursor: pointer;
     font-size: 1rem;
     width: 100%;
+
+    ${media.down('md')} {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
 
     &:hover {
       background: #2563eb;

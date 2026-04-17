@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { Toast } from "@/components/Toast";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -19,6 +20,12 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
@@ -28,6 +35,10 @@ const Header = styled.header`
     display: flex;
     gap: 1rem;
 
+    ${media.down('md')} {
+      width: 100%;
+    }
+
     button.new {
       padding: 0.5rem 1rem;
       border: none;
@@ -35,6 +46,10 @@ const Header = styled.header`
       cursor: pointer;
       background: #10b981;
       color: white;
+
+      ${media.down('md')} {
+        width: 100%;
+      }
 
       &:hover {
         background: #059669;
@@ -47,6 +62,10 @@ const Main = styled.main`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 `;
 
 const Form = styled.form`
@@ -181,6 +200,12 @@ const ProductItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -188,6 +213,12 @@ const ProductItem = styled.div`
 
   .info {
     flex: 1;
+    min-width: 200px;
+
+    ${media.down('md')} {
+      width: 100%;
+      min-width: unset;
+    }
 
     h3 {
       color: #101a33;
@@ -204,11 +235,20 @@ const ProductItem = styled.div`
     display: flex;
     gap: 1rem;
 
+    ${media.down('md')} {
+      width: 100%;
+      justify-content: stretch;
+    }
+
     button {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+
+      ${media.down('md')} {
+        flex: 1;
+      }
 
       &.edit {
         background: #f59e0b;
