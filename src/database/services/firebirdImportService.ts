@@ -82,7 +82,7 @@ export class FirebirdImportService {
       
       // Buscar IDs existentes no MongoDB
       const existingIds = new Set(
-        (await CustomerModel.find({}, { legacyId: 1 }).lean()).map(c => c.legacyId)
+        (await CustomerModel.find({}, { legacyId: 1 }).lean()).map((c: { legacyId: number }) => c.legacyId)
       );
       this.log(`${existingIds.size} clientes já existem no MongoDB`);
       
@@ -199,7 +199,7 @@ export class FirebirdImportService {
       
       const existingIds = new Set(
         (await ProductsModel.find({}, { "specifications.legacyId": 1 }).lean())
-          .map(p => p.specifications?.legacyId)
+          .map((p: { specifications?: { legacyId?: number } }) => p.specifications?.legacyId)
           .filter(Boolean)
       );
       this.log(`${existingIds.size} produtos já existem no MongoDB`);
@@ -288,7 +288,7 @@ export class FirebirdImportService {
       const ProductsModel = conn.models.LegacyProduct || conn.model('LegacyProduct', Products.schema);
       
       const existingIds = new Set(
-        (await OrderModel.find({}, { legacyId: 1 }).lean()).map(o => o.legacyId)
+        (await OrderModel.find({}, { legacyId: 1 }).lean()).map((o: { legacyId: number }) => o.legacyId)
       );
       this.log(`${existingIds.size} pedidos já existem no MongoDB`);
       
@@ -303,11 +303,11 @@ export class FirebirdImportService {
       
       // Buscar todos os clientes e produtos de uma vez
       const customers = await CustomerModel.find({}).lean();
-      const customerMap = new Map(customers.map(c => [c.legacyId, c._id]));
+      const customerMap = new Map(customers.map((c: { legacyId: number; _id: unknown }) => [c.legacyId, c._id]));
       
       const products = await ProductsModel.find({}).lean();
       const productMap = new Map(
-        products.map(p => [p.specifications?.legacyId, { _id: p._id, name: p.name }])
+        products.map((p: { specifications?: { legacyId?: number }; _id: unknown; name: string }) => [p.specifications?.legacyId, { _id: p._id, name: p.name }])
       );
 
       const BATCH_SIZE = 250;
@@ -322,7 +322,7 @@ export class FirebirdImportService {
           
           const orderItems = itemsMap.get(o.CODPEDIDO) || [];
           const mappedItems = orderItems.map((item: any) => {
-            const product = productMap.get(item.CODPRODUTO);
+            const product = productMap.get(item.CODPRODUTO) as { _id: unknown; name: string } | undefined;
             return {
               productId: product?._id,
               productName: product?.name || `Produto ${item.CODPRODUTO}`,
@@ -617,9 +617,9 @@ export class FirebirdImportService {
     const ImportHistoryModel = conn.models.ImportHistory || conn.model('ImportHistory', ImportHistory.schema);
     
     const lastImport = await ImportHistoryModel.findOne().sort({ importDate: -1 }).lean();
-    if (lastImport) {
+    if (lastImport && lastImport.importDate) {
       this.lastSyncDate = lastImport.importDate;
-      this.log(`Última sincronização: ${this.lastSyncDate.toLocaleString('pt-BR')}`);
+      this.log(`Última sincronização: ${new Date(lastImport.importDate).toLocaleString('pt-BR')}`);
     } else {
       this.log(`Primeira importação - processando todos os registros`);
     }
