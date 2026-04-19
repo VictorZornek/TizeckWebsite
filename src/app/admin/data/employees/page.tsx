@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function EmployeesPage() {
   return (
     <>
-      <AdminHeader title="👤 Funcionários" showBackButton />
+      <AdminHeader title="Funcionários" showBackButton />
       <DataTable
-      title="👤 Funcionários"
+      title="Funcionários"
       apiEndpoint="/api/employees"
       filters={[
         { key: "search", label: "Buscar por nome, CPF...", type: "text" },

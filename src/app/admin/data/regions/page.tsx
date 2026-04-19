@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function RegionsPage() {
   return (
     <>
-      <AdminHeader title="🌍 Regiões" showBackButton />
+      <AdminHeader title="Regiões" showBackButton />
       <DataTable
-      title="🌍 Regiões"
+      title="Regiões"
       apiEndpoint="/api/regions"
       columns={[
         { key: "legacyId", label: "Código" },

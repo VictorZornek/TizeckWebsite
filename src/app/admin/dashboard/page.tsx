@@ -5,6 +5,7 @@ import styled from "styled-components";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
+import { Globe, Database } from "lucide-react";
 
 const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
@@ -60,8 +61,10 @@ const Card = styled.div<{ $isDark: boolean }>`
   }
 
   .icon {
-    font-size: 3rem;
+    display: flex;
+    justify-content: center;
     margin-bottom: 1rem;
+    color: #3b82f6;
   }
 
   h2 {
@@ -88,12 +91,12 @@ export default function DashboardPage() {
         <h2>Bem-vindo ao painel de administração</h2>
         <Grid>
           <Card $isDark={isDark} onClick={() => router.push("/admin/website")}>
-            <div className="icon">🌐</div>
+            <div className="icon"><Globe size={48} /></div>
             <h2>Gerenciamento do Site</h2>
             <p>Gerencie produtos e categorias do site</p>
           </Card>
           <Card $isDark={isDark} onClick={() => router.push("/admin/system")}>
-            <div className="icon">💾</div>
+            <div className="icon"><Database size={48} /></div>
             <h2>Backup e Sistema</h2>
             <p>Importação e gerenciamento de dados legados</p>
           </Card>

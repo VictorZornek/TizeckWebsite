@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function OrderInstallmentsPage() {
   return (
     <>
-      <AdminHeader title="📅 Parcelas de Pedidos" showBackButton />
+      <AdminHeader title="Parcelas de Pedidos" showBackButton />
       <DataTable
-      title="📅 Parcelas de Pedidos"
+      title="Parcelas de Pedidos"
       apiEndpoint="/api/order-installments"
       filters={[
         { key: "orderCode", label: "Código do Pedido", type: "text" },

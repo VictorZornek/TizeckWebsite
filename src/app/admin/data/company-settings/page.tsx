@@ -78,7 +78,7 @@ export default function CompanySettingsPage() {
 
   return (
     <Container $isDark={isDark}>
-      <AdminHeader title="🏭 Dados da Empresa" showBackButton />
+      <AdminHeader title="Dados da Empresa" showBackButton />
       <Main>
         {loading ? (
           <Loading $isDark={isDark}>Carregando...</Loading>

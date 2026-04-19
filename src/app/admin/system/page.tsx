@@ -5,6 +5,7 @@ import styled from "styled-components";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
+import { Download, Users, FileText, User, MapPin, CreditCard, DollarSign, Calendar, Package, BarChart3, Building2, Key } from "lucide-react";
 
 const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
@@ -51,6 +52,9 @@ const Main = styled.main<{ $isDark: boolean }>`
       color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       margin-bottom: 1rem;
       font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
 
       ${media.down('md')} {
         font-size: 1.1rem;
@@ -89,11 +93,13 @@ const Card = styled.div<{ $isDark: boolean }>`
   }
 
   .icon {
-    font-size: 2.5rem;
+    display: flex;
+    justify-content: center;
     margin-bottom: 0.75rem;
+    color: #3b82f6;
 
     ${media.down('md')} {
-      font-size: 2rem;
+      margin-bottom: 0.5rem;
     }
   }
 
@@ -124,16 +130,16 @@ export default function SystemPage() {
 
   return (
     <Container $isDark={isDark}>
-      <AdminHeader title="💾 Backup e Sistema" showBackButton />
+      <AdminHeader title="Backup e Sistema" showBackButton />
       <Main $isDark={isDark}>
         <h2>Gerenciamento de dados legados</h2>
         <p className="subtitle">Importação e visualização de dados do sistema antigo</p>
         
         <div className="section">
-          <h3>📥 Importação</h3>
+          <h3><Download size={20} /> Importação</h3>
           <Grid>
             <Card $isDark={isDark} onClick={() => router.push("/admin/import")}>
-              <div className="icon">📥</div>
+              <div className="icon"><Download size={40} /></div>
               <h4>Importação</h4>
               <p>Importe dados do banco Firebird</p>
             </Card>
@@ -141,25 +147,25 @@ export default function SystemPage() {
         </div>
 
         <div className="section">
-          <h3>📄 Dados Principais</h3>
+          <h3><FileText size={20} /> Dados Principais</h3>
           <Grid>
             <Card $isDark={isDark} onClick={() => router.push("/admin/customers")}>
-              <div className="icon">👥</div>
+              <div className="icon"><Users size={40} /></div>
               <h4>Clientes</h4>
               <p>Visualize clientes importados</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/orders")}>
-              <div className="icon">📋</div>
+              <div className="icon"><FileText size={40} /></div>
               <h4>Pedidos</h4>
               <p>Visualize pedidos importados</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/employees")}>
-              <div className="icon">👤</div>
+              <div className="icon"><User size={40} /></div>
               <h4>Funcionários</h4>
               <p>Visualize funcionários/vendedores</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/regions")}>
-              <div className="icon">🌍</div>
+              <div className="icon"><MapPin size={40} /></div>
               <h4>Regiões</h4>
               <p>Visualize regiões de venda</p>
             </Card>
@@ -167,20 +173,20 @@ export default function SystemPage() {
         </div>
 
         <div className="section">
-          <h3>💰 Financeiro</h3>
+          <h3><DollarSign size={20} /> Financeiro</h3>
           <Grid>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/accounts")}>
-              <div className="icon">💳</div>
+              <div className="icon"><CreditCard size={40} /></div>
               <h4>Contas</h4>
               <p>Contas a pagar/receber</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/payment-conditions")}>
-              <div className="icon">💵</div>
+              <div className="icon"><DollarSign size={40} /></div>
               <h4>Condições Pagamento</h4>
               <p>Condições de pagamento</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/order-installments")}>
-              <div className="icon">📅</div>
+              <div className="icon"><Calendar size={40} /></div>
               <h4>Parcelas Pedidos</h4>
               <p>Parcelas dos pedidos</p>
             </Card>
@@ -188,15 +194,15 @@ export default function SystemPage() {
         </div>
 
         <div className="section">
-          <h3>📦 Estoque e Histórico</h3>
+          <h3><Package size={20} /> Estoque e Histórico</h3>
           <Grid>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/stock-entries")}>
-              <div className="icon">📥</div>
+              <div className="icon"><Package size={40} /></div>
               <h4>Entradas Estoque</h4>
               <p>Histórico de entradas</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/customer-items")}>
-              <div className="icon">📊</div>
+              <div className="icon"><BarChart3 size={40} /></div>
               <h4>Histórico Clientes</h4>
               <p>Itens comprados por cliente</p>
             </Card>
@@ -204,15 +210,15 @@ export default function SystemPage() {
         </div>
 
         <div className="section">
-          <h3>⚙️ Configurações</h3>
+          <h3><Building2 size={20} /> Configurações</h3>
           <Grid>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/company-settings")}>
-              <div className="icon">🏭</div>
+              <div className="icon"><Building2 size={40} /></div>
               <h4>Dados da Empresa</h4>
               <p>Configurações da empresa</p>
             </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/data/system-users")}>
-              <div className="icon">🔑</div>
+              <div className="icon"><Key size={40} /></div>
               <h4>Usuários Sistema</h4>
               <p>Usuários do sistema legado</p>
             </Card>

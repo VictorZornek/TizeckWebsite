@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function CustomerItemsPage() {
   return (
     <>
-      <AdminHeader title="📊 Histórico de Compras por Cliente" showBackButton />
+      <AdminHeader title="Histórico de Compras por Cliente" showBackButton />
       <DataTable
-      title="📊 Histórico de Compras por Cliente"
+      title="Histórico de Compras por Cliente"
       apiEndpoint="/api/customer-items"
       filters={[
         { key: "customerCode", label: "Código do Cliente", type: "text" },

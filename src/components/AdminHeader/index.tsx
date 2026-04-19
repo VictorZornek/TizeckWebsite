@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Sun, Moon, LogOut } from "lucide-react";
 
 const HeaderContainer = styled.header<{ $isDark: boolean }>`
   background: ${props => props.$isDark ? '#2d3748' : 'white'};
@@ -39,7 +40,7 @@ const HeaderActions = styled.div`
 `;
 
 const ThemeToggle = styled.button<{ $isDark: boolean }>`
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   background: ${props => props.$isDark ? '#4a5568' : '#e2e8f0'};
   color: ${props => props.$isDark ? '#f7fafc' : '#2d3748'};
   border: none;
@@ -47,12 +48,14 @@ const ThemeToggle = styled.button<{ $isDark: boolean }>`
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
 
   ${media.down('md')} {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+    width: 36px;
+    height: 36px;
   }
 
   &:hover {
@@ -67,6 +70,9 @@ const ActionButton = styled.button<{ $isDark?: boolean; $variant?: 'primary' | '
   cursor: pointer;
   transition: all 0.3s ease;
   color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   ${media.down('md')} {
     padding: 0.4rem 0.8rem;
@@ -119,9 +125,8 @@ export default function AdminHeader({
     <HeaderContainer $isDark={isDark}>
       <h1>{title}</h1>
       <HeaderActions>
-        <ThemeToggle $isDark={isDark} onClick={toggleTheme}>
-          {isDark ? '☀️' : '🌙'}
-          {isDark ? 'Modo Claro' : 'Modo Escuro'}
+        <ThemeToggle $isDark={isDark} onClick={toggleTheme} title={isDark ? 'Modo Claro' : 'Modo Escuro'}>
+          {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </ThemeToggle>
         {showBackButton && (
           <ActionButton $isDark={isDark} $variant="secondary" onClick={() => router.push(backPath)}>
@@ -130,6 +135,7 @@ export default function AdminHeader({
         )}
         {showLogoutButton && (
           <ActionButton $variant="danger" onClick={handleLogout}>
+            <LogOut size={18} />
             Sair
           </ActionButton>
         )}

@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function AccountsPage() {
   return (
     <>
-      <AdminHeader title="💳 Contas a Pagar/Receber" showBackButton />
+      <AdminHeader title="Contas a Pagar/Receber" showBackButton />
       <DataTable
-      title="💳 Contas a Pagar/Receber"
+      title="Contas a Pagar/Receber"
       apiEndpoint="/api/accounts"
       filters={[
         { key: "customerCode", label: "Código Cliente/Fornecedor", type: "text" },

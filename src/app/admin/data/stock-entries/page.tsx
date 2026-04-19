@@ -6,9 +6,9 @@ import DataTable from "@/components/DataTable";
 export default function StockEntriesPage() {
   return (
     <>
-      <AdminHeader title="📥 Entradas de Estoque" showBackButton />
+      <AdminHeader title="Entradas de Estoque" showBackButton />
       <DataTable
-      title="📥 Entradas de Estoque"
+      title="Entradas de Estoque"
       apiEndpoint="/api/stock-entries"
       filters={[
         { key: "productCode", label: "Código do Produto", type: "text" },

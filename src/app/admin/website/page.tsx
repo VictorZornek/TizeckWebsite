@@ -3,55 +3,17 @@
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
+import { Package, Tag } from "lucide-react";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
-const Header = styled.header`
-  background: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  ${media.down('md')} {
-    padding: 1rem;
-  }
-
-  h1 {
-    color: #101a33;
-    font-size: 1.5rem;
-
-    ${media.down('md')} {
-      font-size: 1.25rem;
-    }
-  }
-
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    background: #6b7280;
-    color: white;
-
-    ${media.down('md')} {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-    }
-
-    &:hover {
-      background: #4b5563;
-    }
-  }
-`;
-
-const Main = styled.main`
+const Main = styled.main<{ $isDark: boolean }>`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -61,7 +23,7 @@ const Main = styled.main`
   }
 
   h2 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 0.5rem;
 
     ${media.down('md')} {
@@ -70,7 +32,7 @@ const Main = styled.main`
   }
 
   .subtitle {
-    color: #666;
+    color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
     margin-bottom: 2rem;
 
     ${media.down('md')} {
@@ -90,28 +52,31 @@ const Grid = styled.div`
   }
 `;
 
-const Card = styled.div`
-  background: white;
+const Card = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   text-align: center;
+  transition: all 0.3s ease;
 
   ${media.down('md')} {
     padding: 1.5rem;
   }
 
   .icon {
-    font-size: 3rem;
+    display: flex;
+    justify-content: center;
     margin-bottom: 1rem;
+    color: #3b82f6;
 
     ${media.down('md')} {
-      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
     }
   }
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
 
     ${media.down('md')} {
@@ -120,7 +85,7 @@ const Card = styled.div`
   }
 
   p {
-    color: #666;
+    color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
     margin-bottom: 2rem;
 
     ${media.down('md')} {
@@ -138,6 +103,7 @@ const Card = styled.div`
     cursor: pointer;
     font-size: 1rem;
     width: 100%;
+    transition: all 0.3s ease;
 
     ${media.down('md')} {
       padding: 0.8rem 1.5rem;
@@ -152,29 +118,26 @@ const Card = styled.div`
 
 export default function WebsitePage() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   return (
-    <Container>
-      <Header>
-        <h1>🌐 Gerenciamento do Site</h1>
-        <button onClick={() => router.push("/admin/dashboard")}>
-          Voltar ao Dashboard
-        </button>
-      </Header>
-      <Main>
+    <Container $isDark={isDark}>
+      <AdminHeader title="Gerenciamento do Site" showBackButton />
+      <Main $isDark={isDark}>
         <h2>Gerencie o conteúdo do site</h2>
         <p className="subtitle">Produtos e categorias exibidos para os clientes</p>
         <Grid>
-          <Card>
-            <div className="icon">📦</div>
+          <Card $isDark={isDark}>
+            <div className="icon"><Package size={48} /></div>
             <h3>Produtos</h3>
             <p>Gerencie todos os produtos do site</p>
             <button onClick={() => router.push("/admin/products")}>
               Gerenciar Produtos
             </button>
           </Card>
-          <Card>
-            <div className="icon">🏷️</div>
+          <Card $isDark={isDark}>
+            <div className="icon"><Tag size={48} /></div>
             <h3>Categorias</h3>
             <p>Gerencie as categorias de produtos</p>
             <button onClick={() => router.push("/admin/categories")}>
