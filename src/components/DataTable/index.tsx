@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
 const Main = styled.main`
@@ -20,19 +22,20 @@ const Main = styled.main`
   }
 `;
 
-const Filters = styled.div`
-  background: white;
+const Filters = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   margin-bottom: 2rem;
+  transition: all 0.3s ease;
 
   ${media.down('md')} {
     padding: 1rem;
   }
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
@@ -48,9 +51,12 @@ const Filters = styled.div`
 
     input, select {
       padding: 0.75rem;
-      border: 1px solid #ddd;
+      border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
       border-radius: 0.5rem;
       font-size: 0.9rem;
+      background: ${props => props.$isDark ? '#1a202c' : 'white'};
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+      transition: all 0.3s ease;
     }
   }
 
@@ -68,6 +74,7 @@ const Filters = styled.div`
       border-radius: 0.5rem;
       cursor: pointer;
       font-weight: 500;
+      transition: all 0.3s ease;
 
       ${media.down('md')} {
         width: 100%;
@@ -83,22 +90,23 @@ const Filters = styled.div`
       }
 
       &.clear {
-        background: #e5e7eb;
-        color: #374151;
+        background: ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+        color: ${props => props.$isDark ? '#f7fafc' : '#374151'};
 
         &:hover {
-          background: #d1d5db;
+          background: ${props => props.$isDark ? '#718096' : '#d1d5db'};
         }
       }
     }
   }
 `;
 
-const Table = styled.div`
-  background: white;
+const Table = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   overflow: hidden;
+  transition: all 0.3s ease;
 
   ${media.down('md')} {
     overflow-x: auto;
@@ -113,14 +121,14 @@ const Table = styled.div`
     }
 
     thead {
-      background: #f9fafb;
+      background: ${props => props.$isDark ? '#1a202c' : '#f9fafb'};
 
       th {
         padding: 1rem;
         text-align: left;
         font-weight: 600;
-        color: #374151;
-        border-bottom: 2px solid #e5e7eb;
+        color: ${props => props.$isDark ? '#cbd5e0' : '#374151'};
+        border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
 
         ${media.down('md')} {
           padding: 0.75rem 0.5rem;
@@ -131,15 +139,16 @@ const Table = styled.div`
 
     tbody {
       tr {
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+        transition: background 0.2s ease;
 
         &:hover {
-          background: #f9fafb;
+          background: ${props => props.$isDark ? '#374151' : '#f9fafb'};
         }
 
         td {
           padding: 1rem;
-          color: #374151;
+          color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
 
           ${media.down('md')} {
             padding: 0.75rem 0.5rem;
@@ -151,7 +160,7 @@ const Table = styled.div`
   }
 `;
 
-const Pagination = styled.div`
+const Pagination = styled.div<{ $isDark: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,10 +170,12 @@ const Pagination = styled.div`
 
   button {
     padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
-    background: white;
+    background: ${props => props.$isDark ? '#2d3748' : 'white'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     cursor: pointer;
+    transition: all 0.3s ease;
 
     ${media.down('md')} {
       padding: 0.4rem 0.8rem;
@@ -172,7 +183,7 @@ const Pagination = styled.div`
     }
 
     &:hover:not(:disabled) {
-      background: #f9fafb;
+      background: ${props => props.$isDark ? '#374151' : '#f9fafb'};
     }
 
     &:disabled {
@@ -182,7 +193,7 @@ const Pagination = styled.div`
   }
 
   span {
-    color: #374151;
+    color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
 
     ${media.down('md')} {
       font-size: 0.9rem;
@@ -191,10 +202,10 @@ const Pagination = styled.div`
   }
 `;
 
-const Loading = styled.div`
+const Loading = styled.div<{ $isDark: boolean }>`
   text-align: center;
   padding: 3rem;
-  color: #666;
+  color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
 `;
 
 interface FilterConfig {
@@ -216,6 +227,8 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
   const [loading, setLoading] = useState(true);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 0, limit: 50 });
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchData();
@@ -273,10 +286,10 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
   };
 
   return (
-    <Container>
+    <Container $isDark={isDark}>
       <Main>
         {filters.length > 0 && (
-          <Filters>
+          <Filters $isDark={isDark}>
             <h3>Filtros</h3>
             <div className="filter-grid">
               {filters.map((filter) => (
@@ -314,7 +327,7 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
           </Filters>
         )}
 
-        <Table>
+        <Table $isDark={isDark}>
           <table>
             <thead>
               <tr>
@@ -327,13 +340,13 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
               {loading ? (
                 <tr>
                   <td colSpan={columns.length}>
-                    <Loading>Carregando...</Loading>
+                    <Loading $isDark={isDark}>Carregando...</Loading>
                   </td>
                 </tr>
               ) : data.length === 0 ? (
                 <tr>
                   <td colSpan={columns.length}>
-                    <Loading>Nenhum registro encontrado</Loading>
+                    <Loading $isDark={isDark}>Nenhum registro encontrado</Loading>
                   </td>
                 </tr>
               ) : (
@@ -352,7 +365,7 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
         </Table>
 
         {pagination.pages > 1 && (
-          <Pagination>
+          <Pagination $isDark={isDark}>
             <button
               onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
               disabled={pagination.page === 1}

@@ -1,15 +1,15 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
-
-
 
 const Main = styled.main`
   padding: 2rem;
@@ -17,14 +17,15 @@ const Main = styled.main`
   margin: 0 auto;
 `;
 
-const Card = styled.div`
-  background: white;
+const Card = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  transition: all 0.3s ease;
 
   h2 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1.5rem;
   }
 
@@ -35,28 +36,30 @@ const Card = styled.div`
 
     .info-item {
       h4 {
-        color: #6b7280;
+        color: ${props => props.$isDark ? '#cbd5e0' : '#6b7280'};
         font-size: 0.85rem;
         margin-bottom: 0.5rem;
       }
 
       p {
-        color: #101a33;
+        color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
         font-weight: 500;
       }
     }
   }
 `;
 
-const Loading = styled.div`
+const Loading = styled.div<{ $isDark: boolean }>`
   text-align: center;
   padding: 3rem;
-  color: #666;
+  color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
 `;
 
 export default function CompanySettingsPage() {
   const [settings, setSettings] = useState<Record<string, string | number | null> | null>(null);
   const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchSettings();
@@ -74,15 +77,15 @@ export default function CompanySettingsPage() {
   };
 
   return (
-    <Container>
-      <PageHeader title="🏭 Dados da Empresa" />
+    <Container $isDark={isDark}>
+      <AdminHeader title="🏭 Dados da Empresa" showBackButton />
       <Main>
         {loading ? (
-          <Loading>Carregando...</Loading>
+          <Loading $isDark={isDark}>Carregando...</Loading>
         ) : !settings ? (
-          <Loading>Nenhuma configuração encontrada</Loading>
+          <Loading $isDark={isDark}>Nenhuma configuração encontrada</Loading>
         ) : (
-          <Card>
+          <Card $isDark={isDark}>
             <h2>Informações da Empresa</h2>
             <div className="info-grid">
               <div className="info-item">

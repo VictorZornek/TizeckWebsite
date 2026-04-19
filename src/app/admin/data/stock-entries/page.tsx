@@ -1,10 +1,12 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function StockEntriesPage() {
   return (
     <>
-      <PageHeader title="📥 Entradas de Estoque" />
+      <AdminHeader title="📥 Entradas de Estoque" showBackButton />
       <DataTable
       title="📥 Entradas de Estoque"
       apiEndpoint="/api/stock-entries"

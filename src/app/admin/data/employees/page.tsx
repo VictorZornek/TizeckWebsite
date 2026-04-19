@@ -1,10 +1,12 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function EmployeesPage() {
   return (
     <>
-      <PageHeader title="👤 Funcionários" />
+      <AdminHeader title="👤 Funcionários" showBackButton />
       <DataTable
       title="👤 Funcionários"
       apiEndpoint="/api/employees"

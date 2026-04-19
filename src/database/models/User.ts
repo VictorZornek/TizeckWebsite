@@ -14,6 +14,11 @@ const UserSchema = new Schema({
     type: String,
     default: "admin",
   },
+  theme: {
+    type: String,
+    enum: ["light", "dark"],
+    default: "light",
+  },
 });
 
 const User = models.User || model("User", UserSchema);

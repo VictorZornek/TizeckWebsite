@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
 
@@ -17,20 +19,21 @@ const Main = styled.main`
   margin: 0 auto;
 `;
 
-const UploadSection = styled.div`
-  background: white;
+const UploadSection = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   margin-bottom: 2rem;
+  transition: all 0.3s ease;
 
   h2 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
   .upload-area {
-    border: 2px dashed #ddd;
+    border: 2px dashed ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
     padding: 2rem;
     text-align: center;
@@ -52,7 +55,7 @@ const UploadSection = styled.div`
 
     p {
       margin-top: 0.5rem;
-      color: #666;
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
       font-size: 0.9rem;
     }
   }
@@ -95,21 +98,22 @@ const UploadSection = styled.div`
 
   .progress {
     text-align: center;
-    color: #666;
+    color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
     margin-top: 1rem;
     font-weight: 500;
   }
 `;
 
-const LogsSection = styled.div`
-  background: white;
+const LogsSection = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   margin-bottom: 2rem;
+  transition: all 0.3s ease;
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
@@ -136,15 +140,16 @@ const LogsSection = styled.div`
   }
 `;
 
-const ResultSection = styled.div`
-  background: white;
+const ResultSection = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   margin-bottom: 2rem;
+  transition: all 0.3s ease;
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
@@ -157,10 +162,10 @@ const ResultSection = styled.div`
     .stat-card {
       padding: 1rem;
       border-radius: 0.5rem;
-      background: #f9fafb;
+      background: ${props => props.$isDark ? '#1a202c' : '#f9fafb'};
 
       h4 {
-        color: #666;
+        color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
         font-size: 0.9rem;
         margin-bottom: 0.5rem;
       }
@@ -221,20 +226,21 @@ const ResultSection = styled.div`
   }
 `;
 
-const HistorySection = styled.div`
-  background: white;
+const HistorySection = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  transition: all 0.3s ease;
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
   .history-item {
     padding: 1rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
 
     &:last-child {
       border-bottom: none;
@@ -247,11 +253,11 @@ const HistorySection = styled.div`
 
       .filename {
         font-weight: 500;
-        color: #101a33;
+        color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       }
 
       .date {
-        color: #666;
+        color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
         font-size: 0.9rem;
       }
     }
@@ -282,7 +288,7 @@ const HistorySection = styled.div`
     .summary {
       margin-top: 0.5rem;
       font-size: 0.9rem;
-      color: #666;
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
     }
   }
 `;
@@ -341,6 +347,8 @@ export default function ImportPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
   const [progress, setProgress] = useState("");
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchHistory();
@@ -396,10 +404,10 @@ export default function ImportPage() {
   };
 
   return (
-    <Container>
-      <PageHeader title="Importação de Banco Legado" />
+    <Container $isDark={isDark}>
+      <AdminHeader title="Importação de Banco Legado" showBackButton />
       <Main>
-        <UploadSection>
+        <UploadSection $isDark={isDark}>
           <h2>Upload do Arquivo .GDB</h2>
           <div className="upload-area">
             <input
@@ -420,7 +428,7 @@ export default function ImportPage() {
         </UploadSection>
 
         {logs.length > 0 && (
-          <LogsSection>
+          <LogsSection $isDark={isDark}>
             <h3>Logs da Importação</h3>
             <div className="logs-container">
               {logs.map((log, index) => (
@@ -431,7 +439,7 @@ export default function ImportPage() {
         )}
 
         {result && (
-          <ResultSection>
+          <ResultSection $isDark={isDark}>
             <h3>Resultado da Importação - {result.processingTime}s</h3>
             <div className="stats">
               <div className="stat-card">
@@ -577,7 +585,7 @@ export default function ImportPage() {
           </ResultSection>
         )}
 
-        <HistorySection>
+        <HistorySection $isDark={isDark}>
           <h3>Histórico de Importações</h3>
           {history.map((item) => (
             <div key={item._id} className="history-item">

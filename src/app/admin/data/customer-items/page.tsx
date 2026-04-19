@@ -1,10 +1,12 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function CustomerItemsPage() {
   return (
     <>
-      <PageHeader title="📊 Histórico de Compras por Cliente" />
+      <AdminHeader title="📊 Histórico de Compras por Cliente" showBackButton />
       <DataTable
       title="📊 Histórico de Compras por Cliente"
       apiEndpoint="/api/customer-items"

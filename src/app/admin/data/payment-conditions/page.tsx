@@ -1,10 +1,12 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function PaymentConditionsPage() {
   return (
     <>
-      <PageHeader title="💵 Condições de Pagamento" />
+      <AdminHeader title="💵 Condições de Pagamento" showBackButton />
       <DataTable
       title="💵 Condições de Pagamento"
       apiEndpoint="/api/payment-conditions"
