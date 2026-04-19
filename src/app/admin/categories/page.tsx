@@ -7,14 +7,17 @@ import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
-const Header = styled.header`
-  background: white;
+const Header = styled.header<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -22,13 +25,14 @@ const Header = styled.header`
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  transition: background 0.3s ease;
 
   ${media.down('md')} {
     padding: 1rem;
   }
 
   h1 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     font-size: 1.5rem;
 
     ${media.down('md')} {
@@ -60,11 +64,11 @@ const Header = styled.header`
       }
 
       &.back {
-        background: #6b7280;
+        background: ${props => props.$isDark ? '#4a5568' : '#6b7280'};
         color: white;
 
         &:hover {
-          background: #4b5563;
+          background: ${props => props.$isDark ? '#718096' : '#4b5563'};
         }
       }
 
@@ -163,15 +167,16 @@ const Form = styled.form`
   }
 `;
 
-const CategoryList = styled.div`
-  background: white;
+const CategoryList = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  transition: background 0.3s ease;
 `;
 
-const CategoryItem = styled.div`
+const CategoryItem = styled.div<{ $isDark: boolean }>`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -196,12 +201,12 @@ const CategoryItem = styled.div`
     }
 
     h3 {
-      color: #101a33;
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       margin-bottom: 0.5rem;
     }
 
     p {
-      color: #666;
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
     }
   }
 
@@ -265,6 +270,8 @@ export default function CategoriesPage() {
   const [uploading, setUploading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchCategories();
@@ -376,7 +383,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <Container>
+    <Container $isDark={isDark}>
       <ConfirmModal
         isOpen={!!confirmDelete}
         title="ATENÇÃO: Ação Irreversível"
@@ -392,7 +399,8 @@ export default function CategoriesPage() {
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmDelete(null)}
       />
-      <Header>
+      <AdminHeader title="Gerenciar Categorias" showBackButton backPath="/admin/website" />
+      <Header $isDark={isDark}>
         <h1>Gerenciar Categorias</h1>
         <div className="actions">
           <button className="new" onClick={handleNewCategory}>
@@ -447,9 +455,9 @@ export default function CategoriesPage() {
           </Form>
         </Modal>
 
-        <CategoryList>
+        <CategoryList $isDark={isDark}>
           {categories.map((category) => (
-            <CategoryItem key={category._id}>
+            <CategoryItem key={category._id} $isDark={isDark}>
               <div className="info">
                 <h3>{category.name}</h3>
                 <p>{category.description}</p>

@@ -1,20 +1,22 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { Toast } from "@/components/Toast";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
-const Header = styled.header`
-  background: white;
+const Header = styled.header<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -22,13 +24,14 @@ const Header = styled.header`
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  transition: background 0.3s ease;
 
   ${media.down('md')} {
     padding: 1rem;
   }
 
   h1 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   .actions {
@@ -188,15 +191,16 @@ const Form = styled.form`
   }
 `;
 
-const ProductList = styled.div`
-  background: white;
+const ProductList = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  transition: background 0.3s ease;
 `;
 
-const ProductItem = styled.div`
+const ProductItem = styled.div<{ $isDark: boolean }>`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -221,12 +225,12 @@ const ProductItem = styled.div`
     }
 
     h3 {
-      color: #101a33;
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       margin-bottom: 0.5rem;
     }
 
     p {
-      color: #666;
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
       margin-bottom: 0.25rem;
     }
   }
@@ -313,6 +317,8 @@ export default function ProductsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchProducts();
@@ -572,10 +578,10 @@ export default function ProductsPage() {
   };
 
   return (
-    <Container>
+    <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      <PageHeader title="Gerenciar Produtos" backHref="/admin/website" />
-      <Header>
+      <AdminHeader title="Gerenciar Produtos" showBackButton backPath="/admin/website" />
+      <Header $isDark={isDark}>
         <div />
         <div className="actions">
           <button className="new" onClick={handleNewProduct}>
@@ -654,9 +660,9 @@ export default function ProductsPage() {
           </Form>
         </Modal>
 
-        <ProductList>
+        <ProductList $isDark={isDark}>
           {products.map((product) => (
-            <ProductItem key={product._id}>
+            <ProductItem key={product._id} $isDark={isDark}>
               <div className="info">
                 <h3>{product.name}</h3>
                 <p><strong>Categoria:</strong> {product.category}</p>
