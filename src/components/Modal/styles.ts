@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import * as media from "@/styles/media";
 
 export const Overlay = styled.div`
   position: fixed;
@@ -11,6 +12,7 @@ export const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
 `;
 
 export const Container = styled.div`
@@ -23,9 +25,20 @@ export const Container = styled.div`
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 
+  ${media.down('md')} {
+    padding: 1.5rem;
+    width: 95%;
+    max-height: 95vh;
+  }
+
   h2 {
     margin-bottom: 1.5rem;
     color: #101a33;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
   }
 
   .close-btn {

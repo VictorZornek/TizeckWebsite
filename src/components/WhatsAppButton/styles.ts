@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { up } from '@/styles/media';
 
 const pulse = keyframes`
     0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }

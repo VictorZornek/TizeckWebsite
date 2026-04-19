@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { Toast } from "@/components/Toast";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -19,6 +20,12 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
@@ -28,28 +35,24 @@ const Header = styled.header`
     display: flex;
     gap: 1rem;
 
-    button {
+    ${media.down('md')} {
+      width: 100%;
+    }
+
+    button.new {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+      background: #10b981;
+      color: white;
 
-      &.back {
-        background: #6b7280;
-        color: white;
-
-        &:hover {
-          background: #4b5563;
-        }
+      ${media.down('md')} {
+        width: 100%;
       }
 
-      &.new {
-        background: #10b981;
-        color: white;
-
-        &:hover {
-          background: #059669;
-        }
+      &:hover {
+        background: #059669;
       }
     }
   }
@@ -59,6 +62,10 @@ const Main = styled.main`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 `;
 
 const Form = styled.form`
@@ -193,6 +200,12 @@ const ProductItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -200,6 +213,12 @@ const ProductItem = styled.div`
 
   .info {
     flex: 1;
+    min-width: 200px;
+
+    ${media.down('md')} {
+      width: 100%;
+      min-width: unset;
+    }
 
     h3 {
       color: #101a33;
@@ -216,11 +235,20 @@ const ProductItem = styled.div`
     display: flex;
     gap: 1rem;
 
+    ${media.down('md')} {
+      width: 100%;
+      justify-content: stretch;
+    }
+
     button {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+
+      ${media.down('md')} {
+        flex: 1;
+      }
 
       &.edit {
         background: #f59e0b;
@@ -285,7 +313,6 @@ export default function ProductsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     fetchProducts();
@@ -547,14 +574,12 @@ export default function ProductsPage() {
   return (
     <Container>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <PageHeader title="Gerenciar Produtos" backHref="/admin/website" />
       <Header>
-        <h1>Gerenciar Produtos</h1>
+        <div />
         <div className="actions">
           <button className="new" onClick={handleNewProduct}>
             + Novo Produto
-          </button>
-          <button className="back" onClick={() => router.push("/admin/dashboard")}>
-            Voltar ao Dashboard
           </button>
         </div>
       </Header>

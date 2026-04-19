@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import * as media from "@/styles/media";
 
 const Container = styled.div`
   min-height: 100vh;
@@ -19,20 +20,44 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   h1 {
     color: #101a33;
+    font-size: 1.5rem;
+
+    ${media.down('md')} {
+      font-size: 1.25rem;
+      width: 100%;
+    }
   }
 
   .actions {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
+
+    ${media.down('md')} {
+      width: 100%;
+      justify-content: stretch;
+    }
 
     button {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+
+      ${media.down('md')} {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+      }
 
       &.back {
         background: #6b7280;
@@ -59,6 +84,10 @@ const Main = styled.main`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 `;
 
 const Form = styled.form`
@@ -146,6 +175,12 @@ const CategoryItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  ${media.down('md')} {
+    padding: 1rem;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -153,6 +188,12 @@ const CategoryItem = styled.div`
 
   .info {
     flex: 1;
+    min-width: 200px;
+
+    ${media.down('md')} {
+      width: 100%;
+      min-width: unset;
+    }
 
     h3 {
       color: #101a33;
@@ -168,11 +209,20 @@ const CategoryItem = styled.div`
     display: flex;
     gap: 1rem;
 
+    ${media.down('md')} {
+      width: 100%;
+      justify-content: stretch;
+    }
+
     button {
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+
+      ${media.down('md')} {
+        flex: 1;
+      }
 
       &.edit {
         background: #f59e0b;
