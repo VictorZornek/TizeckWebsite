@@ -60,7 +60,7 @@ export default function HomePage() {
                         <Image src={logoTizeck} alt="Logo Tizeck" width={400} height={160} priority style={{ margin: '-10rem auto 0' }} />
                         <h1>Excelência em Produtos</h1>
 
-                        <p>Há mais de 20 anos no mercado, oferecemos soluções de qualidade com compromisso e inovação</p>
+                        <p>Há mais de 18 anos no mercado, oferecemos soluções de qualidade com compromisso e inovação</p>
                     </div>
 
                     <div className="wrapper-buttons">
@@ -93,7 +93,7 @@ export default function HomePage() {
 
                     <div className="wrapper-counters">
                         <Counter>
-                            <span>+16</span>
+                            <span>+18</span>
                             <p>Anos de Experiência</p>
                         </Counter>
 
