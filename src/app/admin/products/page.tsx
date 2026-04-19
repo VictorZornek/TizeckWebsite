@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { Toast } from "@/components/Toast";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -304,6 +305,8 @@ export default function ProductsPage() {
   const [uploading, setUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
@@ -547,29 +550,43 @@ export default function ProductsPage() {
     });
   };
 
-  const handleDelete = async (id: string) => {
-    if (isLoading) return;
-    if (confirm("Tem certeza que deseja deletar este produto?")) {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
-        if (response.ok) {
-          setToast({ message: "Produto deletado com sucesso!", type: "success" });
-          fetchProducts();
-        } else {
-          setToast({ message: "Erro ao deletar produto", type: "error" });
-        }
-      } catch (error) {
-        console.error("Erro ao deletar produto:", error);
+  const handleDelete = (id: string) => {
+    setProductToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete || isLoading) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/products/${productToDelete}`, { method: "DELETE" });
+      if (response.ok) {
+        setToast({ message: "Produto deletado com sucesso!", type: "success" });
+        fetchProducts();
+      } else {
         setToast({ message: "Erro ao deletar produto", type: "error" });
       }
-      setIsLoading(false);
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+      setToast({ message: "Erro ao deletar produto", type: "error" });
     }
+    setIsLoading(false);
+    setDeleteModalOpen(false);
+    setProductToDelete(null);
   };
 
   return (
     <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        message="Tem certeza que deseja deletar este produto? Esta ação não pode ser desfeita."
+      />
       <AdminHeader 
         title="Gerenciar Produtos" 
         showBackButton 
