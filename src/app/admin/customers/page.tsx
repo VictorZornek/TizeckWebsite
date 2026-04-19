@@ -355,6 +355,7 @@ export default function CustomersPage() {
   const handleClear = () => {
     setFilters({ search: "", city: "", state: "", blocked: "" });
     setPagination(prev => ({ ...prev, page: 1 }));
+    setTimeout(() => fetchCustomers(), 0);
   };
 
   return (
@@ -369,12 +370,14 @@ export default function CustomersPage() {
               placeholder="Buscar por nome, CPF/CNPJ, email..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
             <input
               type="text"
               placeholder="Cidade"
               value={filters.city}
               onChange={(e) => setFilters({ ...filters, city: e.target.value })}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
             <select
               value={filters.state}

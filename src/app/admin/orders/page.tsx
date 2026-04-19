@@ -375,6 +375,7 @@ export default function OrdersPage() {
   const handleClear = () => {
     setFilters({ search: "", status: "", dateFrom: "", dateTo: "" });
     setPagination(prev => ({ ...prev, page: 1 }));
+    setTimeout(() => fetchOrders(), 0);
   };
 
   const formatCurrency = (value: number) => {
@@ -400,6 +401,7 @@ export default function OrdersPage() {
               placeholder="Buscar por código do pedido ou cliente..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
             <select
               value={filters.status}

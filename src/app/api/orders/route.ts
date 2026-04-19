@@ -25,6 +25,22 @@ export async function GET(request: NextRequest) {
           { legacyId: searchNumber },
           { customerLegacyId: searchNumber },
         ];
+      } else {
+        // Buscar clientes por nome primeiro
+        const matchingCustomers = await CustomerModel.find({
+          $or: [
+            { name: { $regex: search, $options: 'i' } },
+            { fantasyName: { $regex: search, $options: 'i' } },
+          ]
+        }).select('legacyId').lean();
+        
+        const customerLegacyIds = matchingCustomers.map(c => c.legacyId);
+        if (customerLegacyIds.length > 0) {
+          query.customerLegacyId = { $in: customerLegacyIds };
+        } else {
+          // Se não encontrou clientes, retornar vazio
+          query._id = null;
+        }
       }
     }
 

@@ -254,6 +254,7 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
   const handleClear = () => {
     setFilterValues({});
     setPagination(prev => ({ ...prev, page: 1 }));
+    setTimeout(() => fetchData(), 0);
   };
 
   const formatValue = (value: unknown, format?: string) => {
@@ -297,6 +298,7 @@ export default function DataTable({ apiEndpoint, columns, filters = [] }: DataTa
                     placeholder={filter.label}
                     value={filterValues[filter.key] || ''}
                     onChange={(e) => setFilterValues({ ...filterValues, [filter.key]: e.target.value })}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   />
                 )
               ))}
