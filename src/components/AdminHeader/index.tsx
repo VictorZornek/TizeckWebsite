@@ -104,13 +104,15 @@ interface AdminHeaderProps {
   showBackButton?: boolean;
   showLogoutButton?: boolean;
   backPath?: string;
+  customActions?: React.ReactNode;
 }
 
 export default function AdminHeader({ 
   title, 
   showBackButton = false, 
   showLogoutButton = false,
-  backPath = "/admin/dashboard"
+  backPath = "/admin/dashboard",
+  customActions
 }: AdminHeaderProps) {
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
@@ -128,6 +130,7 @@ export default function AdminHeader({
         <ThemeToggle $isDark={isDark} onClick={toggleTheme} title={isDark ? 'Modo Claro' : 'Modo Escuro'}>
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </ThemeToggle>
+        {customActions}
         {showBackButton && (
           <ActionButton $isDark={isDark} $variant="secondary" onClick={() => router.push(backPath)}>
             Voltar

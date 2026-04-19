@@ -9,56 +9,46 @@ import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
 
+const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' | 'danger' }>`
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  ${media.down('md')} {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  ${props => {
+    if (props.$variant === 'danger') {
+      return `
+        background: #dc2626;
+        &:hover { background: #b91c1c; }
+      `;
+    }
+    if (props.$variant === 'secondary') {
+      return `
+        background: #6b7280;
+        &:hover { background: #4b5563; }
+      `;
+    }
+    return `
+      background: #10b981;
+      &:hover { background: #059669; }
+    `;
+  }}
+`;
+
 const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
   background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
   transition: background 0.3s ease;
-`;
-
-const Header = styled.header<{ $isDark: boolean }>`
-  background: ${props => props.$isDark ? '#2d3748' : 'white'};
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  transition: background 0.3s ease;
-
-  ${media.down('md')} {
-    padding: 1rem;
-  }
-
-  h1 {
-    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
-  }
-
-  .actions {
-    display: flex;
-    gap: 1rem;
-
-    ${media.down('md')} {
-      width: 100%;
-    }
-
-    button.new {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      background: #10b981;
-      color: white;
-
-      ${media.down('md')} {
-        width: 100%;
-      }
-
-      &:hover {
-        background: #059669;
-      }
-    }
-  }
 `;
 
 const Main = styled.main`
@@ -580,15 +570,16 @@ export default function ProductsPage() {
   return (
     <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      <AdminHeader title="Gerenciar Produtos" showBackButton backPath="/admin/website" />
-      <Header $isDark={isDark}>
-        <div />
-        <div className="actions">
-          <button className="new" onClick={handleNewProduct}>
+      <AdminHeader 
+        title="Gerenciar Produtos" 
+        showBackButton 
+        backPath="/admin/website"
+        customActions={
+          <ActionButton $variant="primary" onClick={handleNewProduct}>
             + Novo Produto
-          </button>
-        </div>
-      </Header>
+          </ActionButton>
+        }
+      />
       <Main>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
           <Form onSubmit={handleSubmit}>
