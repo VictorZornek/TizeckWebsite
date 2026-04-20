@@ -62,6 +62,103 @@ const Main = styled.main`
   }
 `;
 
+const Filters = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+
+  ${media.down('md')} {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const SearchInput = styled.input<{ $isDark: boolean }>`
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
+  border-radius: 0.5rem;
+  background: ${props => props.$isDark ? '#1a202c' : 'white'};
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+
+  &::placeholder {
+    color: ${props => props.$isDark ? '#a0aec0' : '#999'};
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+  }
+`;
+
+const CategoryFilter = styled.select<{ $isDark: boolean }>`
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
+  border-radius: 0.5rem;
+  background: ${props => props.$isDark ? '#1a202c' : 'white'};
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+  }
+`;
+
+const CategorySection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const CategoryTitle = styled.h2<{ $isDark: boolean }>`
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const ProductCount = styled.span<{ $isDark: boolean }>`
+  font-size: 0.9rem;
+  color: ${props => props.$isDark ? '#a0aec0' : '#6b7280'};
+  font-weight: normal;
+`;
+
+const EmptyState = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: ${props => props.$isDark ? '#a0aec0' : '#6b7280'};
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+`;
+
 const Form = styled.form`
   h2 {
     margin-bottom: 1rem;
@@ -310,6 +407,8 @@ export default function ProductsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -375,7 +474,6 @@ export default function ProductsPage() {
     setIsLoading(true);
 
     try {
-      // Criar produto primeiro para obter o ID
       let productId = editingId;
       
       if (!editingId) {
@@ -470,7 +568,6 @@ export default function ProductsPage() {
           setToast({ message: "Erro ao atualizar produto", type: "error" });
         }
       } else {
-        // Atualizar produto com as imagens
         const specifications = formData.specifications 
           ? JSON.parse(formData.specifications) 
           : {};
@@ -575,6 +672,21 @@ export default function ProductsPage() {
     setProductToDelete(null);
   };
 
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const groupedProducts = filteredProducts.reduce((acc, product) => {
+    if (!acc[product.category]) {
+      acc[product.category] = [];
+    }
+    acc[product.category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
+
   return (
     <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
@@ -598,6 +710,62 @@ export default function ProductsPage() {
         }
       />
       <Main>
+        <Filters $isDark={isDark}>
+          <SearchInput
+            $isDark={isDark}
+            type="text"
+            placeholder="Buscar produtos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <CategoryFilter
+            $isDark={isDark}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="all">Todas as Categorias</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </CategoryFilter>
+        </Filters>
+
+        {filteredProducts.length === 0 ? (
+          <EmptyState $isDark={isDark}>
+            <p>Nenhum produto encontrado</p>
+          </EmptyState>
+        ) : (
+          Object.entries(groupedProducts).map(([categoryName, categoryProducts]) => (
+            <CategorySection key={categoryName}>
+              <CategoryTitle $isDark={isDark}>
+                {categoryName}
+                <ProductCount $isDark={isDark}>({categoryProducts.length})</ProductCount>
+              </CategoryTitle>
+              <ProductList $isDark={isDark}>
+                {categoryProducts.map((product) => (
+                  <ProductItem key={product._id} $isDark={isDark}>
+                    <div className="info">
+                      <h3>{product.name}</h3>
+                      <p><strong>Categoria:</strong> {product.category}</p>
+                      <p>{product.description}</p>
+                    </div>
+                    <div className="actions">
+                      <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
+                        Editar
+                      </button>
+                      <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
+                        {isLoading ? 'Processando...' : 'Deletar'}
+                      </button>
+                    </div>
+                  </ProductItem>
+                ))}
+              </ProductList>
+            </CategorySection>
+          ))
+        )}
+
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
           <Form onSubmit={handleSubmit}>
             <h2>{editingId ? "Editar Produto" : "Novo Produto"}</h2>
@@ -667,26 +835,6 @@ export default function ProductsPage() {
             </div>
           </Form>
         </Modal>
-
-        <ProductList $isDark={isDark}>
-          {products.map((product) => (
-            <ProductItem key={product._id} $isDark={isDark}>
-              <div className="info">
-                <h3>{product.name}</h3>
-                <p><strong>Categoria:</strong> {product.category}</p>
-                <p>{product.description}</p>
-              </div>
-              <div className="actions">
-                <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
-                  Editar
-                </button>
-                <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
-                  {isLoading ? 'Processando...' : 'Deletar'}
-                </button>
-              </div>
-            </ProductItem>
-          ))}
-        </ProductList>
       </Main>
     </Container>
   );
