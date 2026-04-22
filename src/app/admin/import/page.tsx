@@ -440,8 +440,22 @@ export default function ImportPage() {
 
         {result && (
           <ResultSection $isDark={isDark}>
-            <h3>Resultado da Importação - {result.processingTime}s</h3>
-            <div className="stats">
+            <h3>Resultado da Importação com Backup Rotativo</h3>
+            <div style={{ marginBottom: '1rem', padding: '1rem', background: isDark ? '#1a202c' : '#f0f9ff', borderRadius: '0.5rem' }}>
+              <p style={{ color: isDark ? '#f7fafc' : '#101a33', marginBottom: '0.5rem' }}>
+                <strong>Banco de Destino:</strong> {result.targetDatabase || 'N/A'}
+              </p>
+              <p style={{ color: isDark ? '#f7fafc' : '#101a33', marginBottom: '0.5rem' }}>
+                <strong>Dia da Semana:</strong> {result.weekday || 'N/A'}
+              </p>
+              <p style={{ color: isDark ? '#f7fafc' : '#101a33' }}>
+                <strong>Status:</strong> <span style={{ color: result.status === 'success' ? '#10b981' : '#dc2626' }}>
+                  {result.status === 'success' ? 'Sucesso' : 'Erro'}
+                </span>
+              </p>
+            </div>
+            {result.stats && (
+              <div className="stats">
               <div className="stat-card">
                 <h4>Clientes</h4>
                 <div className="numbers">
@@ -569,7 +583,8 @@ export default function ImportPage() {
                 <small>Novos / Atualizados / Erros</small>
               </div>
             </div>
-            {result.errors.length > 0 && (
+            )}
+            {result.errors && result.errors.length > 0 && (
               <div className="errors">
                 <h4>Erros Encontrados ({result.errors.length})</h4>
                 <ul>
