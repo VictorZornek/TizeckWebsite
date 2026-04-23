@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { Toast } from "@/components/Toast";
+import { SpecificationsEditor } from "@/components/SpecificationsEditor";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
@@ -159,19 +160,21 @@ const EmptyState = styled.div<{ $isDark: boolean }>`
   }
 `;
 
-const Form = styled.form`
+const Form = styled.form<{ $isDark: boolean }>`
   h2 {
     margin-bottom: 1rem;
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   input, textarea, select {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
     font-size: 1rem;
+    background: ${props => props.$isDark ? '#1a202c' : 'white'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   textarea {
@@ -767,7 +770,7 @@ export default function ProductsPage() {
         )}
 
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <Form onSubmit={handleSubmit}>
+          <Form $isDark={isDark} onSubmit={handleSubmit}>
             <h2>{editingId ? "Editar Produto" : "Novo Produto"}</h2>
             <input
               type="text"
@@ -819,10 +822,10 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <textarea
-              placeholder="Especificações (JSON)"
+            <SpecificationsEditor
               value={formData.specifications}
-              onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, specifications: value })}
+              isDark={isDark}
             />
             
             <div className="form-actions">
