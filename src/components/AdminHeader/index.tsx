@@ -119,8 +119,15 @@ export default function AdminHeader({
   const isDark = theme === 'dark';
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/admin/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    } finally {
+      // Sempre redireciona, mesmo se houver erro
+      router.push("/admin/login");
+      router.refresh();
+    }
   };
 
   return (
