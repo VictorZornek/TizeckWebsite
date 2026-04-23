@@ -11,8 +11,14 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light';
+  const saved = localStorage.getItem('theme');
+  return (saved === 'dark' || saved === 'light') ? saved : 'light';
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,7 +31,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const response = await fetch('/api/user/theme');
       if (response.ok) {
         const data = await response.json();
-        setTheme(data.theme);
+        if (data.theme !== theme) {
+          setTheme(data.theme);
+          localStorage.setItem('theme', data.theme);
+        }
       }
     } catch (error) {
       console.error('Erro ao buscar tema:', error);
@@ -35,6 +44,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggleTheme = async () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
 
     try {
       await fetch('/api/user/theme', {
@@ -47,7 +57,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    );
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
