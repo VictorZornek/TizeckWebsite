@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import StockEntry from "@/database/models/StockEntry";
 
 export async function GET(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "50");
 
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const StockEntryModel = conn.models.StockEntry || conn.model('StockEntry', StockEntry.schema);
     
     const query: Record<string, unknown> = {};

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import Customer from "@/database/models/Customer";
 
 export async function GET(request: NextRequest) {
   try {
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', Customer.schema);
     
     const searchParams = request.nextUrl.searchParams;

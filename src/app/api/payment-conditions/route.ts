@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import PaymentCondition from "@/database/models/PaymentCondition";
 
 export async function GET() {
   try {
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const PaymentConditionModel = conn.models.PaymentCondition || conn.model('PaymentCondition', PaymentCondition.schema);
     const conditions = await PaymentConditionModel.find().sort({ legacyId: 1 });
     return NextResponse.json(conditions);

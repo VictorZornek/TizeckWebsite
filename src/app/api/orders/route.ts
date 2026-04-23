@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import Order from "@/database/models/Order";
 
 export async function GET(request: NextRequest) {
   try {
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const OrderModel = conn.models.LegacyOrder || conn.model('LegacyOrder', Order.schema);
     const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', (await import('@/database/models/Customer')).default.schema);
     
