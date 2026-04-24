@@ -366,13 +366,14 @@ export const Container = styled.div`
                 grid-template-columns: 1fr;
                 gap: 3.5rem;
 
-                justify-items: center;
+                justify-items: stretch;
 
                 ${up("md")} { 
                     grid-template-columns: repeat(2, 1fr); 
 
                     .wrapper-categories > *:nth-last-child(1):nth-child(2n + 1) {
                         grid-column: 1 / span 2;
+                        justify-self: center;
                     }
                 }
 
@@ -389,6 +390,7 @@ export const Container = styled.div`
                 
                     .wrapper-categories > *:nth-last-child(1):nth-child(4n + 1) {
                         grid-column: 2 / span 2;
+                        justify-self: center;
                     }
 
                     .wrapper-categories > *:nth-last-child(2):nth-child(4n + 1) {

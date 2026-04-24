@@ -62,19 +62,21 @@ const Main = styled.main`
   }
 `;
 
-const Form = styled.form`
+const Form = styled.form<{ $isDark?: boolean }>`
   h2 {
     margin-bottom: 1rem;
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   input, textarea {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
     font-size: 1rem;
+    background: ${props => props.$isDark ? '#2d3748' : 'white'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   textarea {
@@ -315,6 +317,7 @@ export default function CategoriesPage() {
     const file = files[0];
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
+    formDataUpload.append("uploadType", "category");
 
     try {
       const response = await fetch("/api/upload", {
@@ -379,7 +382,7 @@ export default function CategoriesPage() {
       />
       <Main>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} $isDark={isDark}>
             <h2>{editingId ? "Editar Categoria" : "Nova Categoria"}</h2>
             <input
               type="text"

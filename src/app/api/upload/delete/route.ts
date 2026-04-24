@@ -22,8 +22,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Chave da imagem inválida" }, { status: 400 });
     }
 
+    // Determinar o bucket baseado no caminho da imagem
+    const bucketName = key.startsWith('categories/') 
+      ? process.env.AWS_S3_BUCKET_CATEGORIES!
+      : process.env.AWS_S3_BUCKET_PRODUCTS!;
+
     await s3.deleteObject({
-      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Bucket: bucketName,
       Key: key,
     }).promise();
     

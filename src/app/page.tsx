@@ -17,26 +17,11 @@ import tizeckFront from '@/assets/TizeckFront.jpg';
 import logoTizeck from '@/assets/LogoTizeck.png';
 
 type Category = {
+    _id: string;
     name: string;
+    description: string;
     image: string;
-};
-
-const categoryLabels: Record<string, string> = {
-    "Bomba": "Bombas",
-    "Suporte MAX": "Suporte MAX",
-    "Suporte Master": "Suporte Master",
-    "Suporte Quadrado": "Suportes Quadrados",
-    "Suporte Redondo": "Suportes Redondos",
-    "Torneira": "Torneiras"
-};
-
-const categoryDescriptions: Record<string, string> = {
-    "Bomba": "Linha completa de bombas para diversos tipos de aplicações.",
-    "Suporte MAX": "Suportes MAX com alta resistência e durabilidade.",
-    "Suporte Master": "Suportes Master com design moderno e funcional.",
-    "Suporte Quadrado": "Suportes quadrados disponíveis em diversas cores e tamanhos.",
-    "Suporte Redondo": "Suportes redondos com acabamento de qualidade superior.",
-    "Torneira": "Torneiras práticas e duráveis para diversos usos."
+    activated: boolean;
 };
 
 export default function HomePage() {
@@ -117,9 +102,9 @@ export default function HomePage() {
                     <div className="wrapper-categories">
                         {categories.map((category) => (
                             <CategoryCard 
-                                key={category.name}
-                                name={categoryLabels[category.name] || category.name}
-                                description={categoryDescriptions[category.name] || ""}
+                                key={category._id}
+                                name={category.name}
+                                description={category.description}
                                 imageUrl={category.image}
                                 href={`/products/${encodeURIComponent(category.name)}`}
                             />

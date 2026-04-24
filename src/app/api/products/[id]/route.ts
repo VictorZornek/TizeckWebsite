@@ -47,7 +47,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     try {
       const sanitizedProductName = product.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
       const listParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME!,
+        Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
         Prefix: `${product.category}/${sanitizedProductName}/`,
       };
 
@@ -55,7 +55,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
       if (listedObjects.Contents && listedObjects.Contents.length > 0) {
         const deleteParams = {
-          Bucket: process.env.AWS_S3_BUCKET_NAME!,
+          Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
           Delete: { Objects: listedObjects.Contents.map(({ Key }) => ({ Key: Key! })) },
         };
 
