@@ -3,9 +3,38 @@ import { writeFile, unlink } from "fs/promises";
 import { join } from "path";
 import { connectMongo } from "@/database/db";
 import { BackupService } from "@/database/services/backupService";
+import { jwtVerify } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "secret"
+);
+
+export const maxDuration = 300;
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar autenticação
+    const token = request.cookies.get("admin-token")?.value;
+    if (!token) {
+      return NextResponse.json(
+        { error: "Não autorizado", message: "Token ausente" },
+        { status: 401 }
+      );
+    }
+
+    try {
+      await jwtVerify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: "Não autorizado", message: "Token inválido" },
+        { status: 401 }
+      );
+    }
+
+    const contentLength = request.headers.get('content-length');
+    console.log(`[IMPORT] Tamanho do body: ${contentLength} bytes`);
+
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
