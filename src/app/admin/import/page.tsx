@@ -614,21 +614,18 @@ export default function ImportPage() {
                 {item.status === "success" ? "Sucesso" : item.status === "error" ? "Erro" : "Parcial"}
               </span>
               <div className="summary">
-                Clientes: {item.stats.customers.new}N/{item.stats.customers.updated}A | 
-                Produtos: {item.stats.products.new}N/{item.stats.products.updated}A | 
-                Pedidos: {item.stats.orders.new}N/{item.stats.orders.updated}A | 
-                Condições: {item.stats.paymentConditions?.new || 0}N/{item.stats.paymentConditions?.updated || 0}A | 
-                Contas: {item.stats.accounts?.new || 0}N/{item.stats.accounts?.updated || 0}A | 
-                Estoque: {item.stats.stockEntries?.new || 0}N/{item.stats.stockEntries?.updated || 0}A | 
-                Funções: {item.stats.jobFunctions?.new || 0}N/{item.stats.jobFunctions?.updated || 0}A | 
-                Funcionários: {item.stats.employees?.new || 0}N/{item.stats.employees?.updated || 0}A | 
-                Regiões: {item.stats.regions?.new || 0}N/{item.stats.regions?.updated || 0}A | 
-                Itens Cond: {item.stats.conditionItems?.new || 0}N/{item.stats.conditionItems?.updated || 0}A | 
-                Parcelas: {item.stats.orderInstallments?.new || 0}N/{item.stats.orderInstallments?.updated || 0}A | 
-                Config: {item.stats.companySettings?.new || 0}N/{item.stats.companySettings?.updated || 0}A | 
-                Hist Cliente: {item.stats.customerItems?.new || 0}N/{item.stats.customerItems?.updated || 0}A | 
-                Usuários: {item.stats.systemUsers?.new || 0}N/{item.stats.systemUsers?.updated || 0}A
-                {item.processingTime && ` | ${item.processingTime}s`}
+                {item.collectionsCount !== undefined && item.documentsCount !== undefined ? (
+                  <>
+                    <strong>Banco:</strong> {item.targetDatabase} | 
+                    <strong>Dia:</strong> {item.weekday} | 
+                    <strong>Collections:</strong> {item.collectionsCount} | 
+                    <strong>Documentos:</strong> {item.documentsCount.toLocaleString('pt-BR')}
+                    {item.backupType === 'monthly' && ' | 📅 Backup Mensal'}
+                    {item.processingTime && ` | ⏱️ ${item.processingTime}s`}
+                  </>
+                ) : (
+                  'Sem dados de validação'
+                )}
               </div>
             </div>
           ))}

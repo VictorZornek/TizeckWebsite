@@ -1,5 +1,5 @@
 import mongoose, { Connection } from 'mongoose';
-import BackupLog from '../models/BackupLog';
+import { connectMongo } from '../db';
 
 export interface BackupConfig {
   weekday: string;
@@ -93,6 +93,9 @@ export class BackupService {
    * Cria log de execução
    */
   static async createBackupLog(config: BackupConfig): Promise<string> {
+    await connectMongo();
+    const BackupLog = (await import('../models/BackupLog')).default;
+    
     const log = new BackupLog({
       executionDate: new Date(),
       weekday: config.weekday,
@@ -122,6 +125,8 @@ export class BackupService {
       monthlySnapshot?: string;
     }
   ): Promise<void> {
+    await connectMongo();
+    const BackupLog = (await import('../models/BackupLog')).default;
     await BackupLog.findByIdAndUpdate(logId, updates);
   }
 
@@ -129,6 +134,8 @@ export class BackupService {
    * Obtém o último backup bem-sucedido
    */
   static async getLastSuccessfulBackup(): Promise<any> {
+    await connectMongo();
+    const BackupLog = (await import('../models/BackupLog')).default;
     return await BackupLog.findOne({ status: 'success' })
       .sort({ executionDate: -1 })
       .lean();
@@ -339,6 +346,8 @@ export class BackupService {
    * Lista histórico de backups
    */
   static async getBackupHistory(limit: number = 50): Promise<any[]> {
+    await connectMongo();
+    const BackupLog = (await import('../models/BackupLog')).default;
     return await BackupLog.find()
       .sort({ executionDate: -1 })
       .limit(limit)
@@ -355,6 +364,9 @@ export class BackupService {
     lastBackup: any;
     weeklyStatus: Record<string, any>;
   }> {
+    await connectMongo();
+    const BackupLog = (await import('../models/BackupLog')).default;
+    
     const total = await BackupLog.countDocuments();
     const successful = await BackupLog.countDocuments({ status: 'success' });
     const failed = await BackupLog.countDocuments({ status: 'failed' });
