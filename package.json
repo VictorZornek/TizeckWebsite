@@ -17,7 +17,8 @@
     "check-orders": "node src/scripts/checkOrders.js",
     "check-all-tables": "node src/scripts/checkAllTables.js",
     "analyze-products": "node src/scripts/analyzeProducts.js",
-    "migrate-legacy": "node src/scripts/migrateLegacy.js"
+    "migrate-legacy": "node src/scripts/migrateLegacy.js",
+    "migrate-db": "tsx scripts/migrate-database.ts"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
@@ -46,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

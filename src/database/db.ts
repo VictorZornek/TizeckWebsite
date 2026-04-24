@@ -5,7 +5,9 @@ if (!MONGODB_URI) {
   throw new Error("Env MONGODB_URI não definida.");
 }
 
-// Cache global para evitar múltiplas conexoes em dev/hot-reload
+// Garantir que conecta ao banco "tizeck"
+const TIZECK_URI = MONGODB_URI.replace(/\/([^\/]*)(\?|$)/, '/tizeck$2');
+
 type Cached = {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -23,7 +25,7 @@ export async function connectMongo() {
   if (global._mongoose!.conn) return global._mongoose!.conn;
 
   if (!global._mongoose!.promise) {
-    global._mongoose!.promise = mongoose.connect(MONGODB_URI!, {
+    global._mongoose!.promise = mongoose.connect(TIZECK_URI, {
       bufferCommands: false,
     });
   }
