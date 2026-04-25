@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
 import AWS from "aws-sdk";
@@ -80,6 +81,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             { new: true }
           );
           
+          revalidatePath('/');
           return NextResponse.json(product);
         }
       } catch (error) {
@@ -100,6 +102,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
     }
     
+    revalidatePath('/');
     return NextResponse.json(product);
   } catch (error) {
     console.error("Erro ao atualizar produto:", error);
@@ -155,6 +158,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     
     console.log(`✓ Produto deletado do banco: ${product.name} (ID: ${id})`);
     
+    revalidatePath('/');
     return NextResponse.json({ 
       success: true,
       message: "Produto e imagens deletados com sucesso"
