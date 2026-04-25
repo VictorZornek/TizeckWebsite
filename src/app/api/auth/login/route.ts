@@ -4,24 +4,40 @@ import { SignJWT } from "jose";
 import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
 
+function validatePassword(password: string): { valid: boolean; error?: string } {
+  if (password.length < 10) {
+    return { valid: false, error: "A senha deve ter no mínimo 10 caracteres" };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: "A senha deve conter ao menos uma letra maiúscula" };
+  }
+  if (!/[a-z]/.test(password)) {
+    return { valid: false, error: "A senha deve conter ao menos uma letra minúscula" };
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return { valid: false, error: "A senha deve conter ao menos um caractere especial" };
+  }
+  return { valid: true };
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { username, password } = await request.json();
 
-    console.log('[LOGIN] Tentativa de login:', email);
+    console.log('[LOGIN] Tentativa de login:', username);
 
     await connectMongo();
     
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
       console.log('[LOGIN] Usuário não encontrado');
-      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+      return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       console.log('[LOGIN] Senha inválida');
-      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+      return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
 
     const secret = new TextEncoder().encode(
@@ -30,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     const token = await new SignJWT({ 
       userId: user._id.toString(), 
-      email: user.email 
+      username: user.username 
     })
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime("8h")
@@ -43,7 +59,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 28800, // 8 horas
+      maxAge: 28800,
     });
 
     console.log('[LOGIN] Cookie configurado com sucesso');

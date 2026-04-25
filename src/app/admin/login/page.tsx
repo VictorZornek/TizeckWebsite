@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled, { keyframes } from "styled-components";
+import { Eye, EyeOff } from "lucide-react";
 
 const fadeIn = keyframes`
   from {
@@ -124,6 +125,38 @@ const InputGroup = styled.div`
   }
 `;
 
+const PasswordInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: 3rem;
+  }
+`;
+
+const TogglePasswordButton = styled.button`
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #718096;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #3b82f6;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
 const SubmitButton = styled.button`
   width: 100%;
   padding: 1rem;
@@ -164,8 +197,9 @@ const ErrorMessage = styled.div`
 `;
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -179,7 +213,7 @@ export default function LoginPage() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
@@ -205,27 +239,36 @@ export default function LoginPage() {
         
         <LoginForm onSubmit={handleSubmit}>
           <InputGroup>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Usuário</label>
             <input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="seu_usuario"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </InputGroup>
 
           <InputGroup>
             <label htmlFor="password">Senha</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <PasswordInputWrapper>
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <TogglePasswordButton
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </TogglePasswordButton>
+            </PasswordInputWrapper>
           </InputGroup>
 
           <SubmitButton type="submit" disabled={loading}>
