@@ -11,6 +11,8 @@ import { CategoryCard } from "@/components/CategoryCard";
 import { InformationCard } from "@/components/InformationCard";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
+import { FeaturedProductsClient } from '@/components/FeaturedProducts/client';
+
 import tizeckFront from '@/assets/TizeckFront.jpg';
 import logoTizeck from '@/assets/LogoTizeck.png';
 
@@ -60,30 +62,7 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
                     </span>
                 </section>
 
-                <section className="featured-products">
-                    <div className="wrapper-title">
-                        <h2>Produtos em Destaque</h2>
-                        <p>Conheça nossos produtos mais procurados</p>
-                    </div>
-
-                    <div className="products-grid">
-                        {featuredProducts.length > 0 ? (
-                            featuredProducts.map((product) => (
-                                <div key={product.name} className="product-card">
-                                    <a href={`/details/${encodeURIComponent(product.name)}`}>
-                                        <img 
-                                            src={product.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"} 
-                                            alt={product.name}
-                                        />
-                                        <h3>{product.name}</h3>
-                                    </a>
-                                </div>
-                            ))
-                        ) : (
-                            <p style={{ textAlign: 'center', width: '100%', color: '#666' }}>Nenhum produto em destaque no momento</p>
-                        )}
-                    </div>
-                </section>
+                <FeaturedProductsClient products={featuredProducts} />
 
                 <section className="about" id="about">
                     <div className="wrapper-title-text">
