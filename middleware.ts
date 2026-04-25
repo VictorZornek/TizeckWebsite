@@ -12,8 +12,6 @@ const PUBLIC_ROUTES = [
   "/api/auth/login",
   "/api/auth/logout",
   "/api/auth/verify",
-  "/api/user/theme",
-  "/api/import",
   "/_next",
   "/favicon.ico",
 ];
@@ -40,11 +38,6 @@ export async function middleware(request: NextRequest) {
   
   // Permitir rotas públicas
   if (isPublicRoute(pathname)) {
-    return NextResponse.next();
-  }
-
-  // Bypass do middleware para /api/import (autenticação será feita na rota)
-  if (pathname === "/api/import") {
     return NextResponse.next();
   }
 
@@ -77,6 +70,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/admin/:path*",
-    "/api/((?!import).*)",
+    "/api/:path*",
   ],
 };
