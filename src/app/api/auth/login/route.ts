@@ -4,22 +4,45 @@ import { SignJWT } from "jose";
 import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
 import { getJwtSecretEncoded } from "@/lib/jwt";
+import { loginRateLimiter, getClientIp } from "@/lib/rateLimit";
 
 export async function POST(request: NextRequest) {
   try {
+    // Extrair IP do cliente
+    const clientIp = getClientIp(request);
+
+    // Verificar rate limit
+    const { allowed, retryAfter } = loginRateLimiter.check(clientIp);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Muitas tentativas de login. Tente novamente mais tarde." },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': retryAfter?.toString() || '900',
+          },
+        }
+      );
+    }
+
     const { username, password } = await request.json();
 
     await connectMongo();
     
     const user = await User.findOne({ username });
     if (!user) {
+      loginRateLimiter.increment(clientIp);
       return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
+      loginRateLimiter.increment(clientIp);
       return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
+
+    // Login bem-sucedido - resetar contador
+    loginRateLimiter.reset(clientIp);
 
     const token = await new SignJWT({ 
       userId: user._id.toString(), 
