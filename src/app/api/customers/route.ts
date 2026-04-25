@@ -5,7 +5,6 @@ import Customer from "@/database/models/Customer";
 export async function GET(request: NextRequest) {
   try {
     const conn = await connectBackupDatabase();
-    const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', Customer.schema);
     
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
@@ -39,12 +38,13 @@ export async function GET(request: NextRequest) {
     }
 
     const skip = (page - 1) * limit;
-    const total = await CustomerModel.countDocuments(query);
-    const customers = await CustomerModel.find(query)
+    const collection = conn.db.collection('legacycustomers');
+    const total = await collection.countDocuments(query);
+    const customers = await collection.find(query)
       .sort({ name: 1 })
       .skip(skip)
       .limit(limit)
-      .lean();
+      .toArray();
 
     return NextResponse.json({
       customers,
@@ -55,7 +55,8 @@ export async function GET(request: NextRequest) {
         pages: Math.ceil(total / limit),
       },
     });
-  } catch {
+  } catch (error) {
+    console.error('Erro ao buscar clientes:', error);
     return NextResponse.json({ error: "Erro ao buscar clientes" }, { status: 500 });
   }
 }
