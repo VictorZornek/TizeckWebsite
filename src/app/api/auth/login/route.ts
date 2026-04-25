@@ -4,22 +4,6 @@ import { SignJWT } from "jose";
 import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
 
-function validatePassword(password: string): { valid: boolean; error?: string } {
-  if (password.length < 10) {
-    return { valid: false, error: "A senha deve ter no mínimo 10 caracteres" };
-  }
-  if (!/[A-Z]/.test(password)) {
-    return { valid: false, error: "A senha deve conter ao menos uma letra maiúscula" };
-  }
-  if (!/[a-z]/.test(password)) {
-    return { valid: false, error: "A senha deve conter ao menos uma letra minúscula" };
-  }
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    return { valid: false, error: "A senha deve conter ao menos um caractere especial" };
-  }
-  return { valid: true };
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json();

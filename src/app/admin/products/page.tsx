@@ -384,6 +384,7 @@ interface Product {
   images: string[];
   specifications: Record<string, string | number | boolean>;
   activated: boolean;
+  featured?: boolean;
 }
 
 interface Category {
@@ -400,6 +401,7 @@ export default function ProductsPage() {
     category: "",
     images: [] as string[],
     specifications: "",
+    featured: false,
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -491,6 +493,7 @@ export default function ProductsPage() {
             category: formData.category,
             images: [],
             specifications,
+            featured: formData.featured,
           }),
         });
 
@@ -556,6 +559,7 @@ export default function ProductsPage() {
             ...formData,
             images: finalImages,
             specifications,
+            featured: formData.featured,
           }),
         });
 
@@ -580,6 +584,7 @@ export default function ProductsPage() {
             category: formData.category,
             images: finalImages,
             specifications,
+            featured: formData.featured,
           }),
         });
 
@@ -606,6 +611,7 @@ export default function ProductsPage() {
       category: product.category,
       images: product.images,
       specifications: JSON.stringify(product.specifications, null, 2),
+      featured: product.featured || false,
     });
     setOriginalImages(product.images);
     setEditingId(product._id);
@@ -619,6 +625,7 @@ export default function ProductsPage() {
       category: "",
       images: [],
       specifications: "",
+      featured: false,
     });
     setPendingFiles([]);
     setOriginalImages([]);
@@ -642,6 +649,7 @@ export default function ProductsPage() {
       category: "",
       images: [],
       specifications: "",
+      featured: false,
     });
   };
 
@@ -752,7 +760,22 @@ export default function ProductsPage() {
                 {categoryProducts.map((product) => (
                   <ProductItem key={product._id} $isDark={isDark}>
                     <div className="info">
-                      <h3>{product.name}</h3>
+                      <h3>
+                        {product.name}
+                        {product.featured && (
+                          <span style={{ 
+                            marginLeft: '0.5rem', 
+                            fontSize: '0.8rem', 
+                            background: '#f59e0b', 
+                            color: 'white', 
+                            padding: '0.2rem 0.5rem', 
+                            borderRadius: '0.3rem',
+                            fontWeight: 'bold'
+                          }}>
+                            ⭐ DESTAQUE
+                          </span>
+                        )}
+                      </h3>
                       <p><strong>Categoria:</strong> {product.category}</p>
                       <p>{product.description}</p>
                     </div>
@@ -828,6 +851,16 @@ export default function ProductsPage() {
               onChange={(value) => setFormData({ ...formData, specifications: value })}
               isDark={isDark}
             />
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem' }}>
+              <input
+                type="checkbox"
+                checked={formData.featured}
+                onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                style={{ width: 'auto', margin: 0, cursor: 'pointer' }}
+              />
+              <span style={{ color: isDark ? '#f7fafc' : '#101a33' }}>Produto em Destaque</span>
+            </label>
             
             <div className="form-actions">
               <button type="submit" className={`save ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
