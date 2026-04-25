@@ -27,14 +27,14 @@ export async function connectMongo() {
   if (!global._mongoose!.promise) {
     global._mongoose!.promise = mongoose.connect(TIZECK_URI, {
       bufferCommands: false,
+    }).then(conn => {
+      if (process.env.NODE_ENV !== "production") {
+        console.log("✅ MongoDB conectado (singleton).");
+      }
+      return conn;
     });
   }
 
   global._mongoose!.conn = await global._mongoose!.promise;
-
-  if (process.env.NODE_ENV !== "production") {
-    console.log("✅ MongoDB conectado (singleton).");
-  }
-
   return global._mongoose!.conn;
 }
