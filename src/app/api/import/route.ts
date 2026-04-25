@@ -4,10 +4,7 @@ import { join } from "path";
 import { connectMongo } from "@/database/db";
 import { BackupService } from "@/database/services/backupService";
 import { jwtVerify } from "jose";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "secret"
-);
+import { getJwtSecretEncoded } from "@/lib/jwt";
 
 export const maxDuration = 300;
 export const dynamic = 'force-dynamic';
@@ -24,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      await jwtVerify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecretEncoded());
     } catch {
       return NextResponse.json(
         { error: "Não autorizado", message: "Token inválido" },

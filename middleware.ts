@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { getJwtSecretEncoded } from "@/lib/jwt";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "secret"
-);
+const JWT_SECRET = getJwtSecretEncoded();
 
 // Rotas públicas que não precisam de autenticação
 const PUBLIC_ROUTES = [

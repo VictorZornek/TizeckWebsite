@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectMongo } from '@/database/db';
 import { BackupService } from '@/database/services/backupService';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+import { jwtVerify } from 'jose';
+import { getJwtSecretEncoded } from '@/lib/jwt';
 
 /**
  * POST /api/backup/execute
@@ -11,15 +10,16 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verificar autenticação
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    // Verificar autenticação via cookie httpOnly
+    const token = request.cookies.get('admin-token')?.value;
     if (!token) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
     let decoded: any;
     try {
-      decoded = jwt.verify(token, JWT_SECRET);
+      const { payload } = await jwtVerify(token, getJwtSecretEncoded());
+      decoded = payload;
     } catch {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
@@ -83,13 +83,13 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.cookies.get('admin-token')?.value;
     if (!token) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
     try {
-      jwt.verify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecretEncoded());
     } catch {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }

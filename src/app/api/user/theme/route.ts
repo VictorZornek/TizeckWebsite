@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
+import { getJwtSecretEncoded } from "@/lib/jwt";
 
 async function getUserFromToken(request: NextRequest) {
   const token = request.cookies.get("admin-token")?.value;
   if (!token) return null;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret") as { userId: string };
-    return decoded.userId;
+    const { payload } = await jwtVerify(token, getJwtSecretEncoded());
+    return payload.userId as string;
   } catch {
     return null;
   }

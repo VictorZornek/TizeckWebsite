@@ -216,14 +216,12 @@ export default function BackupPage() {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
       const [statsRes, historyRes] = await Promise.all([
         fetch('/api/backup/stats', {
-          headers: { 'Authorization': `Bearer ${token}` }
+          credentials: 'include'
         }),
         fetch('/api/backup/history?limit=20', {
-          headers: { 'Authorization': `Bearer ${token}` }
+          credentials: 'include'
         })
       ]);
 
@@ -246,13 +244,12 @@ export default function BackupPage() {
   const executeBackup = async () => {
     setExecuting(true);
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch('/api/backup/execute', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({})
       });
 

@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
+import { getJwtSecretEncoded } from "@/lib/jwt";
 
-export function verifyToken(request: NextRequest) {
+export async function verifyToken(request: NextRequest) {
   const token = request.cookies.get("admin-token")?.value;
 
   if (!token) {
@@ -9,13 +10,14 @@ export function verifyToken(request: NextRequest) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret");
-    return decoded;
+    const { payload } = await jwtVerify(token, getJwtSecretEncoded());
+    return payload;
   } catch {
     return null;
   }
 }
 
-export function isAuthenticated(request: NextRequest): boolean {
-  return verifyToken(request) !== null;
+export async function isAuthenticated(request: NextRequest): Promise<boolean> {
+  const result = await verifyToken(request);
+  return result !== null;
 }

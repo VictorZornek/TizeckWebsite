@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectMongo } from '@/database/db';
 import { BackupService } from '@/database/services/backupService';
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+import { jwtVerify } from 'jose';
+import { getJwtSecretEncoded } from '@/lib/jwt';
 
 /**
  * GET /api/backup/history
@@ -11,13 +10,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    const token = request.cookies.get('admin-token')?.value;
     if (!token) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
     }
 
     try {
-      jwt.verify(token, JWT_SECRET);
+      await jwtVerify(token, getJwtSecretEncoded());
     } catch {
       return NextResponse.json({ error: 'Token inválido' }, { status: 401 });
     }
