@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { useTheme } from '@/contexts/ThemeContext';
 import AdminHeader from '@/components/AdminHeader';
@@ -202,10 +203,10 @@ interface BackupHistory {
 }
 
 export default function BackupPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<BackupStats | null>(null);
   const [history, setHistory] = useState<BackupHistory[]>([]);
   const [loading, setLoading] = useState(true);
-  const [executing, setExecuting] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -241,31 +242,8 @@ export default function BackupPage() {
     }
   };
 
-  const executeBackup = async () => {
-    setExecuting(true);
-    try {
-      const response = await fetch('/api/backup/execute', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({})
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setToast({ message: 'Backup executado com sucesso!', type: 'success' });
-        fetchData();
-      } else {
-        setToast({ message: data.error || 'Erro ao executar backup', type: 'error' });
-      }
-    } catch (error) {
-      setToast({ message: 'Erro ao executar backup', type: 'error' });
-    } finally {
-      setExecuting(false);
-    }
+  const executeBackup = () => {
+    router.push('/admin/import');
   };
 
   const weekdays = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'];
@@ -289,9 +267,9 @@ export default function BackupPage() {
         showBackButton 
         backPath="/admin/system"
         customActions={
-          <Button onClick={executeBackup} disabled={executing}>
+          <Button onClick={executeBackup}>
             <Database size={20} />
-            {executing ? 'Executando...' : 'Executar Backup'}
+            Importar Dados
           </Button>
         }
       />

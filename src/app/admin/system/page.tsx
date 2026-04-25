@@ -5,7 +5,7 @@ import styled from "styled-components";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
-import { Download, Users, FileText, User, MapPin, CreditCard, DollarSign, Calendar, Package, BarChart3, Building2, Key } from "lucide-react";
+import { Download, Users, FileText, User, MapPin, CreditCard, DollarSign, Calendar, Package, BarChart3, Building2, Key, Database } from "lucide-react";
 
 const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
@@ -136,8 +136,13 @@ export default function SystemPage() {
         <p className="subtitle">Importação e visualização de dados do sistema antigo</p>
         
         <div className="section">
-          <h3><Download size={20} /> Importação</h3>
+          <h3><Database size={20} /> Sistema e Backup</h3>
           <Grid>
+            <Card $isDark={isDark} onClick={() => router.push("/admin/backup")}>
+              <div className="icon"><Database size={40} /></div>
+              <h4>Gerenciar Backups</h4>
+              <p>Executar e visualizar histórico de backups</p>
+            </Card>
             <Card $isDark={isDark} onClick={() => router.push("/admin/import")}>
               <div className="icon"><Download size={40} /></div>
               <h4>Importação</h4>
