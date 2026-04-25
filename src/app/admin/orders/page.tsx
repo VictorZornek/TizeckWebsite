@@ -1,16 +1,16 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
-  background: #f5f5f5;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
-
-
 
 const Main = styled.main`
   padding: 2rem;
@@ -22,19 +22,20 @@ const Main = styled.main`
   }
 `;
 
-const Filters = styled.div`
-  background: white;
+const Filters = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   padding: 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   margin-bottom: 2rem;
+  transition: all 0.3s ease;
 
   ${media.down('md')} {
     padding: 1rem;
   }
 
   h3 {
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
   }
 
@@ -50,9 +51,12 @@ const Filters = styled.div`
 
     input, select {
       padding: 0.75rem;
-      border: 1px solid #ddd;
+      border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
       border-radius: 0.5rem;
       font-size: 0.9rem;
+      background: ${props => props.$isDark ? '#1a202c' : 'white'};
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+      transition: all 0.3s ease;
     }
   }
 
@@ -70,6 +74,7 @@ const Filters = styled.div`
       border-radius: 0.5rem;
       cursor: pointer;
       font-weight: 500;
+      transition: all 0.3s ease;
 
       ${media.down('md')} {
         width: 100%;
@@ -85,22 +90,23 @@ const Filters = styled.div`
       }
 
       &.clear {
-        background: #e5e7eb;
-        color: #374151;
+        background: ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+        color: ${props => props.$isDark ? '#f7fafc' : '#374151'};
 
         &:hover {
-          background: #d1d5db;
+          background: ${props => props.$isDark ? '#718096' : '#d1d5db'};
         }
       }
     }
   }
 `;
 
-const Table = styled.div`
-  background: white;
+const Table = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
   overflow: hidden;
+  transition: all 0.3s ease;
 
   ${media.down('md')} {
     overflow-x: auto;
@@ -115,14 +121,14 @@ const Table = styled.div`
     }
 
     thead {
-      background: #f9fafb;
+      background: ${props => props.$isDark ? '#1a202c' : '#f9fafb'};
 
       th {
         padding: 1rem;
         text-align: left;
         font-weight: 600;
-        color: #374151;
-        border-bottom: 2px solid #e5e7eb;
+        color: ${props => props.$isDark ? '#cbd5e0' : '#374151'};
+        border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
 
         ${media.down('md')} {
           padding: 0.75rem 0.5rem;
@@ -133,16 +139,17 @@ const Table = styled.div`
 
     tbody {
       tr {
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
         cursor: pointer;
+        transition: background 0.2s ease;
 
         &:hover {
-          background: #f9fafb;
+          background: ${props => props.$isDark ? '#374151' : '#f9fafb'};
         }
 
         td {
           padding: 1rem;
-          color: #374151;
+          color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
 
           ${media.down('md')} {
             padding: 0.75rem 0.5rem;
@@ -154,7 +161,7 @@ const Table = styled.div`
   }
 `;
 
-const Pagination = styled.div`
+const Pagination = styled.div<{ $isDark: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -164,10 +171,12 @@ const Pagination = styled.div`
 
   button {
     padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
-    background: white;
+    background: ${props => props.$isDark ? '#2d3748' : 'white'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     cursor: pointer;
+    transition: all 0.3s ease;
 
     ${media.down('md')} {
       padding: 0.4rem 0.8rem;
@@ -175,7 +184,7 @@ const Pagination = styled.div`
     }
 
     &:hover:not(:disabled) {
-      background: #f9fafb;
+      background: ${props => props.$isDark ? '#374151' : '#f9fafb'};
     }
 
     &:disabled {
@@ -185,7 +194,7 @@ const Pagination = styled.div`
   }
 
   span {
-    color: #374151;
+    color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
 
     ${media.down('md')} {
       font-size: 0.9rem;
@@ -194,7 +203,7 @@ const Pagination = styled.div`
   }
 `;
 
-const Modal = styled.div<{ isOpen: boolean }>`
+const Modal = styled.div<{ isOpen: boolean; $isDark: boolean }>`
   display: ${props => props.isOpen ? 'flex' : 'none'};
   position: fixed;
   top: 0;
@@ -208,13 +217,14 @@ const Modal = styled.div<{ isOpen: boolean }>`
   padding: 1rem;
 
   .modal-content {
-    background: white;
+    background: ${props => props.$isDark ? '#2d3748' : 'white'};
     padding: 2rem;
     border-radius: 1rem;
     max-width: 900px;
     max-height: 80vh;
     overflow-y: auto;
     width: 90%;
+    transition: all 0.3s ease;
 
     ${media.down('md')} {
       padding: 1rem;
@@ -223,7 +233,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
     }
 
     h2 {
-      color: #101a33;
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       margin-bottom: 1.5rem;
 
       ${media.down('md')} {
@@ -243,13 +253,13 @@ const Modal = styled.div<{ isOpen: boolean }>`
 
       .info-item {
         h4 {
-          color: #6b7280;
+          color: ${props => props.$isDark ? '#cbd5e0' : '#6b7280'};
           font-size: 0.85rem;
           margin-bottom: 0.25rem;
         }
 
         p {
-          color: #101a33;
+          color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
           font-weight: 500;
           word-break: break-word;
         }
@@ -258,7 +268,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
 
     .items-section {
       h3 {
-        color: #101a33;
+        color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
         margin-bottom: 1rem;
 
         ${media.down('md')} {
@@ -279,7 +289,7 @@ const Modal = styled.div<{ isOpen: boolean }>`
         th, td {
           padding: 0.75rem;
           text-align: left;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
 
           ${media.down('md')} {
             padding: 0.5rem;
@@ -287,9 +297,13 @@ const Modal = styled.div<{ isOpen: boolean }>`
         }
 
         th {
-          background: #f9fafb;
+          background: ${props => props.$isDark ? '#1a202c' : '#f9fafb'};
           font-weight: 600;
-          color: #374151;
+          color: ${props => props.$isDark ? '#cbd5e0' : '#374151'};
+        }
+
+        td {
+          color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
         }
       }
     }
@@ -297,15 +311,16 @@ const Modal = styled.div<{ isOpen: boolean }>`
     .close-btn {
       margin-top: 1.5rem;
       padding: 0.75rem 1.5rem;
-      background: #6b7280;
+      background: ${props => props.$isDark ? '#4a5568' : '#6b7280'};
       color: white;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
       width: 100%;
+      transition: all 0.3s ease;
 
       &:hover {
-        background: #4b5563;
+        background: ${props => props.$isDark ? '#718096' : '#4b5563'};
       }
     }
   }
@@ -343,6 +358,8 @@ export default function OrdersPage() {
     pages: 0,
   });
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchOrders();
@@ -358,11 +375,11 @@ export default function OrdersPage() {
       });
       const response = await fetch(`/api/orders?${params}`);
       const data = await response.json();
-      console.log('Pedidos recebidos:', data.orders[0]); // Debug
-      setOrders(data.orders);
+      setOrders(data.orders || []);
       setPagination(prev => ({ ...prev, ...data.pagination }));
     } catch (error) {
       console.error("Erro ao buscar pedidos:", error);
+      setOrders([]);
     }
     setLoading(false);
   };
@@ -390,10 +407,10 @@ export default function OrdersPage() {
   };
 
   return (
-    <Container>
-      <PageHeader title="Pedidos Importados" />
+    <Container $isDark={isDark}>
+      <AdminHeader title="Pedidos Importados" showBackButton backPath="/admin/system" />
       <Main>
-        <Filters>
+        <Filters $isDark={isDark}>
           <h3>Filtros</h3>
           <div className="filter-grid">
             <input
@@ -435,7 +452,7 @@ export default function OrdersPage() {
           </div>
         </Filters>
 
-        <Table>
+        <Table $isDark={isDark}>
           <table>
             <thead>
               <tr>
@@ -462,10 +479,7 @@ export default function OrdersPage() {
                 </tr>
               ) : (
                 orders.map((order) => (
-                  <tr key={order._id} onClick={() => {
-                    console.log('Clicou no pedido:', order.legacyId, 'Items:', order.items);
-                    setSelectedOrder(order);
-                  }}>
+                  <tr key={order._id} onClick={() => setSelectedOrder(order)}>
                     <td>#{order.legacyId}</td>
                     <td>{order.customer?.name || order.customer?.fantasyName || `Cliente #${order.customerLegacyId}`}</td>
                     <td>{formatDate(order.orderDate)}</td>
@@ -479,7 +493,7 @@ export default function OrdersPage() {
           </table>
         </Table>
 
-        <Pagination>
+        <Pagination $isDark={isDark}>
           <button
             onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
             disabled={pagination.page === 1}
@@ -498,12 +512,11 @@ export default function OrdersPage() {
         </Pagination>
       </Main>
 
-      <Modal isOpen={!!selectedOrder}>
+      <Modal isOpen={!!selectedOrder} $isDark={isDark}>
         <div className="modal-content">
           <h2>Detalhes do Pedido #{selectedOrder?.legacyId}</h2>
           {selectedOrder && (
             <>
-              {console.log('Modal - Items:', selectedOrder.items)}
               <div className="info-grid">
                 <div className="info-item">
                   <h4>Cliente</h4>
