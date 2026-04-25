@@ -30,9 +30,7 @@ export async function getProductByName(name: string) {
 export async function getFeaturedProducts() {
     await connectMongo();
 
-    const products = await Products.find({
-        name: { $in: ["Suporte Quadrado Branco", "Suporte Redondo Branco", "Suporte Quadrado Preto"] }
-    }).limit(3);
+    const products = await Products.find({ featured: true });
 
     return products;
 }

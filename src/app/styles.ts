@@ -138,82 +138,119 @@ export const Container = styled.div`
         }
 
         .featured-products {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1rem 1.5rem 8rem;
+            background: linear-gradient(135deg,rgba(16, 26, 51, 1) 0%, rgba(59, 129, 245, 1) 100%);
             text-align: center;
 
             .wrapper-title {
-                margin-bottom: 4rem;
+                padding: 2rem 1.5rem 0;
+                margin-bottom: 2rem;
+
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
 
                 h2 {
-                    font-size: 2.5rem;
+                    font-size: 2rem;
                     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
-                    color: ${({ theme }) => theme.COLORS.DARK_BLUE};
-                    margin-bottom: 1rem;
-                    line-height: 1.2;
+                    color: ${({ theme }) => theme.COLORS.WHITE_900};
+                    line-height: 1.3;
 
                     ${up('md')} {
-                        font-size: 3.5rem;
+                        font-size: 2.2rem;
                     }
                 }
 
                 p {
-                    font-size: 1.5rem;
-                    color: ${({ theme }) => theme.COLORS.GRAY_400};
-                    line-height: 1.6;
+                    font-size: 1.4rem;
+                    color: ${({ theme }) => theme.COLORS.WHITE_600};
+                    line-height: 1.5;
 
                     ${up('md')} {
-                        font-size: 1.8rem;
+                        font-size: 1.6rem;
                     }
+                }
+
+                ${up('md')} {
+                    padding: 3rem 3rem 0;
+                    margin-bottom: 3rem;
                 }
             }
 
             .products-grid {
                 display: grid;
                 grid-template-columns: 1fr;
-                gap: 2rem;
-                max-width: 120rem;
-                margin: 0 auto;
+                gap: 3.5rem;
+                justify-items: stretch;
 
-                ${up('sm')} {
+                ${up('md')} {
                     grid-template-columns: repeat(2, 1fr);
                 }
 
-                ${up('md')} {
+                ${up('lg')} {
                     grid-template-columns: repeat(3, 1fr);
-                    gap: 3rem;
                 }
 
                 .product-card {
-                    background: white;
-                    border-radius: 1.5rem;
+                    width: 100%;
+                    height: 28rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0;
+                    padding-top: 1.5rem;
+                    border-radius: .8rem;
+                    background-color: rgba(255, 255, 255, 0.07);
                     overflow: hidden;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                    transition: all 0.3s ease;
+                    transition: transform 0.2s, box-shadow 0.2s;
 
                     &:hover {
-                        transform: translateY(-8px);
-                        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+                        transform: translateY(-0.8rem);
+                        box-shadow: 0 1.6rem 3.2rem rgba(0, 0, 0, 1);
+                    }
+
+                    ${up('md')} {
+                        height: 32rem;
+                        padding-top: 2rem;
                     }
 
                     a {
-                        display: block;
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
                         text-decoration: none;
                         color: inherit;
                     }
 
                     img {
-                        width: 100%;
-                        height: 250px;
-                        object-fit: cover;
+                        width: 16rem;
+                        height: 12rem;
+                        object-fit: contain;
+                        padding: .5rem;
+                        border-radius: .8rem;
+                        align-self: center;
+                        margin-bottom: 1rem;
+
+                        ${up('md')} {
+                            width: 18rem;
+                            height: 14rem;
+                        }
                     }
 
                     h3 {
-                        padding: 1.5rem;
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        padding: 1.2rem 1.5rem 1.5rem;
                         font-size: 1.6rem;
+                        font-weight: ${({ theme }) => theme.FONTS_WEIGHT.BOLD};
                         color: ${({ theme }) => theme.COLORS.DARK_BLUE};
-                        font-weight: ${({ theme }) => theme.FONTS_WEIGHT.MEDIUM};
+                        background-color: ${({ theme }) => theme.COLORS.WHITE_600};
                         line-height: 1.3;
+
+                        ${up('md')} {
+                            font-size: 1.8rem;
+                            padding: 1.5rem 2rem 2rem;
+                        }
                     }
                 }
             }

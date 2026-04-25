@@ -12,7 +12,7 @@ const s3 = new AWS.S3({
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { name, description, category, images, specifications, activated } = await request.json();
+    const { name, description, category, images, specifications, activated, featured } = await request.json();
     
     await connectMongo();
     
@@ -76,7 +76,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           
           const product = await Products.findByIdAndUpdate(
             id,
-            { name, description, category, images: updatedImages, specifications, activated },
+            { name, description, category, images: updatedImages, specifications, activated, featured },
             { new: true }
           );
           
@@ -92,7 +92,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     
     const product = await Products.findByIdAndUpdate(
       id,
-      { name, description, category, images, specifications, activated },
+      { name, description, category, images, specifications, activated, featured },
       { new: true }
     );
     
