@@ -402,7 +402,6 @@ export default function ProductsPage() {
     specifications: "",
   });
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -473,7 +472,6 @@ export default function ProductsPage() {
     e.preventDefault();
     if (isLoading) return;
     
-    setUploading(true);
     setIsLoading(true);
 
     try {
@@ -498,7 +496,6 @@ export default function ProductsPage() {
 
         if (!createResponse.ok) {
           setToast({ message: "Erro ao criar produto", type: "error" });
-          setUploading(false);
           setIsLoading(false);
           return;
         }
@@ -525,7 +522,6 @@ export default function ProductsPage() {
           uploadedUrls.push(data.url);
         } else {
           setToast({ message: "Erro ao fazer upload da imagem", type: "error" });
-          setUploading(false);
           setIsLoading(false);
           return;
         }
@@ -599,7 +595,6 @@ export default function ProductsPage() {
       console.error("Erro ao salvar produto:", error);
       setToast({ message: "Erro ao salvar produto", type: "error" });
     } finally {
-      setUploading(false);
       setIsLoading(false);
     }
   };
@@ -660,11 +655,17 @@ export default function ProductsPage() {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/products/${productToDelete}`, { method: "DELETE" });
+      const data = await response.json();
+      
       if (response.ok) {
-        setToast({ message: "Produto deletado com sucesso!", type: "success" });
+        setToast({ message: "Produto e imagens deletados com sucesso!", type: "success" });
         fetchProducts();
       } else {
-        setToast({ message: "Erro ao deletar produto", type: "error" });
+        const errorMsg = data.details 
+          ? `Erro ao deletar imagens do S3. Produto não foi removido.`
+          : data.error || "Erro ao deletar produto";
+        setToast({ message: errorMsg, type: "error" });
+        console.error("Detalhes do erro:", data.details);
       }
     } catch (error) {
       console.error("Erro ao deletar produto:", error);
@@ -805,7 +806,6 @@ export default function ProductsPage() {
                 accept="image/*"
                 onChange={handleImageUpload}
               />
-              {uploading && <p>Fazendo upload...</p>}
               <div className="image-preview">
                 {formData.images.map((url, index) => (
                   <div key={index} className="image-wrapper">

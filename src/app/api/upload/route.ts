@@ -23,14 +23,15 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes);
     const fileName = `${Date.now()}-${file.name}`;
     
+    // Tudo vai para o bucket tizeck-products
+    const bucketName = process.env.AWS_S3_BUCKET_PRODUCTS!;
     let key: string;
-    let bucketName: string;
     
     if (uploadType === 'category') {
-      bucketName = process.env.AWS_S3_BUCKET_CATEGORIES!;
+      // Imagens de categoria vão para categories/
       key = `categories/${fileName}`;
     } else {
-      bucketName = process.env.AWS_S3_BUCKET_PRODUCTS!;
+      // Imagens de produto vão para {categoria}/{produto}/
       if (!category || !productName) {
         return NextResponse.json({ error: "Categoria e nome do produto são obrigatórios" }, { status: 400 });
       }
@@ -46,6 +47,8 @@ export async function POST(request: NextRequest) {
     };
 
     const result = await s3.upload(uploadParams).promise();
+    
+    console.log(`✓ Upload realizado: ${key}`);
     
     return NextResponse.json({ url: result.Location });
   } catch (error) {

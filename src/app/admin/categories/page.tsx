@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { Toast } from "@/components/Toast";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
@@ -96,11 +97,36 @@ const Form = styled.form<{ $isDark?: boolean }>`
       gap: 1rem;
       flex-wrap: wrap;
 
-      img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 0.5rem;
+      .image-wrapper {
+        position: relative;
+
+        img {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 0.5rem;
+        }
+
+        .remove-btn {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: #dc2626;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+
+          &:hover {
+            background: #b91c1c;
+          }
+        }
       }
     }
   }
@@ -115,14 +141,36 @@ const Form = styled.form<{ $isDark?: boolean }>`
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
+      position: relative;
 
       &.save {
         background: #10b981;
         color: white;
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: #059669;
         }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        &.loading::after {
+          content: '';
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          margin-left: 8px;
+          border: 2px solid #ffffff;
+          border-radius: 50%;
+          border-top-color: transparent;
+          animation: spin 0.6s linear infinite;
+        }
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
 
       &.cancel {
@@ -237,8 +285,12 @@ export default function CategoriesPage() {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<{ id: string; name: string } | null>(null);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [originalImage, setOriginalImage] = useState<string>("");
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const router = useRouter();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -259,23 +311,74 @@ export default function CategoriesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) return;
+    
+    setIsLoading(true);
 
     try {
+      let imageUrl = formData.image;
+      
+      // Se há um arquivo pendente, fazer upload primeiro
+      if (pendingFile) {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", pendingFile);
+        uploadFormData.append("uploadType", "category");
+
+        const uploadResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          setToast({ message: "Erro ao fazer upload da imagem", type: "error" });
+          setIsLoading(false);
+          return;
+        }
+
+        const uploadData = await uploadResponse.json();
+        imageUrl = uploadData.url;
+        
+        // Se está editando e tinha imagem antiga, deletar
+        if (editingId && originalImage && originalImage !== imageUrl) {
+          try {
+            await fetch("/api/upload/delete", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ imageUrl: originalImage }),
+            });
+          } catch (error) {
+            console.error("Erro ao deletar imagem antiga:", error);
+          }
+        }
+      }
+
       const url = editingId ? `/api/categories/${editingId}` : "/api/categories";
       const method = editingId ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          image: imageUrl,
+        }),
       });
 
       if (response.ok) {
+        setToast({ 
+          message: editingId ? "Categoria atualizada com sucesso!" : "Categoria criada com sucesso!", 
+          type: "success" 
+        });
         handleCloseModal();
         fetchCategories();
+      } else {
+        setToast({ message: "Erro ao salvar categoria", type: "error" });
       }
     } catch (error) {
       console.error("Erro ao salvar categoria:", error);
+      setToast({ message: "Erro ao salvar categoria", type: "error" });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -285,6 +388,8 @@ export default function CategoriesPage() {
       description: category.description,
       image: category.image,
     });
+    setOriginalImage(category.image);
+    setPreviewUrl(category.image);
     setEditingId(category._id);
     setIsModalOpen(true);
   };
@@ -295,13 +400,23 @@ export default function CategoriesPage() {
       description: "",
       image: "",
     });
+    setPendingFile(null);
+    setPreviewUrl("");
+    setOriginalImage("");
     setEditingId(null);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
+    // Limpar preview URL se for blob
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setIsModalOpen(false);
     setEditingId(null);
+    setPendingFile(null);
+    setPreviewUrl("");
+    setOriginalImage("");
     setFormData({
       name: "",
       description: "",
@@ -309,31 +424,26 @@ export default function CategoriesPage() {
     });
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    setUploading(true);
     const file = files[0];
-    const formDataUpload = new FormData();
-    formDataUpload.append("file", file);
-    formDataUpload.append("uploadType", "category");
-
-    try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formDataUpload,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(prev => ({ ...prev, image: data.url }));
-      }
-    } catch (error) {
-      console.error("Erro no upload:", error);
-    } finally {
-      setUploading(false);
+    setPendingFile(file);
+    
+    // Criar preview local
+    const blobUrl = URL.createObjectURL(file);
+    setPreviewUrl(blobUrl);
+    setFormData(prev => ({ ...prev, image: blobUrl }));
+  };
+  
+  const handleRemoveImage = () => {
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
     }
+    setPendingFile(null);
+    setPreviewUrl("");
+    setFormData(prev => ({ ...prev, image: "" }));
   };
 
   const handleDeleteClick = (id: string, categoryName: string) => {
@@ -343,18 +453,33 @@ export default function CategoriesPage() {
   const handleConfirmDelete = async () => {
     if (!confirmDelete) return;
     
+    setIsLoading(true);
     try {
-      await fetch(`/api/categories/${confirmDelete.id}`, { method: "DELETE" });
-      fetchCategories();
+      const response = await fetch(`/api/categories/${confirmDelete.id}`, { method: "DELETE" });
+      const data = await response.json();
+      
+      if (response.ok) {
+        setToast({ message: "Categoria e produtos deletados com sucesso!", type: "success" });
+        fetchCategories();
+      } else {
+        const errorMsg = data.details 
+          ? `Erro ao deletar arquivos do S3. Categoria não foi removida.`
+          : data.error || "Erro ao deletar categoria";
+        setToast({ message: errorMsg, type: "error" });
+        console.error("Detalhes do erro:", data.details);
+      }
     } catch (error) {
       console.error("Erro ao deletar categoria:", error);
+      setToast({ message: "Erro ao deletar categoria", type: "error" });
     } finally {
+      setIsLoading(false);
       setConfirmDelete(null);
     }
   };
 
   return (
     <Container $isDark={isDark}>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <ConfirmModal
         isOpen={!!confirmDelete}
         title="ATENÇÃO: Ação Irreversível"
@@ -402,22 +527,29 @@ export default function CategoriesPage() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploading}
+                onChange={handleImageSelect}
               />
-              {uploading && <p>Fazendo upload...</p>}
-              {formData.image && (
+              {previewUrl && (
                 <div className="image-preview">
-                  <Image src={formData.image} alt="Preview" width={100} height={100} />
+                  <div className="image-wrapper">
+                    <Image src={previewUrl} alt="Preview" width={100} height={100} />
+                    <button 
+                      type="button" 
+                      className="remove-btn" 
+                      onClick={handleRemoveImage}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
             
             <div className="form-actions">
-              <button type="submit" className="save">
-                {editingId ? "Atualizar" : "Criar"} Categoria
+              <button type="submit" className={`save ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
+                {isLoading ? 'Salvando...' : editingId ? "Atualizar" : "Criar"} Categoria
               </button>
-              <button type="button" className="cancel" onClick={handleCloseModal}>
+              <button type="button" className="cancel" onClick={handleCloseModal} disabled={isLoading}>
                 Cancelar
               </button>
             </div>
@@ -432,10 +564,10 @@ export default function CategoriesPage() {
                 <p>{category.description}</p>
               </div>
               <div className="actions">
-                <button className="edit" onClick={() => handleEdit(category)}>
+                <button className="edit" onClick={() => handleEdit(category)} disabled={isLoading}>
                   Editar
                 </button>
-                <button className="delete" onClick={() => handleDeleteClick(category._id, category.name)}>
+                <button className="delete" onClick={() => handleDeleteClick(category._id, category.name)} disabled={isLoading}>
                   Deletar
                 </button>
               </div>
