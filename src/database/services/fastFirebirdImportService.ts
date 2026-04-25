@@ -96,7 +96,7 @@ export class FastFirebirdImportService {
       });
 
       if (documents.length > 0) {
-        await this.conn.db.collection('legacycustomers').insertMany(documents, { ordered: false });
+        await this.conn.db!.collection('legacycustomers').insertMany(documents, { ordered: false });
       }
       stats.imported = documents.length;
       stats.new = documents.length;
@@ -142,7 +142,7 @@ export class FastFirebirdImportService {
       }));
 
       if (documents.length > 0) {
-        await this.conn.db.collection('legacyproducts').insertMany(documents, { ordered: false });
+        await this.conn.db!.collection('legacyproducts').insertMany(documents, { ordered: false });
       }
       stats.imported = documents.length;
       stats.new = documents.length;
@@ -169,10 +169,10 @@ export class FastFirebirdImportService {
         itemsMap.get(item.CODPEDIDO)!.push(item);
       });
       
-      const customers = await this.conn.db.collection('legacycustomers').find({}).toArray();
+      const customers = await this.conn.db!.collection('legacycustomers').find({}).toArray();
       const customerMap = new Map(customers.map(c => [c.legacyId, c._id]));
       
-      const products = await this.conn.db.collection('legacyproducts').find({}).toArray();
+      const products = await this.conn.db!.collection('legacyproducts').find({}).toArray();
       const productMap = new Map(products.map(p => [p.specifications?.legacyId, { _id: p._id, name: p.name }]));
 
       const documents = orders.map(o => {
@@ -212,7 +212,7 @@ export class FastFirebirdImportService {
       });
 
       if (documents.length > 0) {
-        await this.conn.db.collection('legacyorders').insertMany(documents, { ordered: false });
+        await this.conn.db!.collection('legacyorders').insertMany(documents, { ordered: false });
       }
       stats.imported = documents.length;
       stats.new = documents.length;
@@ -231,7 +231,7 @@ export class FastFirebirdImportService {
       if (data.length === 0) return { stats, errors: [] };
       
       const documents = data.map(mapper);
-      await this.conn.db.collection(collectionName).insertMany(documents, { ordered: false });
+      await this.conn.db!.collection(collectionName).insertMany(documents, { ordered: false });
       stats.imported = documents.length;
       stats.new = documents.length;
       this.log(`✓ ${documents.length} ${tableName}`);
