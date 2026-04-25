@@ -133,6 +133,7 @@ export class BackupService {
   /**
    * Obtém o último backup bem-sucedido
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getLastSuccessfulBackup(): Promise<any> {
     await connectMongo();
     const BackupLog = (await import('../models/BackupLog')).default;
@@ -160,12 +161,12 @@ export class BackupService {
    */
   static async validateDatabase(connection: Connection): Promise<ValidationResult> {
     try {
-      const collections = await connection.db.listCollections().toArray();
+      const collections = await connection.db!.listCollections().toArray();
       const collectionsCount = collections.length;
       
       let documentsCount = 0;
       for (const collection of collections) {
-        const count = await connection.db.collection(collection.name).countDocuments();
+        const count = await connection.db!.collection(collection.name).countDocuments();
         documentsCount += count;
       }
 
@@ -176,7 +177,7 @@ export class BackupService {
         documentsCount,
         isValid
       };
-    } catch (error) {
+    } catch {
       return {
         collectionsCount: 0,
         documentsCount: 0,
@@ -189,13 +190,13 @@ export class BackupService {
    * Copia dados de um banco para outro (DROP + INSERT - mais rápido)
    */
   static async copyDatabase(sourceConn: Connection, targetConn: Connection): Promise<void> {
-    const collections = await sourceConn.db.listCollections().toArray();
+    const collections = await sourceConn.db!.listCollections().toArray();
     
     // 1. DROP todas as collections do destino
-    const targetCollections = await targetConn.db.listCollections().toArray();
+    const targetCollections = await targetConn.db!.listCollections().toArray();
     for (const collectionInfo of targetCollections) {
       if (!collectionInfo.name.startsWith('system.')) {
-        await targetConn.db.collection(collectionInfo.name).drop().catch(() => {});
+        await targetConn.db!.collection(collectionInfo.name).drop().catch(() => {});
       }
     }
     
@@ -206,8 +207,8 @@ export class BackupService {
       // Pular collections do sistema
       if (collectionName.startsWith('system.')) continue;
       
-      const sourceCollection = sourceConn.db.collection(collectionName);
-      const targetCollection = targetConn.db.collection(collectionName);
+      const sourceCollection = sourceConn.db!.collection(collectionName);
+      const targetCollection = targetConn.db!.collection(collectionName);
       
       // Buscar TODOS os documentos de uma vez
       const allDocuments = await sourceCollection.find({}).toArray();
@@ -223,12 +224,12 @@ export class BackupService {
         if (index.name !== '_id_') {
           try {
             const key = index.key;
-            const options: any = { name: index.name };
+            const options: Record<string, unknown> = { name: index.name };
             if (index.unique) options.unique = true;
             if (index.sparse) options.sparse = true;
             await targetCollection.createIndex(key, options);
-          } catch (error) {
-            console.warn(`Aviso: não foi possível criar índice ${index.name}:`, error);
+          } catch {
+            console.warn(`Aviso: não foi possível criar índice ${index.name}`);
           }
         }
       }
@@ -243,6 +244,7 @@ export class BackupService {
     logId: string;
     message: string;
     error?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     importStats?: any;
   }> {
     const startTime = Date.now();
@@ -262,10 +264,10 @@ export class BackupService {
       targetConn = await this.createConnection(config.targetDatabase);
 
       // 4. DROP todas as collections do banco de destino
-      const targetCollections = await targetConn.db.listCollections().toArray();
+      const targetCollections = await targetConn.db!.listCollections().toArray();
       for (const collectionInfo of targetCollections) {
         if (!collectionInfo.name.startsWith('system.')) {
-          await targetConn.db.collection(collectionInfo.name).drop().catch(() => {});
+          await targetConn.db!.collection(collectionInfo.name).drop().catch(() => {});
         }
       }
 
@@ -318,8 +320,8 @@ export class BackupService {
         importStats: importResult.stats
       };
 
-    } catch (error: any) {
-      const errorMessage = error.message || 'Erro desconhecido';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       
       if (logId) {
         await this.updateBackupLog(logId, {
@@ -345,6 +347,7 @@ export class BackupService {
   /**
    * Lista histórico de backups
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static async getBackupHistory(limit: number = 50): Promise<any[]> {
     await connectMongo();
     const BackupLog = (await import('../models/BackupLog')).default;
@@ -361,7 +364,9 @@ export class BackupService {
     total: number;
     successful: number;
     failed: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     lastBackup: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     weeklyStatus: Record<string, any>;
   }> {
     await connectMongo();

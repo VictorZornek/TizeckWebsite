@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         ];
       } else {
         // Buscar clientes por nome primeiro
-        const customersCollection = conn.db.collection('legacycustomers');
+        const customersCollection = conn.db!.collection('legacycustomers');
         const matchingCustomers = await customersCollection.find({
           $or: [
             { name: { $regex: search, $options: 'i' } },
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     }
 
     const skip = (page - 1) * limit;
-    const ordersCollection = conn.db.collection('legacyorders');
+    const ordersCollection = conn.db!.collection('legacyorders');
     const total = await ordersCollection.countDocuments(query);
     
     const orders = await ordersCollection.find(query)
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     // Buscar clientes manualmente
     const customerIds = [...new Set(orders.map(o => o.customerLegacyId).filter(Boolean))];
-    const customersCollection = conn.db.collection('legacycustomers');
+    const customersCollection = conn.db!.collection('legacycustomers');
     const customers = await customersCollection.find({ legacyId: { $in: customerIds } }).toArray();
     const customerMap = new Map(customers.map(c => [c.legacyId, c]));
 

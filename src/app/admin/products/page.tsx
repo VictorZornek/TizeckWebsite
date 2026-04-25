@@ -696,6 +696,7 @@ export default function ProductsPage() {
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <ConfirmModal
         isOpen={deleteModalOpen}
+        title="Deletar Produto"
         onConfirm={confirmDelete}
         onCancel={() => {
           setDeleteModalOpen(false);

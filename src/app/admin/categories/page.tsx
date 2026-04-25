@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
@@ -291,7 +290,6 @@ export default function CategoriesPage() {
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [originalImage, setOriginalImage] = useState<string>("");
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const router = useRouter();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 

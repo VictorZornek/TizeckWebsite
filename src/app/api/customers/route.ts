@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectBackupDatabase } from "@/database/dbBackup";
-import Customer from "@/database/models/Customer";
 
 export async function GET(request: NextRequest) {
   try {
@@ -38,7 +37,7 @@ export async function GET(request: NextRequest) {
     }
 
     const skip = (page - 1) * limit;
-    const collection = conn.db.collection('legacycustomers');
+    const collection = conn.db!.collection('legacycustomers');
     const total = await collection.countDocuments(query);
     const customers = await collection.find(query)
       .sort({ name: 1 })

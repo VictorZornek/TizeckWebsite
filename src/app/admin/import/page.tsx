@@ -295,7 +295,10 @@ const HistorySection = styled.div<{ $isDark: boolean }>`
 
 interface ImportResult {
   status: string;
-  stats: {
+  message?: string;
+  targetDatabase?: string;
+  weekday?: string;
+  stats?: {
     customers: { imported: number; errors: number; new: number; updated: number };
     products: { imported: number; errors: number; new: number; updated: number };
     orders: { imported: number; errors: number; new: number; updated: number };
@@ -311,9 +314,9 @@ interface ImportResult {
     customerItems: { imported: number; errors: number; new: number; updated: number };
     systemUsers: { imported: number; errors: number; new: number; updated: number };
   };
-  errors: string[];
-  logs: string[];
-  processingTime: number;
+  errors?: string[];
+  logs?: string[];
+  processingTime?: number;
 }
 
 interface HistoryItem {
@@ -321,7 +324,13 @@ interface HistoryItem {
   fileName: string;
   importDate: string;
   status: string;
-  stats: {
+  targetDatabase?: string;
+  weekday?: string;
+  collectionsCount?: number;
+  documentsCount?: number;
+  backupType?: string;
+  processingTime?: number;
+  stats?: {
     customers: { imported: number; errors: number; new: number; updated: number };
     products: { imported: number; errors: number; new: number; updated: number };
     orders: { imported: number; errors: number; new: number; updated: number };
@@ -337,7 +346,6 @@ interface HistoryItem {
     customerItems: { imported: number; errors: number; new: number; updated: number };
     systemUsers: { imported: number; errors: number; new: number; updated: number };
   };
-  processingTime: number;
 }
 
 export default function ImportPage() {
