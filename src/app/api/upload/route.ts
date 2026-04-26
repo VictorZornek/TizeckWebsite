@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import AWS from "aws-sdk";
 import { randomUUID } from "crypto";
-
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+import { createS3Client, getS3Bucket } from "@/lib/aws";
 
 // Whitelist de tipos MIME permitidos
 const ALLOWED_MIME_TYPES = [
@@ -96,6 +90,10 @@ function validateKey(key: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    // Validar e criar client S3
+    const s3 = createS3Client();
+    const bucketName = getS3Bucket();
+    
     const formData = await request.formData();
     const file = formData.get("file") as File;
     const category = formData.get("category") as string;
@@ -137,7 +135,6 @@ export async function POST(request: NextRequest) {
     // Gerar nome único e seguro
     const uniqueFileName = `${Date.now()}-${randomUUID()}${fileExtension}`;
     
-    const bucketName = process.env.AWS_S3_BUCKET_PRODUCTS!;
     let key: string;
     
     if (uploadType === 'category') {

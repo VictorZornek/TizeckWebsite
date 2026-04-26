@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import AWS from "aws-sdk";
-
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
-});
+import { createS3Client, getS3Bucket } from "@/lib/aws";
 
 // Whitelist de extensões permitidas para deleção
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
@@ -13,10 +7,7 @@ const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 /**
  * Valida se a URL pertence ao bucket esperado
  */
-function isValidBucketUrl(imageUrl: string): boolean {
-  const bucketName = process.env.AWS_S3_BUCKET_PRODUCTS;
-  const region = process.env.AWS_REGION;
-  
+function isValidBucketUrl(imageUrl: string, bucketName: string, region: string): boolean {
   if (!bucketName || !region) return false;
   
   // Formatos válidos de URL do S3
@@ -87,6 +78,13 @@ function validateKey(key: string): { valid: boolean; error?: string } {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // Validar e criar client S3
+    const s3 = createS3Client();
+    const bucketName = getS3Bucket();
+    
+    // Obter região para validação de URL
+    const region = process.env.AWS_REGION!;
+    
     const { imageUrl } = await request.json();
     
     // Validação 1: URL fornecida
@@ -95,7 +93,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Validação 2: URL pertence ao bucket esperado
-    if (!isValidBucketUrl(imageUrl)) {
+    if (!isValidBucketUrl(imageUrl, bucketName, region)) {
       return NextResponse.json({ error: "URL inválida" }, { status: 400 });
     }
 
@@ -106,7 +104,6 @@ export async function DELETE(request: NextRequest) {
       key = decodeURIComponent(url.pathname.substring(1));
       
       // Se a URL for no formato s3.amazonaws.com/bucket/key, remover o bucket do path
-      const bucketName = process.env.AWS_S3_BUCKET_PRODUCTS!;
       if (key.startsWith(`${bucketName}/`)) {
         key = key.substring(bucketName.length + 1);
       }
@@ -119,8 +116,6 @@ export async function DELETE(request: NextRequest) {
     if (!validation.valid) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-
-    const bucketName = process.env.AWS_S3_BUCKET_PRODUCTS!;
 
     await s3.deleteObject({
       Bucket: bucketName,
