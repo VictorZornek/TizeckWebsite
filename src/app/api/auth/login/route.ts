@@ -5,6 +5,7 @@ import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
 import { getJwtSecretEncoded } from "@/lib/jwt";
 import { loginRateLimiter, getClientIp } from "@/lib/rateLimit";
+import { logError } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error('[LOGIN] Erro:', error);
+    logError('LOGIN', error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

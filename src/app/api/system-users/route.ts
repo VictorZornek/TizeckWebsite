@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectBackupDatabase } from "@/database/dbBackup";
 import SystemUser from "@/database/models/SystemUser";
+import { logError } from "@/lib/logger";
 
 export async function GET() {
   try {
@@ -16,7 +17,7 @@ export async function GET() {
     
     return NextResponse.json(users);
   } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
+    logError('SYSTEM_USERS_GET', error);
     return NextResponse.json({ error: "Erro ao buscar usuários" }, { status: 500 });
   }
 }

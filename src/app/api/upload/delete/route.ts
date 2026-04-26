@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createS3Client, getS3Bucket } from "@/lib/aws";
+import { logError, logInfo } from "@/lib/logger";
 
 // Whitelist de extensões permitidas para deleção
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
@@ -122,11 +123,11 @@ export async function DELETE(request: NextRequest) {
       Key: key,
     }).promise();
     
-    console.log(`✓ Imagem deletada: ${key}`);
+    logInfo('S3_DELETE', `Imagem deletada: ${key}`);
     
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Erro ao deletar do S3:", error);
+    logError('S3_DELETE', error);
     return NextResponse.json({ error: "Erro ao deletar imagem" }, { status: 500 });
   }
 }

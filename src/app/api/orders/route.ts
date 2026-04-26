@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectBackupDatabase } from "@/database/dbBackup";
 import { ordersQuerySchema } from "@/lib/validators/query";
 import { escapeRegex, isValidDate } from "@/lib/validators/common";
+import { logError } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
@@ -105,7 +106,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Erro ao buscar pedidos:', error);
+    logError('ORDERS_GET', error);
     return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
   }
 }

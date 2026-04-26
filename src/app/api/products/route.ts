@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
 import { createProductSchema } from "@/lib/validators/product";
+import { logError } from "@/lib/logger";
 
 export async function GET() {
   try {
     await connectMongo();
     const products = await Products.find({ activated: true });
     return NextResponse.json(products);
-  } catch {
+  } catch (error) {
+    logError('PRODUCTS_GET', error);
     return NextResponse.json({ error: "Erro ao buscar produtos" }, { status: 500 });
   }
 }
@@ -43,7 +45,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
-    console.error("Erro ao criar produto:", error);
+    logError('PRODUCTS_CREATE', error);
     return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
   }
 }

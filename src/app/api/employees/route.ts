@@ -3,6 +3,7 @@ import { connectBackupDatabase } from "@/database/dbBackup";
 import Employee from "@/database/models/Employee";
 import { employeesQuerySchema } from "@/lib/validators/query";
 import { escapeRegex } from "@/lib/validators/common";
+import { logError } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Erro ao buscar funcionários:', error);
+    logError('EMPLOYEES_GET', error);
     return NextResponse.json({ error: "Erro ao buscar funcionários" }, { status: 500 });
   }
 }

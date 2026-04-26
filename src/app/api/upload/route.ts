@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createS3Client, getS3Bucket } from "@/lib/aws";
+import { logError, logInfo } from "@/lib/logger";
 
 // Whitelist de tipos MIME permitidos
 const ALLOWED_MIME_TYPES = [
@@ -180,11 +181,11 @@ export async function POST(request: NextRequest) {
 
     const result = await s3.upload(uploadParams).promise();
     
-    console.log(`✓ Upload realizado: ${key}`);
+    logInfo('UPLOAD', `Upload realizado: ${key}`);
     
     return NextResponse.json({ url: result.Location });
   } catch (error) {
-    console.error("Erro no upload:", error);
+    logError('UPLOAD', error);
     return NextResponse.json({ error: "Erro no upload" }, { status: 500 });
   }
 }
