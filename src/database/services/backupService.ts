@@ -39,8 +39,17 @@ export class BackupService {
 
   /**
    * Obtém o banco do dia ANTERIOR (para leitura pela aplicação)
+   * Nos finais de semana (sábado, domingo) e segunda-feira, retorna backup_sexta
    */
   static getPreviousDayDatabase(date: Date = new Date()): string {
+    const currentDay = date.getDay(); // 0=domingo, 1=segunda, 6=sábado
+    
+    // Se for sábado (6), domingo (0) ou segunda (1), usar backup_sexta
+    if (currentDay === 0 || currentDay === 1 || currentDay === 6) {
+      return this.WEEKDAY_DATABASES['sexta'];
+    }
+    
+    // Para outros dias, usar o banco do dia anterior
     const weekdays = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const yesterday = new Date(date);
     yesterday.setDate(yesterday.getDate() - 1);
