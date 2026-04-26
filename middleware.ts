@@ -21,6 +21,9 @@ const PUBLIC_GET_ROUTES = [
   "/api/categories",
 ];
 
+// Métodos que exigem validação de Origin
+const MUTATING_METHODS = ["POST", "PUT", "PATCH", "DELETE"];
+
 function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
 }
@@ -49,9 +52,64 @@ async function verifyAuthToken(token: string | undefined): Promise<boolean> {
   }
 }
 
+function isValidOrigin(origin: string | null, host: string): boolean {
+  // Se não há Origin, permitir (requisições same-origin, curl, etc)
+  if (!origin) {
+    return true;
+  }
+
+  try {
+    const originUrl = new URL(origin);
+    const originHost = originUrl.host;
+
+    // Permitir se o host do Origin corresponde ao host atual
+    if (originHost === host) {
+      return true;
+    }
+
+    // Permitir localhost em desenvolvimento
+    if (process.env.NODE_ENV === 'development') {
+      const localhostPatterns = [
+        'localhost',
+        '127.0.0.1',
+        '[::1]',
+      ];
+      
+      const isOriginLocalhost = localhostPatterns.some(pattern => 
+        originHost.includes(pattern)
+      );
+      const isHostLocalhost = localhostPatterns.some(pattern => 
+        host.includes(pattern)
+      );
+
+      if (isOriginLocalhost && isHostLocalhost) {
+        return true;
+      }
+    }
+
+    return false;
+  } catch (error) {
+    // Se não conseguir parsear o Origin, bloquear
+    return false;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const method = request.method;
+  
+  // Validação de Origin para métodos mutantes em rotas /api/*
+  if (pathname.startsWith("/api/") && MUTATING_METHODS.includes(method)) {
+    const origin = request.headers.get("origin");
+    const host = request.headers.get("host") || "";
+
+    if (!isValidOrigin(origin, host)) {
+      return NextResponse.json(
+        { error: "Origem não permitida" },
+        { status: 403 }
+      );
+    }
+  }
   
   // Permitir rotas públicas
   if (isPublicRoute(pathname)) {
