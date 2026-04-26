@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
 import AWS from "aws-sdk";
+import { updateProductSchema, objectIdSchema } from "@/lib/validators/product";
+import { sanitizePathName } from "@/lib/validators/common";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -13,11 +15,32 @@ const s3 = new AWS.S3({
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { name, description, category, images, specifications, activated, featured } = await request.json();
+    
+    // Validar ObjectId
+    const idResult = objectIdSchema.safeParse(id);
+    if (!idResult.success) {
+      return NextResponse.json(
+        { error: 'ID inválido' },
+        { status: 400 }
+      );
+    }
+    const validatedId = idResult.data;
+    
+    const body = await request.json();
+    
+    // Validar body com Zod
+    const bodyResult = updateProductSchema.safeParse(body);
+    if (!bodyResult.success) {
+      return NextResponse.json(
+        { error: 'Dados inválidos' },
+        { status: 400 }
+      );
+    }
+    const validatedData = bodyResult.data;
     
     await connectMongo();
     
-    const oldProduct = await Products.findById(id);
+    const oldProduct = await Products.findById(validatedId);
     
     if (!oldProduct) {
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
@@ -25,17 +48,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     
     const oldName = oldProduct.name;
     const oldCategory = oldProduct.category;
-    const nameChanged = oldName !== name;
-    const categoryChanged = oldCategory !== category;
+    const nameChanged = oldName !== validatedData.name;
+    const categoryChanged = oldCategory !== validatedData.category;
     
     // Se nome ou categoria mudaram, precisamos mover a pasta no S3
     if (nameChanged || categoryChanged) {
       try {
-        const oldSanitized = oldName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
-        const newSanitized = name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
+        const oldSanitized = sanitizePathName(oldName);
+        const newSanitized = sanitizePathName(validatedData.name);
         
         const oldPrefix = `${oldCategory}/${oldSanitized}/`;
-        const newPrefix = `${category}/${newSanitized}/`;
+        const newPrefix = `${validatedData.category}/${newSanitized}/`;
         
         // Listar todos os objetos da pasta antiga
         const listParams = {
@@ -71,13 +94,21 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           console.log(`✓ Pasta antiga deletada: ${oldPrefix}`);
           
           // Atualizar URLs das imagens
-          const updatedImages = images.map((img: string) => 
+          const updatedImages = validatedData.images.map((img: string) => 
             img.replace(oldPrefix, newPrefix)
           );
           
           const product = await Products.findByIdAndUpdate(
-            id,
-            { name, description, category, images: updatedImages, specifications, activated, featured },
+            validatedId,
+            { 
+              name: validatedData.name,
+              description: validatedData.description,
+              category: validatedData.category,
+              images: updatedImages,
+              specifications: validatedData.specifications,
+              activated: validatedData.activated,
+              featured: validatedData.featured,
+            },
             { new: true }
           );
           
@@ -93,8 +124,16 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     const product = await Products.findByIdAndUpdate(
-      id,
-      { name, description, category, images, specifications, activated, featured },
+      validatedId,
+      { 
+        name: validatedData.name,
+        description: validatedData.description,
+        category: validatedData.category,
+        images: validatedData.images,
+        specifications: validatedData.specifications,
+        activated: validatedData.activated,
+        featured: validatedData.featured,
+      },
       { new: true }
     );
     
@@ -113,9 +152,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    
+    // Validar ObjectId
+    const idResult = objectIdSchema.safeParse(id);
+    if (!idResult.success) {
+      return NextResponse.json(
+        { error: 'ID inválido' },
+        { status: 400 }
+      );
+    }
+    const validatedId = idResult.data;
+    
     await connectMongo();
     
-    const product = await Products.findById(id);
+    const product = await Products.findById(validatedId);
     
     if (!product) {
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
@@ -154,9 +204,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
     
     // Só deleta do banco se todas as imagens foram removidas do S3
-    await Products.findByIdAndDelete(id);
+    await Products.findByIdAndDelete(validatedId);
     
-    console.log(`✓ Produto deletado do banco: ${product.name} (ID: ${id})`);
+    console.log(`✓ Produto deletado do banco: ${product.name} (ID: ${validatedId})`);
     
     revalidatePath('/');
     return NextResponse.json({ 

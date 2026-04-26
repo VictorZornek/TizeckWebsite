@@ -3,6 +3,8 @@ import { connectMongo } from "@/database/db";
 import Category from "@/database/models/Category";
 import Product from "@/database/models/Product";
 import AWS from "aws-sdk";
+import { updateCategorySchema } from "@/lib/validators/category";
+import { objectIdSchema } from "@/lib/validators/product";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -13,18 +15,39 @@ const s3 = new AWS.S3({
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { name, description, image, activated } = await request.json();
+    
+    // Validar ObjectId
+    const idResult = objectIdSchema.safeParse(id);
+    if (!idResult.success) {
+      return NextResponse.json(
+        { error: 'ID inválido' },
+        { status: 400 }
+      );
+    }
+    const validatedId = idResult.data;
+    
+    const body = await request.json();
+    
+    // Validar body com Zod
+    const bodyResult = updateCategorySchema.safeParse(body);
+    if (!bodyResult.success) {
+      return NextResponse.json(
+        { error: 'Dados inválidos' },
+        { status: 400 }
+      );
+    }
+    const validatedData = bodyResult.data;
     
     await connectMongo();
     
-    const oldCategory = await Category.findById(id);
+    const oldCategory = await Category.findById(validatedId);
     
     if (!oldCategory) {
       return NextResponse.json({ error: "Categoria não encontrada" }, { status: 404 });
     }
     
     const oldName = oldCategory.name;
-    const nameChanged = oldName !== name;
+    const nameChanged = oldName !== validatedData.name;
     
     // Se o nome mudou, precisamos renomear a pasta no S3 e atualizar produtos
     if (nameChanged) {
@@ -41,7 +64,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
           // Copiar cada objeto para o novo caminho
           for (const obj of listedObjects.Contents) {
             const oldKey = obj.Key!;
-            const newKey = oldKey.replace(`${oldName}/`, `${name}/`);
+            const newKey = oldKey.replace(`${oldName}/`, `${validatedData.name}/`);
             
             await s3.copyObject({
               Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
@@ -65,19 +88,19 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         // Atualizar campo category em todos os produtos
         await Product.updateMany(
           { category: oldName },
-          { $set: { category: name } }
+          { $set: { category: validatedData.name } }
         );
         
         // Atualizar URLs das imagens nos produtos
-        const products = await Product.find({ category: name });
+        const products = await Product.find({ category: validatedData.name });
         for (const product of products) {
           const updatedImages = product.images.map((img: string) => 
-            img.replace(`/${oldName}/`, `/${name}/`)
+            img.replace(`/${oldName}/`, `/${validatedData.name}/`)
           );
           await Product.findByIdAndUpdate(product._id, { images: updatedImages });
         }
         
-        console.log(`✓ Produtos atualizados: ${oldName} -> ${name}`);
+        console.log(`✓ Produtos atualizados: ${oldName} -> ${validatedData.name}`);
       } catch (error) {
         console.error("Erro ao renomear pasta no S3:", error);
         return NextResponse.json({ 
@@ -87,8 +110,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     
     const category = await Category.findByIdAndUpdate(
-      id,
-      { name, description, image, activated },
+      validatedId,
+      { 
+        name: validatedData.name,
+        description: validatedData.description,
+        image: validatedData.image,
+        activated: validatedData.activated,
+      },
       { new: true }
     );
     
@@ -102,9 +130,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    
+    // Validar ObjectId
+    const idResult = objectIdSchema.safeParse(id);
+    if (!idResult.success) {
+      return NextResponse.json(
+        { error: 'ID inválido' },
+        { status: 400 }
+      );
+    }
+    const validatedId = idResult.data;
+    
     await connectMongo();
     
-    const category = await Category.findById(id);
+    const category = await Category.findById(validatedId);
     
     if (!category) {
       return NextResponse.json({ error: "Categoria não encontrada" }, { status: 404 });
@@ -171,8 +210,8 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     console.log(`✓ Produtos deletados do banco: categoria ${category.name}`);
 
     // 4. Deletar categoria do banco
-    await Category.findByIdAndDelete(id);
-    console.log(`✓ Categoria deletada do banco: ${category.name} (ID: ${id})`);
+    await Category.findByIdAndDelete(validatedId);
+    console.log(`✓ Categoria deletada do banco: ${category.name} (ID: ${validatedId})`);
     
     return NextResponse.json({ 
       success: true,

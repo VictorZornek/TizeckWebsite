@@ -7,8 +7,6 @@ const JWT_SECRET = getJwtSecretEncoded();
 // Rotas públicas que não precisam de autenticação
 const PUBLIC_ROUTES = [
   "/admin/login",
-  "/api/products",
-  "/api/categories",
   "/api/auth/login",
   "/api/auth/logout",
   "/api/auth/verify",
@@ -16,8 +14,26 @@ const PUBLIC_ROUTES = [
   "/favicon.ico",
 ];
 
+// Rotas que permitem GET público mas exigem autenticação para outros métodos
+const PUBLIC_GET_ROUTES = [
+  "/api/products",
+  "/api/products/featured",
+  "/api/categories",
+];
+
 function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
+}
+
+function isPublicGetRoute(pathname: string): boolean {
+  // Verificar rotas exatas e rotas com [id]
+  return PUBLIC_GET_ROUTES.some(route => {
+    if (pathname === route) return true;
+    // Permitir /api/products/[id] e /api/categories/[id] apenas para GET
+    if (route === "/api/products" && pathname.match(/^\/api\/products\/[^/]+$/)) return true;
+    if (route === "/api/categories" && pathname.match(/^\/api\/categories\/[^/]+$/)) return true;
+    return false;
+  });
 }
 
 async function verifyAuthToken(token: string | undefined): Promise<boolean> {
@@ -35,9 +51,15 @@ async function verifyAuthToken(token: string | undefined): Promise<boolean> {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const method = request.method;
   
   // Permitir rotas públicas
   if (isPublicRoute(pathname)) {
+    return NextResponse.next();
+  }
+
+  // Permitir GET em rotas públicas específicas
+  if (method === "GET" && isPublicGetRoute(pathname)) {
     return NextResponse.next();
   }
 
@@ -57,7 +79,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/api/")) {
     if (!isAuthenticated) {
       return NextResponse.json(
-        { error: "Não autorizado", message: "Token de autenticação inválido ou ausente" },
+        { error: "Não autorizado" },
         { status: 401 }
       );
     }

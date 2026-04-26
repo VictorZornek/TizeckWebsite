@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
+import { createProductSchema } from "@/lib/validators/product";
 
 export async function GET() {
   try {
@@ -14,21 +15,35 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, description, category, images, specifications } = await request.json();
+    const body = await request.json();
+    
+    // Validar body com Zod usando safeParse
+    const result = createProductSchema.safeParse(body);
+    
+    if (!result.success) {
+      return NextResponse.json(
+        { error: 'Dados inválidos' },
+        { status: 400 }
+      );
+    }
+    
+    const validatedData = result.data;
     
     await connectMongo();
     
+    // Usar apenas campos validados (evita mass assignment)
     const product = new Products({ 
-      name, 
-      description, 
-      category, 
-      images: images || [], 
-      specifications: specifications || {} 
+      name: validatedData.name,
+      description: validatedData.description,
+      category: validatedData.category,
+      images: validatedData.images,
+      specifications: validatedData.specifications,
     });
     await product.save();
     
     return NextResponse.json(product, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("Erro ao criar produto:", error);
     return NextResponse.json({ error: "Erro ao criar produto" }, { status: 500 });
   }
 }
