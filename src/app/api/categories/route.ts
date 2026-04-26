@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCategoriesWithImages } from "@/database/services/productsService";
 import { connectMongo } from "@/database/db";
 import Category from "@/database/models/Category";
+import { createCategorySchema } from "@/lib/validators/category";
 
 export async function GET() {
     try {
@@ -18,17 +19,24 @@ export async function POST(request: Request) {
         await connectMongo();
         const body = await request.json();
         
+        const validation = createCategorySchema.safeParse(body);
+        if (!validation.success) {
+            return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+        }
+
+        const { name, description, image } = validation.data;
+        
         const category = new Category({
-            name: body.name,
-            description: body.description,
-            image: body.image,
+            name,
+            description,
+            image,
             activated: true
         });
         
         await category.save();
         return NextResponse.json(category, { status: 201 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Erro ao criar categoria:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "Erro ao criar categoria" }, { status: 500 });
     }
 }

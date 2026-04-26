@@ -1,17 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectBackupDatabase } from "@/database/dbBackup";
+import { ordersQuerySchema } from "@/lib/validators/query";
+import { escapeRegex, isValidDate } from "@/lib/validators/common";
 
 export async function GET(request: NextRequest) {
   try {
     const conn = await connectBackupDatabase();
     
     const searchParams = request.nextUrl.searchParams;
-    const search = searchParams.get("search") || "";
-    const status = searchParams.get("status") || "";
-    const dateFrom = searchParams.get("dateFrom") || "";
-    const dateTo = searchParams.get("dateTo") || "";
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const rawParams = {
+      search: searchParams.get("search") || "",
+      status: searchParams.get("status") || "",
+      dateFrom: searchParams.get("dateFrom") || "",
+      dateTo: searchParams.get("dateTo") || "",
+      page: searchParams.get("page") || "1",
+      limit: searchParams.get("limit") || "50",
+    };
+
+    const validation = ordersQuerySchema.safeParse(rawParams);
+    if (!validation.success) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+
+    const { search, status, dateFrom, dateTo, page, limit } = validation.data;
+
+    // Validar datas se fornecidas
+    if (dateFrom && !isValidDate(dateFrom)) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+    if (dateTo && !isValidDate(dateTo)) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
 
     const query: Record<string, unknown> = {};
 
@@ -25,10 +44,11 @@ export async function GET(request: NextRequest) {
       } else {
         // Buscar clientes por nome primeiro
         const customersCollection = conn.db!.collection('legacycustomers');
+        const escapedSearch = escapeRegex(search);
         const matchingCustomers = await customersCollection.find({
           $or: [
-            { name: { $regex: search, $options: 'i' } },
-            { fantasyName: { $regex: search, $options: 'i' } },
+            { name: { $regex: escapedSearch, $options: 'i' } },
+            { fantasyName: { $regex: escapedSearch, $options: 'i' } },
           ]
         }, { projection: { legacyId: 1 } }).toArray();
         
@@ -86,6 +106,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Erro ao buscar pedidos:', error);
-    return NextResponse.json({ error: `Erro ao buscar pedidos: ${error}` }, { status: 500 });
+    return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
   }
 }
