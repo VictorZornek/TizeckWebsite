@@ -20,8 +20,10 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb',
+      bodySizeLimit: '25mb',
     },
+    middlewareClientMaxBodySize: '25mb',
+    proxyTimeout: 60000,
   },
   async headers() {
     return [
