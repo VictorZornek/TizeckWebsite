@@ -1,61 +1,56 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import PageHeader from "@/components/PageHeader";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { Toast } from "@/components/Toast";
+import { SpecificationsEditor } from "@/components/SpecificationsEditor";
 import * as media from "@/styles/media";
+import { useTheme } from "@/contexts/ThemeContext";
+import AdminHeader from "@/components/AdminHeader";
 
-const Container = styled.div`
-  min-height: 100vh;
-  background: #f5f5f5;
-`;
-
-const Header = styled.header`
-  background: white;
-  padding: 1rem 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+const ActionButton = styled.button<{ $variant?: 'primary' | 'secondary' | 'danger' }>`
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
 
   ${media.down('md')} {
-    padding: 1rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
   }
 
-  h1 {
-    color: #101a33;
-  }
-
-  .actions {
-    display: flex;
-    gap: 1rem;
-
-    ${media.down('md')} {
-      width: 100%;
+  ${props => {
+    if (props.$variant === 'danger') {
+      return `
+        background: #dc2626;
+        &:hover { background: #b91c1c; }
+      `;
     }
-
-    button.new {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
+    if (props.$variant === 'secondary') {
+      return `
+        background: #6b7280;
+        &:hover { background: #4b5563; }
+      `;
+    }
+    return `
       background: #10b981;
-      color: white;
+      &:hover { background: #059669; }
+    `;
+  }}
+`;
 
-      ${media.down('md')} {
-        width: 100%;
-      }
-
-      &:hover {
-        background: #059669;
-      }
-    }
-  }
+const Container = styled.div<{ $isDark: boolean }>`
+  min-height: 100vh;
+  background: ${props => props.$isDark ? '#1a202c' : '#f5f5f5'};
+  transition: background 0.3s ease;
 `;
 
 const Main = styled.main`
@@ -68,19 +63,118 @@ const Main = styled.main`
   }
 `;
 
-const Form = styled.form`
+const Filters = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+
+  ${media.down('md')} {
+    flex-direction: column;
+    align-items: stretch;
+  }
+`;
+
+const SearchInput = styled.input<{ $isDark: boolean }>`
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
+  border-radius: 0.5rem;
+  background: ${props => props.$isDark ? '#1a202c' : 'white'};
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+
+  &::placeholder {
+    color: ${props => props.$isDark ? '#a0aec0' : '#999'};
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+  }
+`;
+
+const CategoryFilter = styled.select<{ $isDark: boolean }>`
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
+  border-radius: 0.5rem;
+  background: ${props => props.$isDark ? '#1a202c' : 'white'};
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+  }
+`;
+
+const CategorySection = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const CategoryTitle = styled.h2<{ $isDark: boolean }>`
+  color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const ProductCount = styled.span<{ $isDark: boolean }>`
+  font-size: 0.9rem;
+  color: ${props => props.$isDark ? '#a0aec0' : '#6b7280'};
+  font-weight: normal;
+`;
+
+const EmptyState = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: ${props => props.$isDark ? '#a0aec0' : '#6b7280'};
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+
+  p {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+`;
+
+const Form = styled.form<{ $isDark: boolean }>`
   h2 {
     margin-bottom: 1rem;
-    color: #101a33;
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   input, textarea, select {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid ${props => props.$isDark ? '#4a5568' : '#ddd'};
     border-radius: 0.5rem;
     font-size: 1rem;
+    background: ${props => props.$isDark ? '#1a202c' : 'white'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   }
 
   textarea {
@@ -188,15 +282,16 @@ const Form = styled.form`
   }
 `;
 
-const ProductList = styled.div`
-  background: white;
+const ProductList = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
+  transition: background 0.3s ease;
 `;
 
-const ProductItem = styled.div`
+const ProductItem = styled.div<{ $isDark: boolean }>`
   padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -221,12 +316,12 @@ const ProductItem = styled.div`
     }
 
     h3 {
-      color: #101a33;
+      color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
       margin-bottom: 0.5rem;
     }
 
     p {
-      color: #666;
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
       margin-bottom: 0.25rem;
     }
   }
@@ -289,6 +384,7 @@ interface Product {
   images: string[];
   specifications: Record<string, string | number | boolean>;
   activated: boolean;
+  featured?: boolean;
 }
 
 interface Category {
@@ -305,14 +401,20 @@ export default function ProductsPage() {
     category: "",
     images: [] as string[],
     specifications: "",
+    featured: false,
   });
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     fetchProducts();
@@ -372,11 +474,9 @@ export default function ProductsPage() {
     e.preventDefault();
     if (isLoading) return;
     
-    setUploading(true);
     setIsLoading(true);
 
     try {
-      // Criar produto primeiro para obter o ID
       let productId = editingId;
       
       if (!editingId) {
@@ -393,12 +493,12 @@ export default function ProductsPage() {
             category: formData.category,
             images: [],
             specifications,
+            featured: formData.featured,
           }),
         });
 
         if (!createResponse.ok) {
           setToast({ message: "Erro ao criar produto", type: "error" });
-          setUploading(false);
           setIsLoading(false);
           return;
         }
@@ -414,6 +514,7 @@ export default function ProductsPage() {
         uploadFormData.append("file", file);
         uploadFormData.append("category", formData.category);
         uploadFormData.append("productName", formData.name);
+        uploadFormData.append("uploadType", "product");
 
         const response = await fetch("/api/upload", {
           method: "POST",
@@ -425,7 +526,6 @@ export default function ProductsPage() {
           uploadedUrls.push(data.url);
         } else {
           setToast({ message: "Erro ao fazer upload da imagem", type: "error" });
-          setUploading(false);
           setIsLoading(false);
           return;
         }
@@ -460,6 +560,7 @@ export default function ProductsPage() {
             ...formData,
             images: finalImages,
             specifications,
+            featured: formData.featured,
           }),
         });
 
@@ -471,7 +572,6 @@ export default function ProductsPage() {
           setToast({ message: "Erro ao atualizar produto", type: "error" });
         }
       } else {
-        // Atualizar produto com as imagens
         const specifications = formData.specifications 
           ? JSON.parse(formData.specifications) 
           : {};
@@ -485,6 +585,7 @@ export default function ProductsPage() {
             category: formData.category,
             images: finalImages,
             specifications,
+            featured: formData.featured,
           }),
         });
 
@@ -500,7 +601,6 @@ export default function ProductsPage() {
       console.error("Erro ao salvar produto:", error);
       setToast({ message: "Erro ao salvar produto", type: "error" });
     } finally {
-      setUploading(false);
       setIsLoading(false);
     }
   };
@@ -512,6 +612,7 @@ export default function ProductsPage() {
       category: product.category,
       images: product.images,
       specifications: JSON.stringify(product.specifications, null, 2),
+      featured: product.featured || false,
     });
     setOriginalImages(product.images);
     setEditingId(product._id);
@@ -525,6 +626,7 @@ export default function ProductsPage() {
       category: "",
       images: [],
       specifications: "",
+      featured: false,
     });
     setPendingFiles([]);
     setOriginalImages([]);
@@ -548,44 +650,153 @@ export default function ProductsPage() {
       category: "",
       images: [],
       specifications: "",
+      featured: false,
     });
   };
 
-  const handleDelete = async (id: string) => {
-    if (isLoading) return;
-    if (confirm("Tem certeza que deseja deletar este produto?")) {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
-        if (response.ok) {
-          setToast({ message: "Produto deletado com sucesso!", type: "success" });
-          fetchProducts();
-        } else {
-          setToast({ message: "Erro ao deletar produto", type: "error" });
-        }
-      } catch (error) {
-        console.error("Erro ao deletar produto:", error);
-        setToast({ message: "Erro ao deletar produto", type: "error" });
-      }
-      setIsLoading(false);
-    }
+  const handleDelete = (id: string) => {
+    setProductToDelete(id);
+    setDeleteModalOpen(true);
   };
 
+  const confirmDelete = async () => {
+    if (!productToDelete || isLoading) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/products/${productToDelete}`, { method: "DELETE" });
+      const data = await response.json();
+      
+      if (response.ok) {
+        setToast({ message: "Produto e imagens deletados com sucesso!", type: "success" });
+        fetchProducts();
+      } else {
+        const errorMsg = data.details 
+          ? `Erro ao deletar imagens do S3. Produto não foi removido.`
+          : data.error || "Erro ao deletar produto";
+        setToast({ message: errorMsg, type: "error" });
+        console.error("Detalhes do erro:", data.details);
+      }
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+      setToast({ message: "Erro ao deletar produto", type: "error" });
+    }
+    setIsLoading(false);
+    setDeleteModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const groupedProducts = filteredProducts.reduce((acc, product) => {
+    if (!acc[product.category]) {
+      acc[product.category] = [];
+    }
+    acc[product.category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
+
   return (
-    <Container>
+    <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      <PageHeader title="Gerenciar Produtos" backHref="/admin/website" />
-      <Header>
-        <div />
-        <div className="actions">
-          <button className="new" onClick={handleNewProduct}>
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        title="Deletar Produto"
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        message="Tem certeza que deseja deletar este produto? Esta ação não pode ser desfeita."
+      />
+      <AdminHeader 
+        title="Gerenciar Produtos" 
+        showBackButton 
+        backPath="/admin/website"
+        customActions={
+          <ActionButton $variant="primary" onClick={handleNewProduct}>
             + Novo Produto
-          </button>
-        </div>
-      </Header>
+          </ActionButton>
+        }
+      />
       <Main>
+        <Filters $isDark={isDark}>
+          <SearchInput
+            $isDark={isDark}
+            type="text"
+            placeholder="Buscar produtos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <CategoryFilter
+            $isDark={isDark}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="all">Todas as Categorias</option>
+            {categories.map((category) => (
+              <option key={category._id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </CategoryFilter>
+        </Filters>
+
+        {filteredProducts.length === 0 ? (
+          <EmptyState $isDark={isDark}>
+            <p>Nenhum produto encontrado</p>
+          </EmptyState>
+        ) : (
+          Object.entries(groupedProducts).map(([categoryName, categoryProducts]) => (
+            <CategorySection key={categoryName}>
+              <CategoryTitle $isDark={isDark}>
+                {categoryName}
+                <ProductCount $isDark={isDark}>({categoryProducts.length})</ProductCount>
+              </CategoryTitle>
+              <ProductList $isDark={isDark}>
+                {categoryProducts.map((product) => (
+                  <ProductItem key={product._id} $isDark={isDark}>
+                    <div className="info">
+                      <h3>
+                        {product.name}
+                        {product.featured && (
+                          <span style={{ 
+                            marginLeft: '0.5rem', 
+                            fontSize: '0.8rem', 
+                            background: '#f59e0b', 
+                            color: 'white', 
+                            padding: '0.2rem 0.5rem', 
+                            borderRadius: '0.3rem',
+                            fontWeight: 'bold'
+                          }}>
+                            ⭐ DESTAQUE
+                          </span>
+                        )}
+                      </h3>
+                      <p><strong>Categoria:</strong> {product.category}</p>
+                      <p>{product.description}</p>
+                    </div>
+                    <div className="actions">
+                      <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
+                        Editar
+                      </button>
+                      <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
+                        {isLoading ? 'Processando...' : 'Deletar'}
+                      </button>
+                    </div>
+                  </ProductItem>
+                ))}
+              </ProductList>
+            </CategorySection>
+          ))
+        )}
+
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-          <Form onSubmit={handleSubmit}>
+          <Form $isDark={isDark} onSubmit={handleSubmit}>
             <h2>{editingId ? "Editar Produto" : "Novo Produto"}</h2>
             <input
               type="text"
@@ -620,7 +831,6 @@ export default function ProductsPage() {
                 accept="image/*"
                 onChange={handleImageUpload}
               />
-              {uploading && <p>Fazendo upload...</p>}
               <div className="image-preview">
                 {formData.images.map((url, index) => (
                   <div key={index} className="image-wrapper">
@@ -637,11 +847,21 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <textarea
-              placeholder="Especificações (JSON)"
+            <SpecificationsEditor
               value={formData.specifications}
-              onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, specifications: value })}
+              isDark={isDark}
             />
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: '1rem' }}>
+              <input
+                type="checkbox"
+                checked={formData.featured}
+                onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                style={{ width: 'auto', margin: 0, cursor: 'pointer' }}
+              />
+              <span style={{ color: isDark ? '#f7fafc' : '#101a33' }}>Produto em Destaque</span>
+            </label>
             
             <div className="form-actions">
               <button type="submit" className={`save ${isLoading ? 'loading' : ''}`} disabled={isLoading}>
@@ -653,26 +873,6 @@ export default function ProductsPage() {
             </div>
           </Form>
         </Modal>
-
-        <ProductList>
-          {products.map((product) => (
-            <ProductItem key={product._id}>
-              <div className="info">
-                <h3>{product.name}</h3>
-                <p><strong>Categoria:</strong> {product.category}</p>
-                <p>{product.description}</p>
-              </div>
-              <div className="actions">
-                <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
-                  Editar
-                </button>
-                <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
-                  {isLoading ? 'Processando...' : 'Deletar'}
-                </button>
-              </div>
-            </ProductItem>
-          ))}
-        </ProductList>
       </Main>
     </Container>
   );

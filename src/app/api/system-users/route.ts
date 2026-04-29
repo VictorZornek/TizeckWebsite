@@ -1,14 +1,23 @@
 import { NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import SystemUser from "@/database/models/SystemUser";
+import { logError } from "@/lib/logger";
 
 export async function GET() {
   try {
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const SystemUserModel = conn.models.SystemUser || conn.model('SystemUser', SystemUser.schema);
-    const users = await SystemUserModel.find().sort({ legacyId: 1 });
+    
+    // Usar select para excluir password e __v da resposta
+    const users = await SystemUserModel
+      .find()
+      .select('-password -__v')
+      .sort({ legacyId: 1 })
+      .lean();
+    
     return NextResponse.json(users);
   } catch (error) {
-    return NextResponse.json({ error: `Erro ao buscar usuários: ${error}` }, { status: 500 });
+    logError('SYSTEM_USERS_GET', error);
+    return NextResponse.json({ error: "Erro ao buscar usuários" }, { status: 500 });
   }
 }

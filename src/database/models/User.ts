@@ -1,7 +1,7 @@
 import { Schema, models, model } from "mongoose";
 
 const UserSchema = new Schema({
-  email: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -13,6 +13,11 @@ const UserSchema = new Schema({
   role: {
     type: String,
     default: "admin",
+  },
+  theme: {
+    type: String,
+    enum: ["light", "dark"],
+    default: "light",
   },
 });
 

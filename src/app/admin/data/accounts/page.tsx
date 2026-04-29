@@ -1,12 +1,14 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function AccountsPage() {
   return (
     <>
-      <PageHeader title="💳 Contas a Pagar/Receber" />
+      <AdminHeader title="Contas a Pagar/Receber" showBackButton />
       <DataTable
-      title="💳 Contas a Pagar/Receber"
+      title="Contas a Pagar/Receber"
       apiEndpoint="/api/accounts"
       filters={[
         { key: "customerCode", label: "Código Cliente/Fornecedor", type: "text" },

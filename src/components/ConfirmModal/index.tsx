@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
@@ -13,13 +14,14 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   z-index: 1000;
 `;
 
-const Content = styled.div`
-  background: white;
+const Content = styled.div<{ $isDark: boolean }>`
+  background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
   padding: 2rem;
   max-width: 500px;
   width: 90%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
 
   .icon {
     font-size: 3rem;
@@ -35,7 +37,7 @@ const Content = styled.div`
   }
 
   .message {
-    color: #374151;
+    color: ${props => props.$isDark ? '#e5e7eb' : '#374151'};
     line-height: 1.6;
     margin-bottom: 1.5rem;
 
@@ -51,13 +53,13 @@ const Content = styled.div`
     }
 
     .warning {
-      background: #fef2f2;
+      background: ${props => props.$isDark ? '#7f1d1d' : '#fef2f2'};
       border-left: 4px solid #dc2626;
       padding: 1rem;
       margin-top: 1rem;
       border-radius: 0.5rem;
       font-weight: 600;
-      color: #991b1b;
+      color: ${props => props.$isDark ? '#fecaca' : '#991b1b'};
     }
   }
 
@@ -76,11 +78,11 @@ const Content = styled.div`
       transition: all 0.2s;
 
       &.cancel {
-        background: #e5e7eb;
-        color: #374151;
+        background: ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+        color: ${props => props.$isDark ? '#f7fafc' : '#374151'};
 
         &:hover {
-          background: #d1d5db;
+          background: ${props => props.$isDark ? '#718096' : '#d1d5db'};
         }
       }
 
@@ -105,9 +107,12 @@ interface ConfirmModalProps {
 }
 
 export function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }: ConfirmModalProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   return (
     <Overlay $isOpen={isOpen} onClick={onCancel}>
-      <Content onClick={(e) => e.stopPropagation()}>
+      <Content $isDark={isDark} onClick={(e) => e.stopPropagation()}>
         <div className="icon">⚠️</div>
         <h2>{title}</h2>
         <div className="message" dangerouslySetInnerHTML={{ __html: message }} />

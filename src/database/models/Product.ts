@@ -27,6 +27,11 @@ const ProductSchema = new Schema({
     default: true,
   },
 
+  featured: {
+    type: Boolean,
+    default: false,
+  },
+
   specifications: {
     type: Schema.Types.Mixed,
     default: {},

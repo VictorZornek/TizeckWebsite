@@ -106,21 +106,24 @@ export function Header(){
 
                             <SubMenu open={categoriesOpen}>
                                 {link.categories.map(category => (
-                                    <Link key={category.href} href={category.href}>
-                                        <SubMenuItem onClick={() => setCategoriesOpen(false)}>
-                                            {category.label}
-                                        </SubMenuItem>
-                                    </Link>
+                                    <SubMenuItem 
+                                        key={category.href} 
+                                        href={category.href}
+                                        onClick={() => setCategoriesOpen(false)}
+                                    >
+                                        {category.label}
+                                    </SubMenuItem>
                                 ))}
                             </SubMenu>
                         </NavItem>
                     ) : 'href' in link ? (
                         <NavItem key={link.href}>
-                            <Link href={link.href}>
-                                <NavLink onClick={() => setMenuOpen(false)}>
-                                    {link.label}
-                                </NavLink>
-                            </Link>
+                            <NavLink 
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                {link.label}
+                            </NavLink>
                         </NavItem>
                     ) : null
                 ))}
@@ -171,21 +174,27 @@ export function Header(){
                                         <DrawerSectionTitle>Categorias</DrawerSectionTitle>
                                     
                                         {link.categories.map(category => (
-                                            <Link key={category.href} href={category.href}>
-                                                <NavLink className="drawer-subitem" onClick={closeAll}>
-                                                    {category.label}
-                                                </NavLink>
-                                            </Link>
+                                            <NavLink 
+                                                key={category.href}
+                                                href={category.href}
+                                                className="drawer-subitem" 
+                                                onClick={closeAll}
+                                            >
+                                                {category.label}
+                                            </NavLink>
                                         ))}
                                     </>
                                 )}
                             </div>
                         ) : 'href' in link ? (
-                            <Link key={link.href} href={link.href}>
-                                <NavLink className="drawer-item" onClick={closeAll}>
-                                    {link.label}
-                                </NavLink>
-                            </Link>
+                            <NavLink 
+                                key={link.href}
+                                href={link.href}
+                                className="drawer-item" 
+                                onClick={closeAll}
+                            >
+                                {link.label}
+                            </NavLink>
                         ) : null
                     ))}
                 </DrawerNav>

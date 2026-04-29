@@ -1,12 +1,14 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function RegionsPage() {
   return (
     <>
-      <PageHeader title="🌍 Regiões" />
+      <AdminHeader title="Regiões" showBackButton />
       <DataTable
-      title="🌍 Regiões"
+      title="Regiões"
       apiEndpoint="/api/regions"
       columns={[
         { key: "legacyId", label: "Código" },

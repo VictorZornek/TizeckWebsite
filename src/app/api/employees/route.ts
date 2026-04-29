@@ -1,30 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
+import { connectBackupDatabase } from "@/database/dbBackup";
 import Employee from "@/database/models/Employee";
+import { employeesQuerySchema } from "@/lib/validators/query";
+import { escapeRegex } from "@/lib/validators/common";
+import { logError } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
-    const conn = await connectMongoLegacy();
+    const conn = await connectBackupDatabase();
     const EmployeeModel = conn.models.Employee || conn.model('Employee', Employee.schema);
     
     const searchParams = request.nextUrl.searchParams;
-    const search = searchParams.get("search") || "";
-    const active = searchParams.get("active") || "";
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const rawParams = {
+      search: searchParams.get("search") || "",
+      active: searchParams.get("active") || "",
+      page: searchParams.get("page") || "1",
+      limit: searchParams.get("limit") || "50",
+    };
+
+    const validation = employeesQuerySchema.safeParse(rawParams);
+    if (!validation.success) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+
+    const { search, active, page, limit } = validation.data;
 
     const query: Record<string, unknown> = {};
 
     if (search) {
+      const escapedSearch = escapeRegex(search);
       query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { shortName: { $regex: search, $options: "i" } },
-        { cpf: { $regex: search, $options: "i" } },
+        { name: { $regex: escapedSearch, $options: "i" } },
+        { shortName: { $regex: escapedSearch, $options: "i" } },
+        { cpf: { $regex: escapedSearch, $options: "i" } },
       ];
     }
 
     if (active) {
-      query.active = active;
+      query.active = active === 'true';
     }
 
     const skip = (page - 1) * limit;
@@ -45,6 +58,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    return NextResponse.json({ error: `Erro ao buscar funcionários: ${error}` }, { status: 500 });
+    logError('EMPLOYEES_GET', error);
+    return NextResponse.json({ error: "Erro ao buscar funcionários" }, { status: 500 });
   }
 }

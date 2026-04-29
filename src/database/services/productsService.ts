@@ -1,5 +1,6 @@
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
+import Category from "@/database/models/Category";
 
 export async function listCategories() {
     await connectMongo();
@@ -29,9 +30,7 @@ export async function getProductByName(name: string) {
 export async function getFeaturedProducts() {
     await connectMongo();
 
-    const products = await Products.find({
-        name: { $in: ["Suporte Quadrado Branco", "Suporte Redondo Branco", "Suporte Quadrado Preto"] }
-    }).limit(3);
+    const products = await Products.find({ featured: true });
 
     return products;
 }
@@ -39,22 +38,15 @@ export async function getFeaturedProducts() {
 export async function getCategoriesWithImages() {
     await connectMongo();
 
-    const categories = ["Bomba", "Suporte MAX", "Suporte Master", "Suporte Quadrado", "Suporte Redondo", "Torneira"];
+    // Buscar categorias do banco de dados
+    const categories = await Category.find({ activated: true }).sort({ name: 1 });
     
-    const categoriesWithImages = await Promise.all(
-        categories.map(async (category) => {
-            const product = await Products.findOne({ 
-                category, 
-                images: { $exists: true, $ne: [] } 
-            });
-            
-            return {
-                name: category,
-                image: product?.images?.[0] || "https://tizeck-products.s3.sa-east-1.amazonaws.com/suportes/CapaSuporte.png"
-            };
-        })
-    );
-
-    return categoriesWithImages;
+    return categories.map(cat => ({
+        _id: cat._id,
+        name: cat.name,
+        description: cat.description,
+        image: cat.image,
+        activated: cat.activated
+    }));
 }
 

@@ -16,7 +16,7 @@ export function CategoryCard({ name, description, imageUrl, href }: CategoryCard
     return (
         <Link href={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
             <Container role="link" aria-label={`Ver produtos de ${name}`}>
-                <ImageWrapper src={imageUrl} alt={name} />
+                <ImageWrapper src={imageUrl || undefined} alt={name} />
 
                 <WrapperText>
                     <CategoryName>{name}</CategoryName>

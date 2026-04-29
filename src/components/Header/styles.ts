@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { up } from "@/styles/media";
 
+import Link from 'next/link';
+
 export const Container = styled.header`
     --header-h: 6rem;
 
@@ -55,7 +57,10 @@ export const NavItem = styled.div`
     display: inline-block;
 `;
 
-export const NavLink = styled.a`
+export const NavLink = styled.a.attrs<{ href?: string }>(props => ({
+    as: props.href ? Link : 'button',
+    ...(props.href && { href: props.href })
+}))`
     font-family: var(--font-inter);
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
     font-size: 1.5rem;
@@ -231,7 +236,7 @@ export const SubMenu = styled.div<{ open: boolean }>`
     z-index: 1000;
 `;
 
-export const SubMenuItem = styled.a`
+export const SubMenuItem = styled(Link)`
     font-size: 1.5rem;
     font-weight: ${({ theme }) => theme.FONTS_WEIGHT.SEMI_BOLD};
     text-decoration: none;

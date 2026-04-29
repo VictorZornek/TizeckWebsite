@@ -3,9 +3,7 @@ import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
-    max-width: 28rem;
-    height: auto;
-    min-height: 28rem;
+    height: 28rem;
 
     display: flex;
     flex-direction: column;
@@ -27,13 +25,8 @@ export const Container = styled.div`
     }
 
     ${up("md")} {
-        max-width: 30rem;
-        min-height: 32rem;
+        height: 32rem;
         padding-top: 2rem;
-    }
-
-    ${up("lg")} {
-        max-width: 32rem;
     }
 `;
 
@@ -59,6 +52,7 @@ export const ImageWrapper = styled.img`
 export const WrapperText = styled.div`
     width: 100%;
     flex: 1;
+    min-height: 12rem;
 
     display: flex;
     flex-direction: column;
@@ -73,6 +67,7 @@ export const WrapperText = styled.div`
     ${up("md")} {
         gap: 1rem;
         padding: 1.5rem 2rem 2rem;
+        min-height: 14rem;
     }
 `;
 

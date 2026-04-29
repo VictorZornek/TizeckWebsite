@@ -1,12 +1,14 @@
-import PageHeader from "@/components/PageHeader";
+'use client'
+
+import AdminHeader from "@/components/AdminHeader";
 import DataTable from "@/components/DataTable";
 
 export default function OrderInstallmentsPage() {
   return (
     <>
-      <PageHeader title="📅 Parcelas de Pedidos" />
+      <AdminHeader title="Parcelas de Pedidos" showBackButton />
       <DataTable
-      title="📅 Parcelas de Pedidos"
+      title="Parcelas de Pedidos"
       apiEndpoint="/api/order-installments"
       filters={[
         { key: "orderCode", label: "Código do Pedido", type: "text" },

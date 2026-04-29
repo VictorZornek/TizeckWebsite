@@ -1,40 +1,69 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { connectMongo } from "@/database/db";
 import User from "@/database/models/User";
+import { getJwtSecretEncoded } from "@/lib/jwt";
+import { loginRateLimiter, getClientIp } from "@/lib/rateLimit";
+import { logError } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    // Extrair IP do cliente
+    const clientIp = getClientIp(request);
+
+    // Verificar rate limit
+    const { allowed, retryAfter } = loginRateLimiter.check(clientIp);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Muitas tentativas de login. Tente novamente mais tarde." },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': retryAfter?.toString() || '900',
+          },
+        }
+      );
+    }
+
+    const { username, password } = await request.json();
 
     await connectMongo();
     
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
-      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+      loginRateLimiter.increment(clientIp);
+      return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+      loginRateLimiter.increment(clientIp);
+      return NextResponse.json({ error: "Usuário e/ou senha incorretos" }, { status: 401 });
     }
 
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "secret",
-      { expiresIn: "24h" }
-    );
+    // Login bem-sucedido - resetar contador
+    loginRateLimiter.reset(clientIp);
+
+    const token = await new SignJWT({ 
+      userId: user._id.toString(), 
+      username: user.username 
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("8h")
+      .sign(getJwtSecretEncoded());
 
     const response = NextResponse.json({ success: true });
     response.cookies.set("admin-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 86400,
+      sameSite: "strict",
+      maxAge: 28800,
     });
 
     return response;
-  } catch {
+  } catch (error) {
+    logError('LOGIN', error);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }

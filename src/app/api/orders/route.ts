@@ -1,20 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectMongoLegacy } from "@/database/dbLegacy";
-import Order from "@/database/models/Order";
+import { connectBackupDatabase } from "@/database/dbBackup";
+import { ordersQuerySchema } from "@/lib/validators/query";
+import { escapeRegex, isValidDate } from "@/lib/validators/common";
+import { logError } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
-    const conn = await connectMongoLegacy();
-    const OrderModel = conn.models.LegacyOrder || conn.model('LegacyOrder', Order.schema);
-    const CustomerModel = conn.models.LegacyCustomer || conn.model('LegacyCustomer', (await import('@/database/models/Customer')).default.schema);
+    const conn = await connectBackupDatabase();
     
     const searchParams = request.nextUrl.searchParams;
-    const search = searchParams.get("search") || "";
-    const status = searchParams.get("status") || "";
-    const dateFrom = searchParams.get("dateFrom") || "";
-    const dateTo = searchParams.get("dateTo") || "";
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "50");
+    const rawParams = {
+      search: searchParams.get("search") || "",
+      status: searchParams.get("status") || "",
+      dateFrom: searchParams.get("dateFrom") || "",
+      dateTo: searchParams.get("dateTo") || "",
+      page: searchParams.get("page") || "1",
+      limit: searchParams.get("limit") || "50",
+    };
+
+    const validation = ordersQuerySchema.safeParse(rawParams);
+    if (!validation.success) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+
+    const { search, status, dateFrom, dateTo, page, limit } = validation.data;
+
+    // Validar datas se fornecidas
+    if (dateFrom && !isValidDate(dateFrom)) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
+    if (dateTo && !isValidDate(dateTo)) {
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+    }
 
     const query: Record<string, unknown> = {};
 
@@ -25,6 +42,24 @@ export async function GET(request: NextRequest) {
           { legacyId: searchNumber },
           { customerLegacyId: searchNumber },
         ];
+      } else {
+        // Buscar clientes por nome primeiro
+        const customersCollection = conn.db!.collection('legacycustomers');
+        const escapedSearch = escapeRegex(search);
+        const matchingCustomers = await customersCollection.find({
+          $or: [
+            { name: { $regex: escapedSearch, $options: 'i' } },
+            { fantasyName: { $regex: escapedSearch, $options: 'i' } },
+          ]
+        }, { projection: { legacyId: 1 } }).toArray();
+        
+        const customerLegacyIds = matchingCustomers.map(c => c.legacyId);
+        if (customerLegacyIds.length > 0) {
+          query.customerLegacyId = { $in: customerLegacyIds };
+        } else {
+          // Se não encontrou clientes, retornar vazio
+          query._id = null;
+        }
       }
     }
 
@@ -40,17 +75,19 @@ export async function GET(request: NextRequest) {
     }
 
     const skip = (page - 1) * limit;
-    const total = await OrderModel.countDocuments(query);
+    const ordersCollection = conn.db!.collection('legacyorders');
+    const total = await ordersCollection.countDocuments(query);
     
-    const orders = await OrderModel.find(query)
+    const orders = await ordersCollection.find(query)
       .sort({ orderDate: -1 })
       .skip(skip)
       .limit(limit)
-      .lean();
+      .toArray();
 
     // Buscar clientes manualmente
     const customerIds = [...new Set(orders.map(o => o.customerLegacyId).filter(Boolean))];
-    const customers = await CustomerModel.find({ legacyId: { $in: customerIds } }).lean();
+    const customersCollection = conn.db!.collection('legacycustomers');
+    const customers = await customersCollection.find({ legacyId: { $in: customerIds } }).toArray();
     const customerMap = new Map(customers.map(c => [c.legacyId, c]));
 
     // Adicionar dados do cliente aos pedidos
@@ -69,7 +106,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Erro ao buscar pedidos:', error);
-    return NextResponse.json({ error: `Erro ao buscar pedidos: ${error}` }, { status: 500 });
+    logError('ORDERS_GET', error);
+    return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
   }
 }
