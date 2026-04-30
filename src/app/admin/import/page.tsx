@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useTheme } from "@/contexts/ThemeContext";
 import AdminHeader from "@/components/AdminHeader";
+import { Toast } from "@/components/Toast";
 
 const Container = styled.div<{ $isDark: boolean }>`
   min-height: 100vh;
@@ -296,6 +297,7 @@ const HistorySection = styled.div<{ $isDark: boolean }>`
 interface ImportResult {
   status: string;
   message?: string;
+  error?: string;
   targetDatabase?: string;
   weekday?: string;
   stats?: {
@@ -349,12 +351,12 @@ interface HistoryItem {
 }
 
 export default function ImportPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [importing, setImporting] = useState(false);
+  const [autoImporting, setAutoImporting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
   const [progress, setProgress] = useState("");
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -372,65 +374,50 @@ export default function ImportPage() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleImport = async () => {
-    if (!file) return;
-
-    setImporting(true);
+  const handleAutoImport = async () => {
+    setAutoImporting(true);
     setResult(null);
     setLogs([]);
-    setProgress("Enviando arquivo...");
+    setProgress("Processando backup...");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      setProgress("Processando importação...");
-      const response = await fetch("/api/import", {
+      const response = await fetch("/api/import/from-fixed-path", {
         method: "POST",
-        body: formData,
       });
 
       const data = await response.json();
       setResult(data);
-      if (data.logs) {
-        setLogs(data.logs);
-      }
       setProgress("");
+      
+      if (data.status === 'success') {
+        setToast({ message: "Backup realizado com sucesso.", type: "success" });
+      } else {
+        setToast({ message: data.error || "Erro ao processar o backup. Tente novamente.", type: "error" });
+      }
+      
       fetchHistory();
     } catch (error) {
-      console.error("Erro na importação:", error);
+      console.error("Erro no backup:", error);
+      setResult({
+        status: 'error',
+        error: "Erro ao processar o backup. Tente novamente."
+      });
+      setToast({ message: "Erro ao processar o backup. Tente novamente.", type: "error" });
       setProgress("");
     } finally {
-      setImporting(false);
+      setAutoImporting(false);
     }
   };
 
   return (
     <Container $isDark={isDark}>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <AdminHeader title="Importação de Banco Legado" showBackButton />
       <Main>
         <UploadSection $isDark={isDark}>
-          <h2>Upload do Arquivo .GDB</h2>
-          <div className="upload-area">
-            <input
-              type="file"
-              id="file-upload"
-              accept=".GDB"
-              onChange={handleFileChange}
-            />
-            <label htmlFor="file-upload">
-              {file ? file.name : "Clique para selecionar o arquivo .GDB"}
-            </label>
-            <p>Apenas arquivos .GDB do Firebird são aceitos</p>
-          </div>
-          <button onClick={handleImport} disabled={!file || importing} className={importing ? 'loading' : ''}>
-            {importing ? "Importando..." : "Iniciar Importação"}
+          <h2>Backup Automático</h2>
+          <button onClick={handleAutoImport} disabled={autoImporting} className={autoImporting ? 'loading' : ''}>
+            {autoImporting ? "Processando..." : "Inicializar Backup"}
           </button>
           {progress && <div className="progress">{progress}</div>}
         </UploadSection>
