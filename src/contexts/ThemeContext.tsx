@@ -12,9 +12,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
-  const saved = localStorage.getItem('theme');
-  return (saved === 'dark' || saved === 'light') ? saved : 'light';
+  if (typeof window === 'undefined') return 'dark';
+  
+  try {
+    const saved = localStorage.getItem('theme');
+    return (saved === 'dark' || saved === 'light') ? saved : 'dark';
+  } catch {
+    return 'dark';
+  }
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -23,8 +28,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Sincronizar data-theme no cliente
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    
     fetchTheme();
   }, []);
+  
+  // Atualizar data-theme quando tema mudar
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
 
   const fetchTheme = async () => {
     try {
@@ -45,6 +63,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
+    
+    // Atualizar data-theme imediatamente
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
 
     try {
       await fetch('/api/user/theme', {
