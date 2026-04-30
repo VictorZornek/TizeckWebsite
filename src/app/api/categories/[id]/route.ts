@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectMongo } from "@/database/db";
 import Category from "@/database/models/Category";
 import Product from "@/database/models/Product";
@@ -120,6 +121,15 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       { new: true }
     );
     
+    // Revalidar home
+    revalidatePath("/");
+    
+    // Se nome mudou, revalidar páginas de produtos das categorias antiga e nova
+    if (nameChanged) {
+      revalidatePath(`/products/${encodeURIComponent(oldName)}`);
+      revalidatePath(`/products/${encodeURIComponent(validatedData.name)}`);
+    }
+    
     return NextResponse.json(category);
   } catch (error) {
     console.error("Erro ao atualizar categoria:", error);
@@ -127,98 +137,16 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const { id } = await params;
-    
-    // Validar ObjectId
-    const idResult = objectIdSchema.safeParse(id);
-    if (!idResult.success) {
-      return NextResponse.json(
-        { error: 'ID inválido' },
-        { status: 400 }
-      );
-    }
-    const validatedId = idResult.data;
-    
-    await connectMongo();
-    
-    const category = await Category.findById(validatedId);
-    
-    if (!category) {
-      return NextResponse.json({ error: "Categoria não encontrada" }, { status: 404 });
-    }
-
-    const s3Errors: string[] = [];
-
-    // 1. Deletar todos os produtos da categoria (pasta inteira no S3)
-    try {
-      const listParams = {
-        Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
-        Prefix: `${category.name}/`,
-      };
-
-      const listedObjects = await s3.listObjectsV2(listParams).promise();
-
-      if (listedObjects.Contents && listedObjects.Contents.length > 0) {
-        const deleteParams = {
-          Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
-          Delete: { Objects: listedObjects.Contents.map(({ Key }) => ({ Key: Key! })) },
-        };
-
-        await s3.deleteObjects(deleteParams).promise();
-        console.log(`✓ Pasta de produtos deletada: ${category.name}/`);
-      }
-    } catch (error) {
-      const errorMsg = `Erro ao deletar pasta de produtos: ${error}`;
-      console.error(errorMsg);
-      s3Errors.push(errorMsg);
-    }
-
-    // 2. Deletar imagem da categoria (em categories/)
-    if (category.image) {
-      try {
-        const url = new URL(category.image);
-        const key = decodeURIComponent(url.pathname.substring(1));
-        
-        if (key) {
-          await s3.deleteObject({
-            Bucket: process.env.AWS_S3_BUCKET_PRODUCTS!,
-            Key: key,
-          }).promise();
-          
-          console.log(`✓ Imagem da categoria deletada: ${key}`);
-        }
-      } catch (error) {
-        const errorMsg = `Erro ao deletar imagem da categoria: ${error}`;
-        console.error(errorMsg);
-        s3Errors.push(errorMsg);
+export async function DELETE() {
+  return NextResponse.json(
+    { 
+      error: "Método não permitido. Use POST /api/categories/[id]/confirm-delete" 
+    },
+    { 
+      status: 405,
+      headers: {
+        'Allow': 'GET, PUT'
       }
     }
-    
-    // Se houver erros no S3, não deletar do banco
-    if (s3Errors.length > 0) {
-      console.error("Falha ao deletar arquivos do S3. Abortando delete da categoria.");
-      return NextResponse.json({ 
-        error: "Erro ao deletar arquivos do S3",
-        details: s3Errors 
-      }, { status: 500 });
-    }
-
-    // 3. Deletar produtos do banco
-    await Product.deleteMany({ category: category.name });
-    console.log(`✓ Produtos deletados do banco: categoria ${category.name}`);
-
-    // 4. Deletar categoria do banco
-    await Category.findByIdAndDelete(validatedId);
-    console.log(`✓ Categoria deletada do banco: ${category.name} (ID: ${validatedId})`);
-    
-    return NextResponse.json({ 
-      success: true,
-      message: "Categoria, produtos e arquivos deletados com sucesso"
-    });
-  } catch (error) {
-    console.error("Erro ao deletar categoria:", error);
-    return NextResponse.json({ error: "Erro ao deletar categoria" }, { status: 500 });
-  }
+  );
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCategoriesWithImages } from "@/database/services/productsService";
 import { connectMongo } from "@/database/db";
 import Category from "@/database/models/Category";
@@ -35,6 +36,10 @@ export async function POST(request: Request) {
         });
         
         await category.save();
+        
+        // Revalidar home para exibir nova categoria
+        revalidatePath("/");
+        
         return NextResponse.json(category, { status: 201 });
     } catch (error) {
         logError('CATEGORIES_CREATE', error);

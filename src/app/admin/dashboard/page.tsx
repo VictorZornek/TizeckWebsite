@@ -100,13 +100,6 @@ export default function DashboardPage() {
             <h2>Backup e Sistema</h2>
             <p>Importação e gerenciamento de dados legados</p>
           </Card>
-          <Card>
-            <h2>Clientes</h2>
-            <p>Gerencie clientes e seus arquivos</p>
-            <button onClick={() => router.push("/admin/clientes")}>
-              Gerenciar Clientes
-            </button>
-          </Card>
         </Grid>
       </Main>
     </Container>

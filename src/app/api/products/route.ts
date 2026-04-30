@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectMongo } from "@/database/db";
 import Products from "@/database/models/Product";
 import { createProductSchema } from "@/lib/validators/product";
@@ -42,6 +43,10 @@ export async function POST(request: NextRequest) {
       specifications: validatedData.specifications,
     });
     await product.save();
+    
+    // Revalidar home e página de produtos da categoria
+    revalidatePath("/");
+    revalidatePath(`/products/${encodeURIComponent(validatedData.category)}`);
     
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
-import { ConfirmModal } from "@/components/ConfirmModal";
+import { DeleteCategoryConfirmModal } from "@/components/DeleteCategoryConfirmModal";
 import { Toast } from "@/components/Toast";
 import * as media from "@/styles/media";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -448,17 +448,22 @@ export default function CategoriesPage() {
     setConfirmDelete({ id, name: categoryName });
   };
 
-  const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async (password: string, confirmationPhrase: string) => {
     if (!confirmDelete) return;
     
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/categories/${confirmDelete.id}`, { method: "DELETE" });
+      const response = await fetch(`/api/categories/${confirmDelete.id}/confirm-delete`, { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, confirmationPhrase }),
+      });
       const data = await response.json();
       
       if (response.ok) {
         setToast({ message: "Categoria e produtos deletados com sucesso!", type: "success" });
         fetchCategories();
+        setConfirmDelete(null);
       } else {
         const errorMsg = data.details 
           ? `Erro ao deletar arquivos do S3. Categoria não foi removida.`
@@ -471,25 +476,16 @@ export default function CategoriesPage() {
       setToast({ message: "Erro ao deletar categoria", type: "error" });
     } finally {
       setIsLoading(false);
-      setConfirmDelete(null);
     }
   };
 
   return (
     <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      <ConfirmModal
+      <DeleteCategoryConfirmModal
         isOpen={!!confirmDelete}
-        title="ATENÇÃO: Ação Irreversível"
-        message={`
-          <p>Você está prestes a deletar a categoria <strong>"${confirmDelete?.name}"</strong>.</p>
-          <ul>
-            <li>Remover TODOS os produtos desta categoria</li>
-            <li>Deletar TODAS as imagens associadas do S3</li>
-            <li>Esta ação é IRREVERSÍVEL</li>
-          </ul>
-          <div class="warning">Tem certeza que deseja continuar?</div>
-        `}
+        categoryName={confirmDelete?.name || ""}
+        isLoading={isLoading}
         onConfirm={handleConfirmDelete}
         onCancel={() => setConfirmDelete(null)}
       />

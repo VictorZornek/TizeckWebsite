@@ -112,7 +112,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             { new: true }
           );
           
-          revalidatePath('/');
+          // Revalidar home, categorias e detalhes
+          revalidatePath("/");
+          revalidatePath(`/products/${encodeURIComponent(oldCategory)}`);
+          revalidatePath(`/products/${encodeURIComponent(validatedData.category)}`);
+          revalidatePath(`/details/${encodeURIComponent(oldName)}`);
+          revalidatePath(`/details/${encodeURIComponent(validatedData.name)}`);
+          
           return NextResponse.json(product);
         }
       } catch (error) {
@@ -141,7 +147,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Produto não encontrado" }, { status: 404 });
     }
     
-    revalidatePath('/');
+    // Revalidar home, categoria e detalhes
+    revalidatePath("/");
+    revalidatePath(`/products/${encodeURIComponent(validatedData.category)}`);
+    revalidatePath(`/details/${encodeURIComponent(validatedData.name)}`);
+    
     return NextResponse.json(product);
   } catch (error) {
     console.error("Erro ao atualizar produto:", error);
@@ -208,7 +218,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     
     console.log(`✓ Produto deletado do banco: ${product.name} (ID: ${validatedId})`);
     
-    revalidatePath('/');
+    // Revalidar home, categoria e detalhes do produto deletado
+    revalidatePath("/");
+    revalidatePath(`/products/${encodeURIComponent(product.category)}`);
+    revalidatePath(`/details/${encodeURIComponent(product.name)}`);
+    
     return NextResponse.json({ 
       success: true,
       message: "Produto e imagens deletados com sucesso"
