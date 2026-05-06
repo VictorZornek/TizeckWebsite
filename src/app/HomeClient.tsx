@@ -147,13 +147,33 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
 
                         <WorktimeWrapper>
                             <div className="wrapper-day-hour">
-                                <span className="day">Segunda a Sexta</span>
-                                <span className="hour">08:00 - 18:00</span>
+                                <span className="day">Segunda-feira</span>
+                                <span className="hour">08:00 - 17:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Terça-feira</span>
+                                <span className="hour">08:00 - 17:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Quarta-feira</span>
+                                <span className="hour">08:00 - 17:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Quinta-feira</span>
+                                <span className="hour">08:00 - 17:00</span>
+                            </div>
+
+                            <div className="wrapper-day-hour">
+                                <span className="day">Sexta-feira</span>
+                                <span className="hour">08:00 - 16:00</span>
                             </div>
 
                             <div className="wrapper-day-hour">
                                 <span className="day">Sábado</span>
-                                <span className="hour">08:00 - 12:00</span>
+                                <span className="hour">Fechado</span>
                             </div>
 
                             <div className="wrapper-day-hour">
