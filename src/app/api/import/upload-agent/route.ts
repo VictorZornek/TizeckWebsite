@@ -47,11 +47,18 @@ async function getDocumentsImportedFromLog(
   logId: string | undefined,
 ): Promise<number> {
   if (!logId) return 0;
+
   try {
     await connectMongo();
+
     const doc = await BackupLog.findById(logId)
       .select("validationResult")
-      .lean();
+      .lean() as {
+        validationResult?: {
+          documentsCount?: number;
+        };
+      } | null;
+
     return doc?.validationResult?.documentsCount ?? 0;
   } catch {
     return 0;
