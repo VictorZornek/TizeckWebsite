@@ -10,6 +10,7 @@ const PUBLIC_ROUTES = [
   "/api/auth/login",
   "/api/auth/logout",
   "/api/auth/verify",
+  "/api/import/upload-agent",
   "/_next",
   "/favicon.ico",
 ];
