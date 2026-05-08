@@ -3,7 +3,7 @@ import { up } from "@/styles/media";
 
 export const Container = styled.div`
     width: 100%;
-    height: 28rem;
+    height: 30rem;
 
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@ export const Container = styled.div`
     }
 
     ${up("md")} {
-        height: 32rem;
+        height: 34rem;
         padding-top: 2rem;
     }
 `;
@@ -52,7 +52,7 @@ export const ImageWrapper = styled.img`
 export const WrapperText = styled.div`
     width: 100%;
     flex: 1;
-    min-height: 12rem;
+    min-height: 14rem;
 
     display: flex;
     flex-direction: column;
@@ -67,7 +67,7 @@ export const WrapperText = styled.div`
     ${up("md")} {
         gap: 1rem;
         padding: 1.5rem 2rem 2rem;
-        min-height: 14rem;
+        min-height: 16rem;
     }
 `;
 
@@ -93,13 +93,16 @@ export const Description = styled.p`
     margin: 0;
 
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
 
     ${up("md")} {
         font-size: 1.4rem;
         text-align: justify;
+        text-align-last: left;
+        text-justify: inter-word;
+        hyphens: auto;
     }
 `;
 
