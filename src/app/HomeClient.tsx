@@ -132,13 +132,13 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
                         <InformationCard 
                             icon={MdPhone}
                             title="Telefone"
-                            information={["(11) 98782-2169", "(11) 4067-4561"]}
+                            information={["(11) 98224-0551 - Vendas", "(11) 98782-2169", "(11) 4067-4561"]}
                         />
 
                         <InformationCard 
                             icon={MdMail}
                             title="E-mail"
-                            information={["tizeckwebsite@gmail.com", "contato@tizeck.com"]}
+                            information={["vendas@tizeck.com.br", "adm@tizeck.com.br"]}
                         />
                     </div>
 
