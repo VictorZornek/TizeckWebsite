@@ -111,6 +111,8 @@ const InputGroup = styled.div`
     font-size: 1rem;
     transition: all 0.3s ease;
     background: #f7fafc;
+    color: #1a202c;
+    caret-color: #2563eb;
 
     &:focus {
       outline: none;

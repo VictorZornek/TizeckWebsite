@@ -12,8 +12,6 @@ const Container = styled.div<{ $isDark: boolean }>`
   transition: background 0.3s ease;
 `;
 
-
-
 const Main = styled.main`
   padding: 2rem;
   max-width: 1200px;
@@ -33,197 +31,12 @@ const UploadSection = styled.div<{ $isDark: boolean }>`
     margin-bottom: 1rem;
   }
 
-  .upload-area {
-    border: 2px dashed ${props => props.$isDark ? '#4a5568' : '#ddd'};
-    border-radius: 0.5rem;
-    padding: 2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-
-    input[type="file"] {
-      display: none;
-    }
-
-    label {
-      cursor: pointer;
-      color: #3b82f6;
-      font-weight: 500;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    p {
-      margin-top: 0.5rem;
-      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
-      font-size: 0.9rem;
-    }
-  }
-
-  button {
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    background: #10b981;
-    color: white;
-    width: 100%;
-    position: relative;
-
-    &:hover:not(:disabled) {
-      background: #059669;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    &.loading::after {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      margin-left: 8px;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 0.6s linear infinite;
-    }
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .progress {
-    text-align: center;
-    color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
-    margin-top: 1rem;
-    font-weight: 500;
-  }
-`;
-
-const LogsSection = styled.div<{ $isDark: boolean }>`
-  background: ${props => props.$isDark ? '#2d3748' : 'white'};
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
-  margin-bottom: 2rem;
-  transition: all 0.3s ease;
-
-  h3 {
-    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
-    margin-bottom: 1rem;
-  }
-
-  .logs-container {
-    background: #1e1e1e;
-    color: #d4d4d4;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    max-height: 400px;
-    overflow-y: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    line-height: 1.5;
-
-    .log-line {
-      margin-bottom: 0.25rem;
-      white-space: pre-wrap;
-      word-break: break-all;
-
-      &:hover {
-        background: #2d2d2d;
-      }
-    }
-  }
-`;
-
-const ResultSection = styled.div<{ $isDark: boolean }>`
-  background: ${props => props.$isDark ? '#2d3748' : 'white'};
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, ${props => props.$isDark ? '0.3' : '0.1'});
-  margin-bottom: 2rem;
-  transition: all 0.3s ease;
-
-  h3 {
-    color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
-    margin-bottom: 1rem;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-
-    .stat-card {
-      padding: 1rem;
-      border-radius: 0.5rem;
-      background: ${props => props.$isDark ? '#1a202c' : '#f9fafb'};
-
-      h4 {
-        color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .numbers {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-
-        span {
-          font-size: 1.5rem;
-          font-weight: bold;
-
-          &.success {
-            color: #10b981;
-          }
-
-          &.info {
-            color: #3b82f6;
-          }
-
-          &.error {
-            color: #dc2626;
-          }
-        }
-      }
-
-      small {
-        color: #666;
-        font-size: 0.75rem;
-      }
-    }
-  }
-
-  .errors {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #fef2f2;
-    border-radius: 0.5rem;
-    max-height: 300px;
-    overflow-y: auto;
-
-    h4 {
-      color: #dc2626;
-      margin-bottom: 0.5rem;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-
-      li {
-        color: #991b1b;
-        font-size: 0.9rem;
-        padding: 0.25rem 0;
-      }
-    }
+  .explicativo {
+    color: ${props => props.$isDark ? '#cbd5e0' : '#555'};
+    font-size: 1rem;
+    line-height: 1.55;
+    margin-bottom: 0;
+    max-width: 52rem;
   }
 `;
 
@@ -237,6 +50,56 @@ const HistorySection = styled.div<{ $isDark: boolean }>`
   h3 {
     color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
     margin-bottom: 1rem;
+  }
+
+  button.refresh-historico {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    background: #3b82f6;
+    color: white;
+    width: auto;
+    font-weight: 500;
+
+    &:hover:not(:disabled) {
+      background: #2563eb;
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    &.loading::after {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-left: 8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin-history-btn 0.6s linear infinite;
+      vertical-align: middle;
+    }
+  }
+
+  @keyframes spin-history-btn {
+    to { transform: rotate(360deg); }
+  }
+
+  .history-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin-bottom: 0;
+    }
   }
 
   .history-item {
@@ -284,6 +147,11 @@ const HistorySection = styled.div<{ $isDark: boolean }>`
         background: #fef3c7;
         color: #92400e;
       }
+
+      &.in_progress {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
     }
 
     .summary {
@@ -293,33 +161,6 @@ const HistorySection = styled.div<{ $isDark: boolean }>`
     }
   }
 `;
-
-interface ImportResult {
-  status: string;
-  message?: string;
-  error?: string;
-  targetDatabase?: string;
-  weekday?: string;
-  stats?: {
-    customers: { imported: number; errors: number; new: number; updated: number };
-    products: { imported: number; errors: number; new: number; updated: number };
-    orders: { imported: number; errors: number; new: number; updated: number };
-    paymentConditions: { imported: number; errors: number; new: number; updated: number };
-    accounts: { imported: number; errors: number; new: number; updated: number };
-    stockEntries: { imported: number; errors: number; new: number; updated: number };
-    jobFunctions: { imported: number; errors: number; new: number; updated: number };
-    employees: { imported: number; errors: number; new: number; updated: number };
-    regions: { imported: number; errors: number; new: number; updated: number };
-    conditionItems: { imported: number; errors: number; new: number; updated: number };
-    orderInstallments: { imported: number; errors: number; new: number; updated: number };
-    companySettings: { imported: number; errors: number; new: number; updated: number };
-    customerItems: { imported: number; errors: number; new: number; updated: number };
-    systemUsers: { imported: number; errors: number; new: number; updated: number };
-  };
-  errors?: string[];
-  logs?: string[];
-  processingTime?: number;
-}
 
 interface HistoryItem {
   _id: string;
@@ -332,81 +173,51 @@ interface HistoryItem {
   documentsCount?: number;
   backupType?: string;
   processingTime?: number;
-  stats?: {
-    customers: { imported: number; errors: number; new: number; updated: number };
-    products: { imported: number; errors: number; new: number; updated: number };
-    orders: { imported: number; errors: number; new: number; updated: number };
-    paymentConditions: { imported: number; errors: number; new: number; updated: number };
-    accounts: { imported: number; errors: number; new: number; updated: number };
-    stockEntries: { imported: number; errors: number; new: number; updated: number };
-    jobFunctions: { imported: number; errors: number; new: number; updated: number };
-    employees: { imported: number; errors: number; new: number; updated: number };
-    regions: { imported: number; errors: number; new: number; updated: number };
-    conditionItems: { imported: number; errors: number; new: number; updated: number };
-    orderInstallments: { imported: number; errors: number; new: number; updated: number };
-    companySettings: { imported: number; errors: number; new: number; updated: number };
-    customerItems: { imported: number; errors: number; new: number; updated: number };
-    systemUsers: { imported: number; errors: number; new: number; updated: number };
-  };
 }
 
 export default function ImportPage() {
-  const [autoImporting, setAutoImporting] = useState(false);
-  const [result, setResult] = useState<ImportResult | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [logs, setLogs] = useState<string[]>([]);
-  const [progress, setProgress] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   useEffect(() => {
-    fetchHistory();
+    void fetchHistory();
   }, []);
 
   const fetchHistory = async () => {
     try {
       const response = await fetch("/api/import/history");
       const data = await response.json();
-      setHistory(data);
+      if (!response.ok) {
+        throw new Error(typeof data?.error === "string" ? data.error : "Falha ao carregar histórico");
+      }
+      setHistory(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
+      setToast({
+        message: "Não foi possível carregar o histórico de importações.",
+        type: "error",
+      });
     }
   };
 
-  const handleAutoImport = async () => {
-    setAutoImporting(true);
-    setResult(null);
-    setLogs([]);
-    setProgress("Processando backup...");
-
+  const handleRefreshHistory = async () => {
+    setRefreshing(true);
     try {
-      const response = await fetch("/api/import/from-fixed-path", {
-        method: "POST",
-      });
-
-      const data = await response.json();
-      setResult(data);
-      setProgress("");
-      
-      if (data.status === 'success') {
-        setToast({ message: "Backup realizado com sucesso.", type: "success" });
-      } else {
-        setToast({ message: data.error || "Erro ao processar o backup. Tente novamente.", type: "error" });
-      }
-      
-      fetchHistory();
-    } catch (error) {
-      console.error("Erro no backup:", error);
-      setResult({
-        status: 'error',
-        error: "Erro ao processar o backup. Tente novamente."
-      });
-      setToast({ message: "Erro ao processar o backup. Tente novamente.", type: "error" });
-      setProgress("");
+      await fetchHistory();
     } finally {
-      setAutoImporting(false);
+      setRefreshing(false);
     }
+  };
+
+  const statusLabel = (status: string) => {
+    if (status === "success") return "Sucesso";
+    if (status === "error" || status === "failed") return "Erro";
+    if (status === "partial") return "Parcial";
+    if (status === "in_progress") return "Em andamento";
+    return status;
   };
 
   return (
@@ -415,188 +226,25 @@ export default function ImportPage() {
       <AdminHeader title="Importação de Banco Legado" showBackButton />
       <Main>
         <UploadSection $isDark={isDark}>
-          <h2>Backup Automático</h2>
-          <button onClick={handleAutoImport} disabled={autoImporting} className={autoImporting ? 'loading' : ''}>
-            {autoImporting ? "Processando..." : "Inicializar Backup"}
-          </button>
-          {progress && <div className="progress">{progress}</div>}
+          <h2>Backup automático</h2>
+          <p className="explicativo">
+            O backup é enviado pelo atalho instalado no computador da empresa. Após o envio,
+            o resultado aparecerá automaticamente no histórico abaixo.
+          </p>
         </UploadSection>
 
-        {logs.length > 0 && (
-          <LogsSection $isDark={isDark}>
-            <h3>Logs da Importação</h3>
-            <div className="logs-container">
-              {logs.map((log, index) => (
-                <div key={index} className="log-line">{log}</div>
-              ))}
-            </div>
-          </LogsSection>
-        )}
-
-        {result && (
-          <ResultSection $isDark={isDark}>
-            <h3>Resultado da Importação com Backup Rotativo</h3>
-            <div style={{ marginBottom: '1rem', padding: '1rem', background: isDark ? '#1a202c' : '#f0f9ff', borderRadius: '0.5rem' }}>
-              <p style={{ color: isDark ? '#f7fafc' : '#101a33', marginBottom: '0.5rem' }}>
-                <strong>Banco de Destino:</strong> {result.targetDatabase || 'N/A'}
-              </p>
-              <p style={{ color: isDark ? '#f7fafc' : '#101a33', marginBottom: '0.5rem' }}>
-                <strong>Dia da Semana:</strong> {result.weekday || 'N/A'}
-              </p>
-              <p style={{ color: isDark ? '#f7fafc' : '#101a33' }}>
-                <strong>Status:</strong> <span style={{ color: result.status === 'success' ? '#10b981' : '#dc2626' }}>
-                  {result.status === 'success' ? 'Sucesso' : 'Erro'}
-                </span>
-              </p>
-            </div>
-            {result.stats && (
-              <div className="stats">
-              <div className="stat-card">
-                <h4>Clientes</h4>
-                <div className="numbers">
-                  <span className="success" title="Novos">{result.stats.customers.new}</span>
-                  <span className="info" title="Atualizados">{result.stats.customers.updated}</span>
-                  <span className="error" title="Erros">{result.stats.customers.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Produtos</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.products.new}</span>
-                  <span className="info">{result.stats.products.updated}</span>
-                  <span className="error">{result.stats.products.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Pedidos</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.orders.new}</span>
-                  <span className="info">{result.stats.orders.updated}</span>
-                  <span className="error">{result.stats.orders.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Condições Pagto</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.paymentConditions.new}</span>
-                  <span className="info">{result.stats.paymentConditions.updated}</span>
-                  <span className="error">{result.stats.paymentConditions.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Contas</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.accounts.new}</span>
-                  <span className="info">{result.stats.accounts.updated}</span>
-                  <span className="error">{result.stats.accounts.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Entradas Estoque</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.stockEntries.new}</span>
-                  <span className="info">{result.stats.stockEntries.updated}</span>
-                  <span className="error">{result.stats.stockEntries.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Funções</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.jobFunctions.new}</span>
-                  <span className="info">{result.stats.jobFunctions.updated}</span>
-                  <span className="error">{result.stats.jobFunctions.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Funcionários</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.employees.new}</span>
-                  <span className="info">{result.stats.employees.updated}</span>
-                  <span className="error">{result.stats.employees.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Regiões</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.regions.new}</span>
-                  <span className="info">{result.stats.regions.updated}</span>
-                  <span className="error">{result.stats.regions.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Itens Condição</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.conditionItems.new}</span>
-                  <span className="info">{result.stats.conditionItems.updated}</span>
-                  <span className="error">{result.stats.conditionItems.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Parcelas Pedido</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.orderInstallments.new}</span>
-                  <span className="info">{result.stats.orderInstallments.updated}</span>
-                  <span className="error">{result.stats.orderInstallments.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Config Empresa</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.companySettings.new}</span>
-                  <span className="info">{result.stats.companySettings.updated}</span>
-                  <span className="error">{result.stats.companySettings.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Histórico Cliente</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.customerItems.new}</span>
-                  <span className="info">{result.stats.customerItems.updated}</span>
-                  <span className="error">{result.stats.customerItems.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-              <div className="stat-card">
-                <h4>Usuários Sistema</h4>
-                <div className="numbers">
-                  <span className="success">{result.stats.systemUsers.new}</span>
-                  <span className="info">{result.stats.systemUsers.updated}</span>
-                  <span className="error">{result.stats.systemUsers.errors}</span>
-                </div>
-                <small>Novos / Atualizados / Erros</small>
-              </div>
-            </div>
-            )}
-            {result.errors && result.errors.length > 0 && (
-              <div className="errors">
-                <h4>Erros Encontrados ({result.errors.length})</h4>
-                <ul>
-                  {result.errors.slice(0, 10).map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                  {result.errors.length > 10 && (
-                    <li>... e mais {result.errors.length - 10} erros</li>
-                  )}
-                </ul>
-              </div>
-            )}
-          </ResultSection>
-        )}
-
         <HistorySection $isDark={isDark}>
-          <h3>Histórico de Importações</h3>
+          <div className="history-header-row">
+            <h3>Histórico de importações</h3>
+            <button
+              type="button"
+              onClick={handleRefreshHistory}
+              disabled={refreshing}
+              className={`refresh-historico${refreshing ? " loading" : ""}`}
+            >
+              {refreshing ? "Atualizando..." : "Atualizar histórico"}
+            </button>
+          </div>
           {history.map((item) => (
             <div key={item._id} className="history-item">
               <div className="header">
@@ -605,18 +253,20 @@ export default function ImportPage() {
                   {new Date(item.importDate).toLocaleString("pt-BR")}
                 </span>
               </div>
-              <span className={`status ${item.status}`}>
-                {item.status === "success" ? "Sucesso" : item.status === "error" ? "Erro" : "Parcial"}
+              <span
+                className={`status ${item.status === 'failed' ? 'error' : item.status}`}
+              >
+                {statusLabel(item.status)}
               </span>
               <div className="summary">
                 {item.collectionsCount !== undefined && item.documentsCount !== undefined ? (
                   <>
-                    <strong>Banco:</strong> {item.targetDatabase} | 
-                    <strong>Dia:</strong> {item.weekday} | 
-                    <strong>Collections:</strong> {item.collectionsCount} | 
-                    <strong>Documentos:</strong> {item.documentsCount.toLocaleString('pt-BR')}
-                    {item.backupType === 'monthly' && ' | 📅 Backup Mensal'}
-                    {item.processingTime && ` | ⏱️ ${item.processingTime}s`}
+                    <strong>Banco:</strong> {item.targetDatabase} |
+                    <strong> Dia:</strong> {item.weekday} |
+                    <strong> Collections:</strong> {item.collectionsCount} |
+                    <strong> Documentos:</strong> {item.documentsCount.toLocaleString('pt-BR')}
+                    {item.backupType === 'monthly' && ' | Backup mensal'}
+                    {item.processingTime ? ` | ${item.processingTime}s` : ''}
                   </>
                 ) : (
                   'Sem dados de validação'
