@@ -5,6 +5,7 @@ import { Container } from "./styles";
 import { getProductByName } from "@/database/services/productsService"; 
 
 import { Header } from "@/components/Header";
+import { BackNavButton } from "@/components/BackNavButton";
 import { ImageSlider } from "@/components/ImageSlider";
 import { SpecsList } from "@/components/SpecsList";
 import { BudgetButton } from "@/components/BudgetButton";
@@ -21,6 +22,10 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     const productName = decodeURIComponent(product);
 
     const productResponse = await getProductByName(productName);
+
+    if (!productResponse) {
+        return notFound();
+    }
 
     // Usar imagens reais do produto ou imagem padrão
     const images = productResponse.images?.length 
@@ -39,17 +44,20 @@ export default async function ProductDetailsPage({ params }: PageProps) {
             { label: "Peso", value: "—" },
           ];
 
-    if (!product) {
-        return notFound();
-    }
-
-
+    const categoryName = String(productResponse.category ?? "");
+    const backFallback =
+        categoryName.length > 0
+            ? `/products/${encodeURIComponent(categoryName)}`
+            : "/";
 
     return (
         <Container>
             <Header />
 
             <main>
+                <div className="page-nav">
+                    <BackNavButton fallbackHref={backFallback} />
+                </div>
                 <h1>{productResponse.name}</h1>
 
                 <p>{productResponse.description ?? "Sem descrição cadastrada"}</p>

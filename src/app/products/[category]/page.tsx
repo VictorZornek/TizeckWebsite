@@ -3,6 +3,7 @@ import { Container } from "./styles";
 import { listProductsByCategory } from "@/database/services/productsService";
 
 import { Header } from "@/components/Header";
+import { BackNavButton } from "@/components/BackNavButton";
 import { ProductCard } from "@/components/ProductCard";
 
 type PageProps = { 
@@ -28,6 +29,9 @@ export default async function ProductsPage({ params }: PageProps) {
             <Header />
 
             <main>
+                <div className="page-nav">
+                    <BackNavButton fallbackHref="/" />
+                </div>
                 <h1>Produtos de {categoryName}</h1>
                 
                 <div className="wrapper-products">

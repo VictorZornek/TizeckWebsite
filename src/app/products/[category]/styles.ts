@@ -23,13 +23,27 @@ export const Container = styled.div`
         padding: 0 3rem;
         margin: 0 auto;
 
+        .page-nav {
+            width: 100%;
+            max-width: 120rem;
+            margin: calc(6rem + 2rem) 0 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        ${up("md")} {
+            .page-nav {
+                margin-top: calc(7rem + 1.75rem);
+            }
+        }
+
         > h1 {
             font-size: 2.2rem;
             color: ${({ theme }) => theme.COLORS.WHITE_600};
 
             text-align: center;
 
-            margin: 8rem 0 3rem;
+            margin: 1.2rem 0 3rem;
         }
 
         .wrapper-products {

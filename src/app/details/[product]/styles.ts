@@ -28,13 +28,41 @@ export const Container = styled.div`
     > main {
         width: 100%;
         flex: 1;
-        padding: 8rem 1.6rem 12rem;
+        padding: calc(6rem + 2.25rem) 1.5rem 12rem;
         max-width: 120rem;
         margin: 0 auto;
 
         display: flex;
         flex-direction: column;
         gap: 2rem;
+
+        ${up("md")} {
+            padding-top: calc(7rem + 1.75rem);
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        /* Alinha o voltar ao logo do header (padding 1.5rem / 3rem) em qualquer largura */
+        .page-nav {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            box-sizing: border-box;
+
+            display: flex;
+            justify-content: flex-start;
+
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+
+            ${up("md")} {
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+        }
 
         > h1 {
             font-size: 2.2rem;
