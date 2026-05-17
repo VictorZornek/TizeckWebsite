@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { objectIdSchema } from '@/lib/validators/product';
 
 /**
  * Schema para criação de categoria (POST)
@@ -46,4 +47,13 @@ export const updateCategorySchema = z.object({
   activated: z
     .boolean()
     .optional(),
+});
+
+/**
+ * Body para reordenar categorias (PATCH /api/categories/reorder)
+ */
+export const reorderCategoriesSchema = z.object({
+  orderedIds: z
+    .array(objectIdSchema)
+    .min(1, 'A lista de categorias não pode ser vazia'),
 });

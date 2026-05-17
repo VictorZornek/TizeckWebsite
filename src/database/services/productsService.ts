@@ -39,14 +39,19 @@ export async function getCategoriesWithImages() {
     await connectMongo();
 
     // Buscar categorias do banco de dados
-    const categories = await Category.find({ activated: true }).sort({ name: 1 });
-    
-    return categories.map(cat => ({
-        _id: cat._id,
+    const categories = await Category.find({ activated: true })
+        .sort({
+            displayOrder: 1,
+            name: 1,
+        })
+        .lean();
+
+    return categories.map((cat) => ({
+        _id: String(cat._id),
         name: cat.name,
         description: cat.description,
         image: cat.image,
-        activated: cat.activated
+        activated: cat.activated,
     }));
 }
 

@@ -19,6 +19,10 @@ const CategorySchema = new Schema({
     type: Boolean,
     default: true,
   },
+  displayOrder: {
+    type: Number,
+    required: false,
+  },
 });
 
 const Category = models.Category || model("Category", CategorySchema);

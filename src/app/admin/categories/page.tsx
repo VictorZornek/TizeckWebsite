@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Modal } from "@/components/Modal";
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { DeleteCategoryConfirmModal } from "@/components/DeleteCategoryConfirmModal";
 import { Toast } from "@/components/Toast";
 import * as media from "@/styles/media";
@@ -184,6 +185,29 @@ const Form = styled.form<{ $isDark?: boolean }>`
   }
 `;
 
+const OBJECT_ID_RE = /^[0-9a-fA-F]{24}$/;
+
+/** Normaliza _id vindo da API (string, ObjectId ou Extended JSON {$oid}) para hex de 24 chars. */
+function normalizeCategoryObjectId(raw: unknown): string | null {
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "string") {
+    const t = raw.trim();
+    return OBJECT_ID_RE.test(t) ? t : null;
+  }
+  if (typeof raw === "object" && raw !== null) {
+    const o = raw as Record<string, unknown>;
+    if (typeof o.$oid === "string") {
+      const t = o.$oid.trim();
+      return OBJECT_ID_RE.test(t) ? t : null;
+    }
+    if (typeof (raw as { toString?: () => string }).toString === "function") {
+      const t = String((raw as { toString: () => string }).toString()).trim();
+      if (OBJECT_ID_RE.test(t)) return t;
+    }
+  }
+  return null;
+}
+
 const CategoryList = styled.div<{ $isDark: boolean }>`
   background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
@@ -191,12 +215,91 @@ const CategoryList = styled.div<{ $isDark: boolean }>`
   transition: background 0.3s ease;
 `;
 
+const OrderBlock = styled.div<{ $isDark: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 108px;
+  flex-shrink: 0;
+  padding: 0.25rem 0.35rem 0;
+
+  .order-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: ${props => props.$isDark ? '#e2e8f0' : '#374151'};
+  }
+
+  select {
+    box-sizing: border-box;
+    width: 100px;
+    min-width: 100px;
+    max-width: 110px;
+    height: 40px;
+    padding: 0 0.65rem;
+    border-radius: 0.5rem;
+    border: 2px solid ${props => props.$isDark ? '#6366f1' : '#4f46e5'};
+    background: ${props => props.$isDark ? '#2d3748' : '#f8fafc'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#0f172a'};
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, ${props => props.$isDark ? '0.35' : '0.08'}),
+      0 0 0 1px rgba(255, 255, 255, ${props => props.$isDark ? '0.04' : '0.6'}) inset;
+
+    &:hover:not(:disabled) {
+      border-color: ${props => props.$isDark ? '#818cf8' : '#4338ca'};
+      background: ${props => props.$isDark ? '#374151' : '#fff'};
+    }
+
+    &:focus {
+      outline: none;
+      border-color: ${props => props.$isDark ? '#a5b4fc' : '#3730a3'};
+      box-shadow:
+        0 0 0 3px ${props => props.$isDark ? 'rgba(129, 140, 248, 0.35)' : 'rgba(79, 70, 229, 0.25)'};
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+    max-width: 120px;
+    min-width: min(100%, 120px);
+
+    select {
+      width: 100%;
+      max-width: none;
+      min-width: unset;
+    }
+  }
+`;
+
+const ItemMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem 1.25rem;
+
+  ${media.down('md')} {
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+`;
+
 const CategoryItem = styled.div<{ $isDark: boolean }>`
   padding: 1rem 2rem;
   border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
 
@@ -219,20 +322,34 @@ const CategoryItem = styled.div<{ $isDark: boolean }>`
 
     h3 {
       color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
-    p {
+    .position-line {
+      font-size: 0.9rem;
+      color: ${props => props.$isDark ? '#a0aec0' : '#4b5563'};
+      margin-bottom: 0.35rem;
+
+      strong {
+        color: ${props => props.$isDark ? '#e2e8f0' : '#111827'};
+        font-weight: 700;
+      }
+    }
+
+    p.description {
       color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
+      margin: 0;
     }
   }
 
   .actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
 
     ${media.down('md')} {
-      width: 100%;
+      flex: 1;
+      min-width: min(100%, 280px);
       justify-content: stretch;
     }
 
@@ -277,6 +394,8 @@ interface Category {
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [orderDirty, setOrderDirty] = useState(false);
+  const [saveOrderModalOpen, setSaveOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -301,9 +420,103 @@ export default function CategoriesPage() {
     try {
       const response = await fetch("/api/categories");
       const data = await response.json();
-      setCategories(data);
+      const normalized = Array.isArray(data)
+        ? data
+            .map((c: Category & { _id: unknown }) => {
+              const id = normalizeCategoryObjectId(c._id);
+              if (!id) return null;
+              return { ...c, _id: id };
+            })
+            .filter((c): c is Category => c !== null)
+        : [];
+      setCategories(normalized);
+      setOrderDirty(false);
     } catch (error) {
       console.error("Erro ao buscar categorias:", error);
+    }
+  };
+
+  const handleOrderSelect = (categoryId: string, newPosition: number) => {
+    setCategories((prev) => {
+      const idNorm = normalizeCategoryObjectId(categoryId);
+      if (!idNorm) return prev;
+
+      const fromIndex = prev.findIndex(
+        (c) => normalizeCategoryObjectId(c._id) === idNorm
+      );
+      if (fromIndex === -1) return prev;
+      const targetIndex = Math.min(
+        Math.max(newPosition - 1, 0),
+        prev.length - 1
+      );
+      if (fromIndex === targetIndex) return prev;
+
+      const next = [...prev];
+      const [removed] = next.splice(fromIndex, 1);
+      next.splice(targetIndex, 0, removed);
+
+      queueMicrotask(() => setOrderDirty(true));
+      return next;
+    });
+  };
+
+  const requestSaveOrder = () => {
+    if (!orderDirty || isLoading || categories.length === 0) return;
+    setSaveOrderModalOpen(true);
+  };
+
+  const handleConfirmSaveOrder = async () => {
+    setSaveOrderModalOpen(false);
+    if (!orderDirty || isLoading || categories.length === 0) return;
+
+    const orderedIds = categories
+      .map((c) => normalizeCategoryObjectId(c._id))
+      .filter((id): id is string => id !== null);
+
+    if (orderedIds.length !== categories.length) {
+      setToast({
+        message:
+          "Não foi possível identificar todas as categorias. Recarregue a página e tente novamente.",
+        type: "error",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/categories/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ orderedIds }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        setToast({
+          message: "Ordem das categorias salva com sucesso!",
+          type: "success",
+        });
+        setOrderDirty(false);
+      } else {
+        setToast({
+          message:
+            typeof data.error === "string"
+              ? data.error
+              : "Erro ao salvar ordem",
+          type: "error",
+        });
+      }
+      await fetchCategories();
+    } catch (error) {
+      console.error("Erro ao salvar ordem:", error);
+      setToast({
+        message: "Erro ao salvar ordem das categorias",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -482,6 +695,17 @@ export default function CategoriesPage() {
   return (
     <Container $isDark={isDark}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      <ConfirmModal
+        isOpen={saveOrderModalOpen}
+        title="Confirmar nova ordem"
+        message="Deseja salvar a nova ordem das categorias? Essa alteração será refletida na página inicial do site."
+        onConfirm={handleConfirmSaveOrder}
+        onCancel={() => setSaveOrderModalOpen(false)}
+        confirmLabel="Confirmar e salvar"
+        cancelLabel="Cancelar"
+        variant="primary"
+        showIcon={false}
+      />
       <DeleteCategoryConfirmModal
         isOpen={!!confirmDelete}
         categoryName={confirmDelete?.name || ""}
@@ -494,9 +718,18 @@ export default function CategoriesPage() {
         showBackButton 
         backPath="/admin/website"
         customActions={
-          <ActionButton $variant="primary" onClick={handleNewCategory}>
-            + Nova Categoria
-          </ActionButton>
+          <>
+            <ActionButton
+              $variant="secondary"
+              onClick={requestSaveOrder}
+              disabled={!orderDirty || isLoading || categories.length === 0}
+            >
+              Salvar ordem
+            </ActionButton>
+            <ActionButton $variant="primary" onClick={handleNewCategory}>
+              + Nova Categoria
+            </ActionButton>
+          </>
         }
       />
       <Main>
@@ -551,20 +784,44 @@ export default function CategoriesPage() {
         </Modal>
 
         <CategoryList $isDark={isDark}>
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <CategoryItem key={category._id} $isDark={isDark}>
               <div className="info">
-                <h3>{category.name}</h3>
-                <p>{category.description}</p>
+                <h3>Categoria: {category.name}</h3>
+                <p className="position-line">
+                  Ordem: <strong>{index + 1}º</strong> na lista pública
+                </p>
+                <p className="description">{category.description}</p>
               </div>
-              <div className="actions">
-                <button className="edit" onClick={() => handleEdit(category)} disabled={isLoading}>
-                  Editar
-                </button>
-                <button className="delete" onClick={() => handleDeleteClick(category._id, category.name)} disabled={isLoading}>
-                  Deletar
-                </button>
-              </div>
+              <ItemMeta>
+                <OrderBlock $isDark={isDark}>
+                  <span className="order-label">Posição</span>
+                  <select
+                    value={index + 1}
+                    disabled={isLoading || categories.length === 0}
+                    onChange={(e) =>
+                      handleOrderSelect(category._id, parseInt(e.target.value, 10))
+                    }
+                    aria-label={`Posição da categoria ${category.name} na lista`}
+                  >
+                    {Array.from({ length: categories.length }, (_, i) => i + 1).map(
+                      (pos) => (
+                        <option key={pos} value={pos}>
+                          {pos}º
+                        </option>
+                      )
+                    )}
+                  </select>
+                </OrderBlock>
+                <div className="actions">
+                  <button className="edit" onClick={() => handleEdit(category)} disabled={isLoading}>
+                    Editar
+                  </button>
+                  <button className="delete" onClick={() => handleDeleteClick(category._id, category.name)} disabled={isLoading}>
+                    Deletar
+                  </button>
+                </div>
+              </ItemMeta>
             </CategoryItem>
           ))}
         </CategoryList>

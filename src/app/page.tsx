@@ -19,7 +19,9 @@ type ProductType = {
 async function getCategories(): Promise<CategoryType[]> {
     try {
         await connectMongo();
-        const categories = await Category.find({ activated: true }).lean();
+        const categories = await Category.find({ activated: true })
+            .sort({ displayOrder: 1, name: 1 })
+            .lean();
         return categories.map(cat => ({
             _id: (cat._id as { toString: () => string }).toString(),
             name: cat.name as string,

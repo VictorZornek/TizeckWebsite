@@ -14,7 +14,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   z-index: 1000;
 `;
 
-const Content = styled.div<{ $isDark: boolean }>`
+const Content = styled.div<{ $isDark: boolean; $variant: "danger" | "primary" }>`
   background: ${props => props.$isDark ? '#2d3748' : 'white'};
   border-radius: 1rem;
   padding: 2rem;
@@ -30,7 +30,12 @@ const Content = styled.div<{ $isDark: boolean }>`
   }
 
   h2 {
-    color: #dc2626;
+    color: ${props =>
+      props.$variant === "primary"
+        ? props.$isDark
+          ? "#6ee7b7"
+          : "#047857"
+        : "#dc2626"};
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
@@ -67,6 +72,7 @@ const Content = styled.div<{ $isDark: boolean }>`
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    flex-wrap: wrap;
 
     button {
       padding: 0.75rem 1.5rem;
@@ -81,47 +87,72 @@ const Content = styled.div<{ $isDark: boolean }>`
         background: ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
         color: ${props => props.$isDark ? '#f7fafc' : '#374151'};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background: ${props => props.$isDark ? '#718096' : '#d1d5db'};
         }
       }
 
       &.confirm {
-        background: #dc2626;
+        background: ${props =>
+          props.$variant === "primary" ? "#10b981" : "#dc2626"};
         color: white;
 
-        &:hover {
-          background: #b91c1c;
+        &:hover:not(:disabled) {
+          background: ${props =>
+            props.$variant === "primary" ? "#059669" : "#b91c1c"};
         }
+      }
+
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
       }
     }
   }
 `;
 
-interface ConfirmModalProps {
+export interface ConfirmModalProps {
   isOpen: boolean;
   title: string;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  /** Texto do botão de confirmação (padrão: excluir) */
+  confirmLabel?: string;
+  /** Texto do botão cancelar (padrão: Cancelar) */
+  cancelLabel?: string;
+  /** danger = vermelho (padrão); primary = verde */
+  variant?: "danger" | "primary";
+  /** Se false, não exibe o ícone ⚠️ */
+  showIcon?: boolean;
 }
 
-export function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }: ConfirmModalProps) {
+export function ConfirmModal({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmLabel = "Sim, deletar",
+  cancelLabel = "Cancelar",
+  variant = "danger",
+  showIcon = true,
+}: ConfirmModalProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
   return (
     <Overlay $isOpen={isOpen} onClick={onCancel}>
-      <Content $isDark={isDark} onClick={(e) => e.stopPropagation()}>
-        <div className="icon">⚠️</div>
+      <Content $isDark={isDark} $variant={variant} onClick={(e) => e.stopPropagation()}>
+        {showIcon ? <div className="icon">⚠️</div> : null}
         <h2>{title}</h2>
         <div className="message" dangerouslySetInnerHTML={{ __html: message }} />
         <div className="actions">
-          <button className="cancel" onClick={onCancel}>
-            Cancelar
+          <button type="button" className="cancel" onClick={onCancel}>
+            {cancelLabel}
           </button>
-          <button className="confirm" onClick={onConfirm}>
-            Sim, deletar
+          <button type="button" className="confirm" onClick={onConfirm}>
+            {confirmLabel}
           </button>
         </div>
       </Content>
