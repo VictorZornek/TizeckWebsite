@@ -8,7 +8,11 @@ import { logError } from "@/lib/logger";
 export async function GET() {
   try {
     await connectMongo();
-    const products = await Products.find({ activated: true });
+    const products = await Products.find({ activated: true }).sort({
+      category: 1,
+      displayOrder: 1,
+      name: 1,
+    });
     return NextResponse.json(products);
   } catch (error) {
     logError('PRODUCTS_GET', error);

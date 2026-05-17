@@ -80,3 +80,11 @@ export const objectIdSchema = z
     (id) => /^[0-9a-fA-F]{24}$/.test(id),
     { message: 'ID inválido' }
   );
+
+/**
+ * Body para reordenar produtos dentro de uma categoria (PATCH /api/products/reorder)
+ */
+export const reorderProductsSchema = z.object({
+  category: z.string().trim().min(1, 'Categoria obrigatória').max(100),
+  orderedIds: z.array(objectIdSchema).min(1, 'Lista de IDs não pode ser vazia'),
+});

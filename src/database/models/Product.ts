@@ -36,6 +36,11 @@ const ProductSchema = new Schema({
     type: Schema.Types.Mixed,
     default: {},
   },
+
+  displayOrder: {
+    type: Number,
+    required: false,
+  },
 });
 
 const Products = models.Products || model("Products", ProductSchema);

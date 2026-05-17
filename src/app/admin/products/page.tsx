@@ -125,6 +125,96 @@ const CategoryFilter = styled.select<{ $isDark: boolean }>`
   }
 `;
 
+const OrderBlock = styled.div<{ $isDark: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 108px;
+  flex-shrink: 0;
+  padding: 0.25rem 0.35rem 0;
+
+  .order-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: ${props => props.$isDark ? '#e2e8f0' : '#374151'};
+  }
+
+  select {
+    box-sizing: border-box;
+    width: 100px;
+    min-width: 100px;
+    max-width: 110px;
+    height: 40px;
+    padding: 0 0.65rem;
+    border-radius: 0.5rem;
+    border: 2px solid ${props => props.$isDark ? '#6366f1' : '#4f46e5'};
+    background: ${props => props.$isDark ? '#2d3748' : '#f8fafc'};
+    color: ${props => props.$isDark ? '#f7fafc' : '#0f172a'};
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, ${props => props.$isDark ? '0.35' : '0.08'}),
+      0 0 0 1px rgba(255, 255, 255, ${props => props.$isDark ? '0.04' : '0.6'}) inset;
+
+    &:hover:not(:disabled) {
+      border-color: ${props => props.$isDark ? '#818cf8' : '#4338ca'};
+      background: ${props => props.$isDark ? '#374151' : '#fff'};
+    }
+
+    &:focus {
+      outline: none;
+      border-color: ${props => props.$isDark ? '#a5b4fc' : '#3730a3'};
+      box-shadow:
+        0 0 0 3px ${props => props.$isDark ? 'rgba(129, 140, 248, 0.35)' : 'rgba(79, 70, 229, 0.25)'};
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  ${media.down('md')} {
+    width: 100%;
+    max-width: 120px;
+    min-width: min(100%, 120px);
+
+    select {
+      width: 100%;
+      max-width: none;
+      min-width: unset;
+    }
+  }
+`;
+
+const ItemMeta = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem 1.25rem;
+
+  ${media.down('md')} {
+    width: 100%;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+`;
+
+const CategoryHeaderRow = styled.div<{ $isDark: boolean }>`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+`;
+
 const CategorySection = styled.div`
   margin-bottom: 2rem;
 `;
@@ -132,12 +222,13 @@ const CategorySection = styled.div`
 const CategoryTitle = styled.h2<{ $isDark: boolean }>`
   color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
   font-size: 1.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid ${props => props.$isDark ? '#4a5568' : '#e5e7eb'};
+  margin: 0;
+  padding: 0;
+  border: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 `;
 
 const ProductCount = styled.span<{ $isDark: boolean }>`
@@ -294,7 +385,7 @@ const ProductItem = styled.div<{ $isDark: boolean }>`
   border-bottom: 1px solid ${props => props.$isDark ? '#4a5568' : '#eee'};
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
 
@@ -317,21 +408,39 @@ const ProductItem = styled.div<{ $isDark: boolean }>`
 
     h3 {
       color: ${props => props.$isDark ? '#f7fafc' : '#101a33'};
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
-    p {
+    .position-line {
+      font-size: 0.9rem;
+      color: ${props => props.$isDark ? '#a0aec0' : '#4b5563'};
+      margin-bottom: 0.35rem;
+
+      strong {
+        color: ${props => props.$isDark ? '#e2e8f0' : '#111827'};
+        font-weight: 700;
+      }
+    }
+
+    p.meta {
       color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
       margin-bottom: 0.25rem;
+    }
+
+    p.desc {
+      color: ${props => props.$isDark ? '#cbd5e0' : '#666'};
+      margin: 0;
     }
   }
 
   .actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
 
     ${media.down('md')} {
-      width: 100%;
+      flex: 1;
+      min-width: min(100%, 280px);
       justify-content: stretch;
     }
 
@@ -392,6 +501,75 @@ interface Category {
   name: string;
 }
 
+const OBJECT_ID_RE = /^[0-9a-fA-F]{24}$/;
+
+function normalizeProductObjectId(raw: unknown): string | null {
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "string") {
+    const t = raw.trim();
+    return OBJECT_ID_RE.test(t) ? t : null;
+  }
+  if (typeof raw === "object" && raw !== null) {
+    const o = raw as Record<string, unknown>;
+    if (typeof o.$oid === "string") {
+      const t = o.$oid.trim();
+      return OBJECT_ID_RE.test(t) ? t : null;
+    }
+    if (typeof (raw as { toString?: () => string }).toString === "function") {
+      const t = String((raw as { toString: () => string }).toString()).trim();
+      if (OBJECT_ID_RE.test(t)) return t;
+    }
+  }
+  return null;
+}
+
+function reorderProductsInCategory(
+  list: Product[],
+  categoryName: string,
+  productId: string,
+  newPosition1Based: number
+): Product[] | null {
+  const idNorm = normalizeProductObjectId(productId);
+  if (!idNorm) return null;
+
+  const catIndices: number[] = [];
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].category === categoryName) catIndices.push(i);
+  }
+
+  const sub = catIndices.map((i) => list[i]);
+  const fromSub = sub.findIndex(
+    (p) => normalizeProductObjectId(p._id) === idNorm
+  );
+  if (fromSub === -1) return null;
+  const targetSub = Math.min(
+    Math.max(newPosition1Based - 1, 0),
+    sub.length - 1
+  );
+  if (fromSub === targetSub) return null;
+
+  const nextSub = [...sub];
+  const [removed] = nextSub.splice(fromSub, 1);
+  nextSub.splice(targetSub, 0, removed);
+
+  const next = [...list];
+  catIndices.forEach((listIdx, j) => {
+    next[listIdx] = nextSub[j];
+  });
+  return next;
+}
+
+function canReorderCategory(
+  categoryName: string,
+  categoryProducts: Product[],
+  allProducts: Product[],
+  searchTerm: string
+): boolean {
+  if (searchTerm.trim() !== "") return false;
+  const total = allProducts.filter((p) => p.category === categoryName).length;
+  return total > 0 && categoryProducts.length === total;
+}
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -413,6 +591,12 @@ export default function ProductsPage() {
   const [originalImages, setOriginalImages] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [orderDirtyByCategory, setOrderDirtyByCategory] = useState<
+    Record<string, boolean>
+  >({});
+  const [reorderModalCategory, setReorderModalCategory] = useState<
+    string | null
+  >(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -425,9 +609,119 @@ export default function ProductsPage() {
     try {
       const response = await fetch("/api/products");
       const data = await response.json();
-      setProducts(data);
+      if (!Array.isArray(data)) {
+        setProducts([]);
+        setOrderDirtyByCategory({});
+        return;
+      }
+      const normalized = data
+        .map((p: Product & { _id: unknown }) => {
+          const id = normalizeProductObjectId(p._id);
+          if (!id) return null;
+          return { ...p, _id: id };
+        })
+        .filter((p): p is Product => p !== null);
+      setProducts(normalized);
+      setOrderDirtyByCategory({});
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
+    }
+  };
+
+  const handleProductOrderSelect = (
+    categoryName: string,
+    productId: string,
+    newPosition: number
+  ) => {
+    setProducts((prev) => {
+      const next = reorderProductsInCategory(
+        prev,
+        categoryName,
+        productId,
+        newPosition
+      );
+      if (next) {
+        queueMicrotask(() =>
+          setOrderDirtyByCategory((d) => ({ ...d, [categoryName]: true }))
+        );
+        return next;
+      }
+      return prev;
+    });
+  };
+
+  const requestSaveProductOrder = (categoryName: string) => {
+    if (
+      !orderDirtyByCategory[categoryName] ||
+      isLoading
+    ) {
+      return;
+    }
+    setReorderModalCategory(categoryName);
+  };
+
+  const handleConfirmProductReorder = async () => {
+    const categoryName = reorderModalCategory;
+    setReorderModalCategory(null);
+    if (!categoryName || isLoading) return;
+
+    const orderedIds = products
+      .filter((p) => p.category === categoryName)
+      .map((p) => normalizeProductObjectId(p._id))
+      .filter((id): id is string => id !== null);
+
+    const expectedCount = products.filter(
+      (p) => p.category === categoryName
+    ).length;
+
+    if (orderedIds.length !== expectedCount) {
+      setToast({
+        message:
+          "Não foi possível montar a lista de produtos. Recarregue a página.",
+        type: "error",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/products/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ category: categoryName, orderedIds }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        setToast({
+          message: "Ordem dos produtos salva com sucesso!",
+          type: "success",
+        });
+        setOrderDirtyByCategory((prev) => {
+          const next = { ...prev };
+          delete next[categoryName];
+          return next;
+        });
+      } else {
+        setToast({
+          message:
+            typeof data.error === "string"
+              ? data.error
+              : "Erro ao salvar ordem dos produtos",
+          type: "error",
+        });
+      }
+      await fetchProducts();
+    } catch (error) {
+      console.error("Erro ao salvar ordem:", error);
+      setToast({
+        message: "Erro ao salvar ordem dos produtos",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -713,6 +1007,17 @@ export default function ProductsPage() {
         }}
         message="Tem certeza que deseja deletar este produto? Esta ação não pode ser desfeita."
       />
+      <ConfirmModal
+        isOpen={reorderModalCategory !== null}
+        title="Confirmar nova ordem"
+        message="Deseja salvar a nova ordem dos produtos desta categoria? Essa alteração será refletida na página pública."
+        onConfirm={handleConfirmProductReorder}
+        onCancel={() => setReorderModalCategory(null)}
+        confirmLabel="Confirmar e salvar"
+        cancelLabel="Cancelar"
+        variant="primary"
+        showIcon={false}
+      />
       <AdminHeader 
         title="Gerenciar Produtos" 
         showBackButton 
@@ -751,14 +1056,38 @@ export default function ProductsPage() {
             <p>Nenhum produto encontrado</p>
           </EmptyState>
         ) : (
-          Object.entries(groupedProducts).map(([categoryName, categoryProducts]) => (
+          Object.entries(groupedProducts).map(([categoryName, categoryProducts]) => {
+            const canReorder = canReorderCategory(
+              categoryName,
+              categoryProducts,
+              products,
+              searchTerm
+            );
+            return (
             <CategorySection key={categoryName}>
-              <CategoryTitle $isDark={isDark}>
-                {categoryName}
-                <ProductCount $isDark={isDark}>({categoryProducts.length})</ProductCount>
-              </CategoryTitle>
+              <CategoryHeaderRow $isDark={isDark}>
+                <CategoryTitle $isDark={isDark}>
+                  {categoryName}
+                  <ProductCount $isDark={isDark}>
+                    ({categoryProducts.length})
+                  </ProductCount>
+                </CategoryTitle>
+                <ActionButton
+                  $variant="secondary"
+                  type="button"
+                  onClick={() => requestSaveProductOrder(categoryName)}
+                  disabled={
+                    !orderDirtyByCategory[categoryName] ||
+                    isLoading ||
+                    !canReorder ||
+                    categoryProducts.length === 0
+                  }
+                >
+                  Salvar ordem
+                </ActionButton>
+              </CategoryHeaderRow>
               <ProductList $isDark={isDark}>
-                {categoryProducts.map((product) => (
+                {categoryProducts.map((product, indexInCategory) => (
                   <ProductItem key={product._id} $isDark={isDark}>
                     <div className="info">
                       <h3>
@@ -777,22 +1106,56 @@ export default function ProductsPage() {
                           </span>
                         )}
                       </h3>
-                      <p><strong>Categoria:</strong> {product.category}</p>
-                      <p>{product.description}</p>
+                      <p className="position-line">
+                        Ordem: <strong>{indexInCategory + 1}º</strong> nesta categoria
+                      </p>
+                      <p className="meta"><strong>Categoria:</strong> {product.category}</p>
+                      <p className="desc">{product.description}</p>
                     </div>
-                    <div className="actions">
-                      <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
-                        Editar
-                      </button>
-                      <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
-                        {isLoading ? 'Processando...' : 'Deletar'}
-                      </button>
-                    </div>
+                    <ItemMeta>
+                      <OrderBlock $isDark={isDark}>
+                        <span className="order-label">Posição</span>
+                        <select
+                          value={indexInCategory + 1}
+                          disabled={
+                            isLoading ||
+                            !canReorder ||
+                            categoryProducts.length === 0
+                          }
+                          onChange={(e) =>
+                            handleProductOrderSelect(
+                              categoryName,
+                              product._id,
+                              parseInt(e.target.value, 10)
+                            )
+                          }
+                          aria-label={`Posição do produto ${product.name} na categoria ${categoryName}`}
+                        >
+                          {Array.from(
+                            { length: categoryProducts.length },
+                            (_, i) => i + 1
+                          ).map((pos) => (
+                            <option key={pos} value={pos}>
+                              {pos}º
+                            </option>
+                          ))}
+                        </select>
+                      </OrderBlock>
+                      <div className="actions">
+                        <button className="edit" onClick={() => handleEdit(product)} disabled={isLoading}>
+                          Editar
+                        </button>
+                        <button className="delete" onClick={() => handleDelete(product._id)} disabled={isLoading}>
+                          {isLoading ? 'Processando...' : 'Deletar'}
+                        </button>
+                      </div>
+                    </ItemMeta>
                   </ProductItem>
                 ))}
               </ProductList>
             </CategorySection>
-          ))
+            );
+          })
         )}
 
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>

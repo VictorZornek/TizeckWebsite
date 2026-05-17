@@ -39,6 +39,7 @@ async function getFeaturedProducts(): Promise<ProductType[]> {
     try {
         await connectMongo();
         const products = await Product.find({ featured: true, activated: true })
+            .sort({ displayOrder: 1, name: 1 })
             .select('name images')
             .limit(6)
             .lean();

@@ -14,9 +14,20 @@ export async function listCategories() {
 export async function listProductsByCategory(category: string) {
     await connectMongo();
 
-    const products = await Products.find({ category });
+    const products = await Products.find({ category, activated: true })
+        .sort({
+            displayOrder: 1,
+            name: 1,
+        })
+        .select("name images")
+        .lean()
+        .exec();
 
-    return products;
+    return products as unknown as Array<{
+        _id: unknown;
+        name: string;
+        images?: string[];
+    }>;
 }
 
 export async function getProductByName(name: string) {
@@ -30,7 +41,13 @@ export async function getProductByName(name: string) {
 export async function getFeaturedProducts() {
     await connectMongo();
 
-    const products = await Products.find({ featured: true });
+    const products = await Products.find({ featured: true, activated: true })
+        .sort({
+            displayOrder: 1,
+            name: 1,
+        })
+        .limit(6)
+        .lean();
 
     return products;
 }
