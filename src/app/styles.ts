@@ -51,7 +51,7 @@ export const Container = styled.div`
                 width: 100%;
 
                 img {
-                    max-width: 280px !important;
+                    max-width: 320px !important;
                     width: 100% !important;
                     height: auto !important;
                 }
@@ -74,7 +74,7 @@ export const Container = styled.div`
                     gap: 2rem;
 
                     img {
-                        max-width: 400px !important;
+                        max-width: 460px !important;
                     }
 
                     h1 {
@@ -549,6 +549,30 @@ export const Counter = styled.div`
         padding: 3rem 4rem;
         max-width: none;
         width: auto;
+    }
+`;
+
+export const ClientsCounter = styled(Counter)`
+    /* “Milhares” é mais longo que “+18”: levemente menor que o span base para equilíbrio visual */
+    span {
+        font-size: 2.85rem;
+        line-height: 1.12;
+        text-align: center;
+        letter-spacing: -0.02em;
+
+        ${up('md')} {
+            font-size: 3.65rem;
+        }
+    }
+
+    p {
+        max-width: 17rem;
+        margin: 0 auto;
+        padding: 0 0.75rem;
+        text-align: center;
+        line-height: 1.45;
+        hyphens: manual;
+        text-wrap: balance;
     }
 `;
 

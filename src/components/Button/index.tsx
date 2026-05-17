@@ -29,6 +29,21 @@ export function Button({ title, href, isDark = false, ...rest }: ButtonProps) {
         );
     }
 
+    if (href?.startsWith("#")) {
+        const onHashLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+            e.preventDefault();
+            const el = document.querySelector(href);
+            el?.scrollIntoView({ behavior: "smooth", block: "start" });
+            const path = typeof window !== "undefined" ? window.location.pathname : "/";
+            window.history.replaceState(null, "", `${path}${href}`);
+        };
+        return (
+            <Link href={href} scroll={false} onClick={onHashLinkClick}>
+                {content}
+            </Link>
+        );
+    }
+
     return href ? (
         <Link href={href}>
             {content}

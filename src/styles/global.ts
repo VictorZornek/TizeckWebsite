@@ -19,7 +19,7 @@ export default createGlobalStyle`
     }
 
     html {
-        scroll-behavior: smooth;
+        scroll-behavior: auto;
     }
 
     // compensa o header fixo

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import { FaHome, FaBoxOpen } from 'react-icons/fa';
 import { MdBusiness } from 'react-icons/md';
@@ -26,8 +27,16 @@ type LinkWithCategories = {
 type NavLink = LinkWithHref | LinkWithCategories;
 
 export function Header(){
+    const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false)
     const [categoriesOpen, setCategoriesOpen] = useState(false)
+
+    const handleAboutNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (pathname !== '/') return;
+        e.preventDefault();
+        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.history.replaceState(null, '', '/#about');
+    };
 
     useEffect(() => {
         if (menuOpen) {
@@ -120,7 +129,10 @@ export function Header(){
                         <NavItem key={link.href}>
                             <NavLink 
                                 href={link.href}
-                                onClick={() => setMenuOpen(false)}
+                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                    if (link.href === '/#about') handleAboutNavClick(e);
+                                    setMenuOpen(false);
+                                }}
                             >
                                 {link.label}
                             </NavLink>
@@ -191,7 +203,10 @@ export function Header(){
                                 key={link.href}
                                 href={link.href}
                                 className="drawer-item" 
-                                onClick={closeAll}
+                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                    if (link.href === '/#about') handleAboutNavClick(e);
+                                    closeAll();
+                                }}
                             >
                                 {link.label}
                             </NavLink>

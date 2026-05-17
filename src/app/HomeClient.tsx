@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { MdPhone, MdPlace, MdMail } from 'react-icons/md';
 
-import { Container, Counter, WorktimeWrapper } from "./styles";
+import { Container, Counter, ClientsCounter, WorktimeWrapper } from "./styles";
 
 import { Header } from "@/components/Header";
 import { Button } from "@/components/Button";
@@ -43,7 +43,7 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
             <main>
                 <section className="hero">
                     <div className="wrapper-text">
-                        <Image src={logoTizeck} alt="Logo Tizeck" width={400} height={160} priority style={{ margin: '-10rem auto 0' }} />
+                        <Image src={logoTizeck} alt="Logo Tizeck" width={500} height={200} priority style={{ margin: '-9rem auto 0' }} />
                         <h1>Excelência em Produtos</h1>
 
                         <p>Há mais de 18 anos no mercado, oferecemos soluções de qualidade com compromisso e inovação</p>
@@ -72,7 +72,7 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
 
                     <div className="wrapper-history">
                         <h3>Nossa História</h3>
-                        <p>Fundada em 2008, a Tizeck nasceu da paixão e determinação de um jovem que começou aos 12 anos trabalhando em ferramentaria. O interesse pelo setor de injeção plástica surgiu após contato com um amigo da família, quando começou a vender peças produzidas por uma pequena máquina adquirida em parceria.</p>
+                        <p>Fundada em 2008, a Tizeck nasceu da paixão e determinação de um jovem que, aos 12 anos, trabalhava na ferramentaria do pai, onde começou a aprender o ofício. O interesse pelo setor de injeção plástica surgiu após contato com um amigo da família, quando começou a vender peças produzidas por uma pequena máquina adquirida em parceria.</p>
                         <p>Com esforço e dedicação, as vendas cresceram de 2 mil para mais de 30 mil peças mensais. Aos 21 anos, investiu o dinheiro da venda de um imóvel herdado na compra de sua própria máquina, iniciando o negócio de forma independente. Buscando aperfeiçoamento, formou-se em um curso técnico em plásticos, o que impulsionou o crescimento da empresa.</p>
                         <p>Hoje, somos reconhecidos pela qualidade, tradição familiar e pelos valores que nos guiam: dedicação, inovação e excelência. Oferecemos soluções plásticas que simplificam o cotidiano com preços acessíveis.</p>
                     </div>
@@ -83,10 +83,10 @@ export function HomeClient({ categories, featuredProducts }: HomeClientProps) {
                             <p>Anos de Experiência</p>
                         </Counter>
 
-                        <Counter>
-                            <span>+500</span>
-                            <p>Clientes Satisfeitos</p>
-                        </Counter>
+                        <ClientsCounter>
+                            <span>Milhares</span>
+                            <p>de Clientes Satisfeitos</p>
+                        </ClientsCounter>
                     </div>
 
                     <div className="wrapper-image">
