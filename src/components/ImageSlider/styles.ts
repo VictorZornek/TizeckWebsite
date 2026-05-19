@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import { up } from "@/styles/media";
+
 export const Container = styled.div`
     position: relative;
     width: 100%;
@@ -29,6 +31,10 @@ export const Viewport = styled.div`
 
     overflow: hidden;
     outline: none;
+
+    ${up("lg")} {
+        min-height: 0;
+    }
 `;
 
 export const Track = styled.div`
@@ -38,6 +44,11 @@ export const Track = styled.div`
 
     transition: transform 360ms ease;
     will-change: transform;
+
+    ${up("lg")} {
+        min-width: 0;
+        min-height: 0;
+    }
 `;
 
 export const Slide = styled.div`
@@ -46,6 +57,15 @@ export const Slide = styled.div`
 
     display: grid;
     place-items: center;
+
+    ${up("lg")} {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 0;
+        min-height: 0;
+    }
 `;
 
 export const Image = styled.img`
@@ -55,6 +75,16 @@ export const Image = styled.img`
     object-fit: contain;
 
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+
+    ${up("lg")} {
+        display: block;
+        margin: 0 auto;
+        width: auto;
+        height: auto;
+        max-width: 78%;
+        max-height: 78%;
+        object-fit: contain;
+    }
 `;
 
 export const ArrowButton = styled.button<{ side: 'left' | 'right' }>`
